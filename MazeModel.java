@@ -18,19 +18,28 @@ public class MazeModel extends Observable {
 
   public MazeModel() {
     this.readFile("test.txt");
-    // for(int x = 0; x < MAZE_SIZE; x++) {
-    //   for(int y = 0; y < MAZE_SIZE; y++) {
-    //     this.elements[x][y] = new PathModel();
-    //   }
-    // }
-    
-    // this.elements[1][1] = new WallModel();
-    // this.elements[2][1] = new WallModel();
-    // this.elements[3][1] = new WallModel();
+  }
+
+  /**
+   * 座標が迷路の範囲内かどうか
+   * @param x X座標
+   * @param y Y座標
+   */
+  public boolean isInMaze(int x, int y) {
+    return 0 <= x && 0 <= y && x < MAZE_SIZE && y < MAZE_SIZE;
   }
 
   public MazeElement[][] getElements() {
     return this.elements;
+  }
+
+  /**
+   * 特定の座標の迷路要素を取得する
+   * @param x X座標
+   * @param y Y座標
+   */
+  public MazeElement getElementAt(int x, int y) {
+    return this.elements[x][y];
   }
 
   public void readFile(String path) {

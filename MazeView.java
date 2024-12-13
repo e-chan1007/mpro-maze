@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.util.logging.Logger;
+
 import javax.swing.*;
 
 /**
@@ -20,6 +22,7 @@ public class MazeView extends JPanel implements Observer {
     for(int x = 0; x < MazeModel.MAZE_SIZE; x++){
       for(int y = 0; y < MazeModel.MAZE_SIZE; y++){
         elements[x][y].draw(g, x * MazeModel.MAZE_CELL_SIZE, y * MazeModel.MAZE_CELL_SIZE, MazeModel.MAZE_CELL_SIZE);
+        Logger.getAnonymousLogger().info("" + elements[x][y].canEnter());
       }
     }
   }
