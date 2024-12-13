@@ -4,7 +4,6 @@ public class PlayerController implements KeyListener {
   @Override
   public void keyPressed(KeyEvent e) {
     int keyCode = e.getKeyCode();
-    int playerX = model.getPlayerX();
     if (keyCode == KeyEvent.VK_LEFT) {
       // Move player lef
       

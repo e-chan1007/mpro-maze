@@ -5,7 +5,6 @@ public class PlayerModel {
     }
 
     public int getPlayerX() {
-        if()
         return playerX;
     }
 
