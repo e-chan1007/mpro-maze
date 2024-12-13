@@ -3,7 +3,7 @@
  */
 public class MazeModel extends Observable {
   public static final int MAZE_CELL_SIZE = 48;
-  public static final int MAZE_SIZE = 10;
+  public static final int MAZE_SIZE = 5;
 
   private MazeElement[][] elements = new MazeElement[MAZE_SIZE][MAZE_SIZE];
 
