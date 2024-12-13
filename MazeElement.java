@@ -3,7 +3,16 @@ import java.awt.*;
 /**
  * 迷路の構成要素(抽象クラス: 継承して使う)
  */
-abstract public class MazeElement {
+abstract public class MazeElement {  
+  /**
+   * 歩けるマスかどうか
+   */
+  private final boolean canEnter = true;  
+
+  public boolean canEnter() {
+    return this.canEnter;
+  }
+
   /**
    * 迷路の要素を描画する
    * @param g Graphics
