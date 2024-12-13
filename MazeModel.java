@@ -33,6 +33,15 @@ public class MazeModel extends Observable {
     return this.elements;
   }
 
+  /**
+   * 特定の座標の迷路要素を取得する
+   * @param x X座標
+   * @param y Y座標
+   */
+  public MazeElement getElementAt(int x, int y) {
+    return this.elements[x][y];
+  }
+
   public void readFile(String path) {
     this.elements = new MazeElement[MAZE_SIZE][MAZE_SIZE];
     try {
