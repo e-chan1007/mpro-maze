@@ -7,11 +7,7 @@ abstract public class MazeElement {
   /**
    * 歩けるマスかどうか
    */
-  private final boolean canEnter = true;  
-
-  public boolean canEnter() {
-    return this.canEnter;
-  }
+  abstract public boolean canEnter();  
 
   /**
    * 迷路の要素を描画する
