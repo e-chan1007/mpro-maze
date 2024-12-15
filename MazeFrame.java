@@ -6,15 +6,26 @@ import javax.swing.*;
  * @see MazeView
  */
 public class MazeFrame extends JFrame {
-  MazeModel model;
-
+  // MazeModel model;
   public MazeFrame() {
-    model = new MazeModel();
+    MazeModel mazeModel = new MazeModel();
+    PlayerModel playerModel = new PlayerModel(mazeModel);
+
+    MazeView mazeView = new MazeView(mazeModel, playerModel);
+    PlayerController playerController = new PlayerController(playerModel);
+
+    playerModel.addObserver(mazeView);
+
+    mazeView.addKeyListener(playerController);
+    mazeView.setFocusable(true);
+    mazeView.requestFocusInWindow();
+
     this.setBackground(Color.black);
     this.setTitle("Maze");
-    this.add(new MazeView(model));
-    this.pack();
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    this.add(mazeView);
+    this.pack();
     this.setVisible(true);
   }
 }
