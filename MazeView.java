@@ -1,5 +1,5 @@
 import java.awt.*;
-import java.util.logging.Logger;
+// import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -15,7 +15,11 @@ public class MazeView extends JPanel implements Observer {
 
     this.setBackground(Color.white);
     this.setPreferredSize(
-        new Dimension(MazeModel.MAZE_CELL_SIZE * MazeModel.MAZE_SIZE, MazeModel.MAZE_CELL_SIZE * MazeModel.MAZE_SIZE));
+      new Dimension(
+        MazeModel.MAZE_CELL_SIZE * mazeModel.getMazeWidth(),
+        MazeModel.MAZE_CELL_SIZE * mazeModel.getMazeHeight()
+      )
+    );
     this.setFocusable(true);
     // model = m;
     mazeModel.addObserver(this);
@@ -27,13 +31,16 @@ public class MazeView extends JPanel implements Observer {
 
     //* 迷路を描画 */
     MazeElement elements[][] = mazeModel.getElements();
-    for (int x = 0; x < MazeModel.MAZE_SIZE; x++) {
-      for (int y = 0; y < MazeModel.MAZE_SIZE; y++) {
+    for (int x = 0; x < mazeModel.getMazeWidth(); x++) {
+      for (int y = 0; y < mazeModel.getMazeHeight(); y++) {
         elements[x][y].draw(g, x * MazeModel.MAZE_CELL_SIZE, y * MazeModel.MAZE_CELL_SIZE, MazeModel.MAZE_CELL_SIZE);
-        Logger.getAnonymousLogger().info("" + elements[x][y].canEnter());
+        //* 重いので一旦無効化 */
+        // Logger.getAnonymousLogger().info("" + elements[x][y].canEnter());
       }
     }
 
+
+    //* Playerを描画(仮) */
     g.setColor(Color.RED);
     g.fillOval(
       playerModel.getPlayerX() * MazeModel.MAZE_CELL_SIZE,
