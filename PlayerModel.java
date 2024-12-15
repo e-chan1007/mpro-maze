@@ -3,6 +3,7 @@ public class PlayerModel {
     private int playerY = 1;
     public PlayerModel() {
     }
+    MazeModel mazeModel = new MazeModel();
 
     public int getPlayerX() {
         return playerX;
@@ -13,19 +14,27 @@ public class PlayerModel {
     }
 
     public void moveLeft() {
-        playerX--;
+        if(mazeModel.getElementAt(playerX - 1, playerY) instanceof PathModel) {
+            playerX--;
+        }
     }
 
     public void moveRight() {
-        playerX++;
+        if(mazeModel.getElementAt(playerX + 1, playerY) instanceof PathModel) {
+            playerX++;
+        }
     }
 
     public void moveUp() {
-        playerY--;
+        if(mazeModel.getElementAt(playerX, playerY - 1) instanceof PathModel) {
+            playerY--;
+        }
     }
 
     public void moveDown() {
-        playerY++;
+        if(mazeModel.getElementAt(playerX, playerY + 1) instanceof PathModel) {
+            playerY++;
+        }
     }
 
 
