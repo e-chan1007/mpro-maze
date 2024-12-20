@@ -8,6 +8,9 @@ public class GoalModel extends MazeElement {
   }
 
   @Override
+  public void onEnter(MazeModel mazeModel, PlayerModel playerModel) {}
+
+  @Override
   public void draw(Graphics g, int x, int y, int size) {
     g.setColor(Color.BLUE);
     g.fillRect(x, y, size, size);

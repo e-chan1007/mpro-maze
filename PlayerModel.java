@@ -1,5 +1,3 @@
-import javax.swing.JOptionPane;
-
 public class PlayerModel extends Observable {
     private int playerX = 1;
     private int playerY = 1;
@@ -50,7 +48,7 @@ public class PlayerModel extends Observable {
     }
 
     private void onMove() {
-        mazeModel.getElementAt(playerX, playerX).onEnter(mazeModel, this);
+        mazeModel.getElementAt(playerX, playerY).onEnter(mazeModel, this);
     }
 
     private void notifyChange() {

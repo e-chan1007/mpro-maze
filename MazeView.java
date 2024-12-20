@@ -40,16 +40,6 @@ public class MazeView extends JPanel implements Observer {
     }
 
     playerView.draw(g);
-
-
-    // //* Playerを描画(仮) */
-    // g.setColor(Color.RED);
-    // g.fillOval(
-    //   playerModel.getPlayerX() * MazeModel.MAZE_CELL_SIZE,
-    //   playerModel.getPlayerY() * MazeModel.MAZE_CELL_SIZE,
-    //   MazeModel.MAZE_CELL_SIZE,
-    //   MazeModel.MAZE_CELL_SIZE
-    //   );
   }
 
   public void update(Observable o, Object arg) {
