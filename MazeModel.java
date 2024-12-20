@@ -14,6 +14,7 @@ public class MazeModel extends Observable {
   private Map<Character, Class<? extends MazeElement>> elementMap = new HashMap<>(){{
     put('#', WallModel.class);
     put(' ', PathModel.class);
+    put('G', GoalModel.class);
   }};
 
   public MazeModel() {
