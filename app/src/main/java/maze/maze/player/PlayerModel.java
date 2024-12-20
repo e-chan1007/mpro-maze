@@ -4,9 +4,11 @@ import maze.maze.*;
 import maze.maze.element.StartModel;
 import maze.util.*;
 
+import javax.swing.Timer;
+
 public class PlayerModel extends Observable {
-    private int playerX = 1;
-    private int playerY = 1;
+    private float playerX = 1;
+    private float playerY = 1;
     MazeModel mazeModel = new MazeModel();
 
     public PlayerModel(MazeModel mazeModel) {
@@ -27,24 +29,37 @@ public class PlayerModel extends Observable {
         }
     }
 
-    public int getPlayerX() {
+    public float getPlayerX() {
         return playerX;
     }
 
-    public int getPlayerY() {
+    public float getPlayerY() {
         return playerY;
     }
 
+    //* 連続的な動き試作 */
     public void moveLeft() {
-        if(mazeModel.getElementAt(playerX-1, playerY).canEnter()) {
-            playerX--;
-            notifyChange();
+        if(mazeModel.getElementAt(Math.round(playerX-1), Math.round(playerY)).canEnter()) {
+            final int steps = 100;
+            final int[] currentStep = { 0 };
+
+            Timer timer = new Timer(10, e -> {
+                if ( currentStep[0] < steps) {
+                    playerX -= 0.01;
+                    notifyChange();
+                    currentStep[0]++;
+                } else {
+                    ((Timer) e.getSource()).stop();
+                }
+            });
+            timer.start();
+            // notifyChange();
             onMove();
         }
     }
 
     public void moveRight() {
-        if(mazeModel.getElementAt(playerX+1, playerY).canEnter()) {
+        if(mazeModel.getElementAt(Math.round(playerX+1), Math.round(playerY)).canEnter()) {
             playerX++;
             notifyChange();
             onMove();
@@ -52,7 +67,7 @@ public class PlayerModel extends Observable {
     }
 
     public void moveUp() {
-        if(mazeModel.getElementAt(playerX, playerY-1).canEnter()) {
+        if(mazeModel.getElementAt(Math.round(playerX), Math.round(playerY-1)).canEnter()) {
             playerY--;
             notifyChange();
             onMove();
@@ -60,7 +75,7 @@ public class PlayerModel extends Observable {
     }
 
     public void moveDown() {
-        if(mazeModel.getElementAt(playerX, playerY+1).canEnter()) {
+        if(mazeModel.getElementAt(Math.round(playerX), Math.round(playerY+1)).canEnter()) {
             playerY++;
             notifyChange();
             onMove();
@@ -68,7 +83,7 @@ public class PlayerModel extends Observable {
     }
 
     private void onMove() {
-        mazeModel.getElementAt(playerX, playerY).onEnter(mazeModel, this);
+        mazeModel.getElementAt(Math.round(playerX), Math.round(playerY)).onEnter(mazeModel, this);
     }
 
     private void notifyChange() {
