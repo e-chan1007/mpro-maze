@@ -1,6 +1,7 @@
 package maze.maze.player;
 
 import maze.maze.*;
+import maze.maze.element.StartModel;
 import maze.util.*;
 
 public class PlayerModel extends Observable {
@@ -10,6 +11,20 @@ public class PlayerModel extends Observable {
 
     public PlayerModel(MazeModel mazeModel) {
         this.mazeModel = mazeModel;
+
+        this.mazeModel.addObserver((Observable observable, Object object) -> {
+            setStartPos();
+        });
+        
+        setStartPos();
+    }
+
+    private void setStartPos() {
+        int startPos[] = mazeModel.locateElement(StartModel.class);
+        if(startPos != null) {
+            playerX = startPos[0];
+            playerY = startPos[1];
+        }
     }
 
     public int getPlayerX() {

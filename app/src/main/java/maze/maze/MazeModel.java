@@ -21,6 +21,7 @@ public class MazeModel extends maze.util.Observable {
     put('#', WallModel.class);
     put(' ', PathModel.class);
     put('G', GoalModel.class);
+    put('S', StartModel.class);
   }};
 
   public MazeModel() {
@@ -56,6 +57,16 @@ public class MazeModel extends maze.util.Observable {
     return this.elements[x][y];
   }
 
+  public int[] locateElement(Class<? extends MazeElement> c) {
+    for(int x = 0; x < mazeWidth; x++) {
+      for(int y = 0; y < mazeHeight; y++) {        
+        MazeElement element = this.elements[x][y];
+        if(c.isInstance(element)) return new int[]{x, y};
+      }
+    }
+    return null;
+  }
+
   //* 迷路サイズを動的に取得，作成 */
   public void readFile(String path) {
     try(BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(path)))) {
@@ -80,5 +91,7 @@ public class MazeModel extends maze.util.Observable {
     } catch (Exception e) {
       e.printStackTrace();
     }
+    setChanged();
+    notifyObservers();
   }
 }
