@@ -8,10 +8,12 @@ import javax.swing.*;
 public class MazeView extends JPanel implements Observer {
   protected MazeModel mazeModel;
   protected PlayerModel playerModel;
+  protected PlayerView playerView;
 
   public MazeView(MazeModel mazeModel, PlayerModel playerModel) {
     this.mazeModel = mazeModel;
     this.playerModel = playerModel;
+    this.playerView = new PlayerView(playerModel);
 
     this.setBackground(Color.white);
     this.setPreferredSize(
@@ -37,15 +39,17 @@ public class MazeView extends JPanel implements Observer {
       }
     }
 
+    playerView.draw(g);
 
-    //* Playerを描画(仮) */
-    g.setColor(Color.RED);
-    g.fillOval(
-      playerModel.getPlayerX() * MazeModel.MAZE_CELL_SIZE,
-      playerModel.getPlayerY() * MazeModel.MAZE_CELL_SIZE,
-      MazeModel.MAZE_CELL_SIZE,
-      MazeModel.MAZE_CELL_SIZE
-      );
+
+    // //* Playerを描画(仮) */
+    // g.setColor(Color.RED);
+    // g.fillOval(
+    //   playerModel.getPlayerX() * MazeModel.MAZE_CELL_SIZE,
+    //   playerModel.getPlayerY() * MazeModel.MAZE_CELL_SIZE,
+    //   MazeModel.MAZE_CELL_SIZE,
+    //   MazeModel.MAZE_CELL_SIZE
+    //   );
   }
 
   public void update(Observable o, Object arg) {
