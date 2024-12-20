@@ -18,14 +18,14 @@ public class PlayerModel extends Observable {
     }
 
     public void moveLeft() {
-        if(mazeModel.getElementAt(playerX - 1, playerY).canEnter()) {
+        if(mazeModel.getElementAt(playerX-1, playerY).canEnter()) {
             playerX--;
             notifyChange();
         }
     }
 
     public void moveRight() {
-        if(mazeModel.getElementAt(playerX + 1, playerY).canEnter()) {
+        if(mazeModel.getElementAt(playerX+1, playerY).canEnter()) {
             playerX++;
             notifyChange();
 
@@ -33,7 +33,7 @@ public class PlayerModel extends Observable {
     }
 
     public void moveUp() {
-        if(mazeModel.getElementAt(playerX, playerY - 1).canEnter()) {
+        if(mazeModel.getElementAt(playerX, playerY-1).canEnter()) {
             playerY--;
             notifyChange();
 
@@ -41,13 +41,11 @@ public class PlayerModel extends Observable {
     }
 
     public void moveDown() {
-        if(mazeModel.getElementAt(playerX, playerY + 1).canEnter()) {
+        if(mazeModel.getElementAt(playerX, playerY+1).canEnter()) {
             playerY++;
             notifyChange();
-
         }
     }
-
 
     private void notifyChange() {
         setChanged();
