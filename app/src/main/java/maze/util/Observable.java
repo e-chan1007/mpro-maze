@@ -1,3 +1,5 @@
+package maze.util;
+
 import java.util.ArrayList;
 
 public class Observable {

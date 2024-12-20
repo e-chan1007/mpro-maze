@@ -1,1 +1,1 @@
-javac *.java
+./gradlew build

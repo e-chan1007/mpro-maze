@@ -1,3 +1,8 @@
+package maze.maze.player;
+
+import maze.maze.*;
+import maze.util.*;
+
 public class PlayerModel extends Observable {
     private int playerX = 1;
     private int playerY = 1;

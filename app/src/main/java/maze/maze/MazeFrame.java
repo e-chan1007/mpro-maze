@@ -1,5 +1,9 @@
+package maze.maze;
+
 import java.awt.*;
 import javax.swing.*;
+
+import maze.maze.player.*;
 
 /**
  * 迷路の盤面を表示するJFrame

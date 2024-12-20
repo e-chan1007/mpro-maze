@@ -1,6 +1,9 @@
+package maze.maze.player;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
+import maze.maze.*;
 
 public class PlayerView {
     private PlayerModel playerModel;

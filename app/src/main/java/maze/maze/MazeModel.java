@@ -1,10 +1,16 @@
-import java.nio.file.*;
+package maze.maze;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import maze.maze.element.*;
 
 /**
  * 迷路の盤面を管理するモデル
  */
-public class MazeModel extends Observable {
+public class MazeModel extends maze.util.Observable {
   public static final int MAZE_CELL_SIZE = 48;
   private int mazeWidth;
   private int mazeHeight;
@@ -18,7 +24,7 @@ public class MazeModel extends Observable {
   }};
 
   public MazeModel() {
-    this.readFile("test.txt");
+    this.readFile("/test.txt");
   }
   /**
    * 座標が迷路の範囲内かどうか
@@ -52,8 +58,8 @@ public class MazeModel extends Observable {
 
   //* 迷路サイズを動的に取得，作成 */
   public void readFile(String path) {
-    try {
-      List<String> lines = Files.readAllLines(Path.of(path));
+    try(BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(path)))) {
+      List<String> lines = reader.lines().collect(Collectors.toList());
       int height = lines.size();
       int width = lines.stream().mapToInt(String::length).max().orElse(0);
 

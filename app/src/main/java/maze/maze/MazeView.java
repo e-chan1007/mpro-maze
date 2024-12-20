@@ -1,6 +1,10 @@
+package maze.maze;
+
 import java.awt.*;
-// import java.util.logging.Logger;
 import javax.swing.*;
+import maze.util.*;
+import maze.maze.element.*;
+import maze.maze.player.*;
 
 /**
  * 迷路の盤面を描画するView

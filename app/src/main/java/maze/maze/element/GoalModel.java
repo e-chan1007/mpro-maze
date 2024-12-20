@@ -1,5 +1,10 @@
+package maze.maze.element;
+
 import java.awt.Color;
 import java.awt.Graphics;
+
+import maze.maze.*;
+import maze.maze.player.*;
 
 public class GoalModel extends MazeElement {
   @Override
@@ -14,11 +19,5 @@ public class GoalModel extends MazeElement {
   public void draw(Graphics g, int x, int y, int size) {
     g.setColor(Color.BLUE);
     g.fillRect(x, y, size, size);
-  }
-
-  @Override
-  public void onEnter(MazeModel mazeModel, PlayerModel playerModel) {
-    
-  }
-  
+  }  
 }
