@@ -12,5 +12,10 @@ public class GoalModel extends MazeElement {
     g.setColor(Color.BLUE);
     g.fillRect(x, y, size, size);
   }
+
+  @Override
+  public void onEnter(MazeModel mazeModel, PlayerModel playerModel) {
+    
+  }
   
 }
