@@ -1,4 +1,3 @@
-import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
@@ -7,7 +6,6 @@ import java.util.*;
  */
 public class MazeModel extends Observable {
   public static final int MAZE_CELL_SIZE = 48;
-  // public static final int MAZE_SIZE = 7;
   private int mazeWidth;
   private int mazeHeight;
 
@@ -53,7 +51,6 @@ public class MazeModel extends Observable {
 
   //* 迷路サイズを動的に取得，作成 */
   public void readFile(String path) {
-    // this.elements = new MazeElement[MAZE_SIZE][MAZE_SIZE];
     try {
       List<String> lines = Files.readAllLines(Path.of(path));
       int height = lines.size();
@@ -64,10 +61,8 @@ public class MazeModel extends Observable {
       this.elements = new MazeElement[width][height];
 
       for(int y = 0; y < height; y++) {
-        // if(lines.size() <= y) break;
         String line = lines.get(y);
         for(int x = 0; x < line.length(); x++) {          
-          // if(lines.size() <= x) break;
           char c = line.charAt(x);
           Class<? extends MazeElement> elementClass = elementMap.get(c);
           if(elementClass != null) {

@@ -34,8 +34,6 @@ public class MazeView extends JPanel implements Observer {
     for (int x = 0; x < mazeModel.getMazeWidth(); x++) {
       for (int y = 0; y < mazeModel.getMazeHeight(); y++) {
         elements[x][y].draw(g, x * MazeModel.MAZE_CELL_SIZE, y * MazeModel.MAZE_CELL_SIZE, MazeModel.MAZE_CELL_SIZE);
-        //* 重いので一旦無効化 */
-        // Logger.getAnonymousLogger().info("" + elements[x][y].canEnter());
       }
     }
 

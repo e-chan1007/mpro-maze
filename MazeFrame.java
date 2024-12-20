@@ -6,7 +6,6 @@ import javax.swing.*;
  * @see MazeView
  */
 public class MazeFrame extends JFrame {
-  // MazeModel model;
   public MazeFrame() {
     MazeModel mazeModel = new MazeModel();
     PlayerModel playerModel = new PlayerModel(mazeModel);
@@ -23,6 +22,7 @@ public class MazeFrame extends JFrame {
     this.setBackground(Color.black);
     this.setTitle("Maze");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.setResizable(false);
 
     this.add(mazeView);
     this.pack();
