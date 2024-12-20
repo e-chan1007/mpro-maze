@@ -7,8 +7,8 @@ public class PathModel extends MazeElement {
 
   @Override
   public void draw(Graphics g, int x, int y, int size) {
-    g.setColor(Color.GREEN);
-    g.drawRect(x, y, size, size);
+    //g.setColor(Color.GREEN);
+    //g.drawRect(x, y, size, size);
   }
   
 }

@@ -1,6 +1,9 @@
 import java.awt.*;
 // import java.util.logging.Logger;
 import javax.swing.*;
+import java.awt.image.*;
+import java.io.*;
+import javax.imageio.ImageIO;
 
 /**
  * 迷路の盤面を描画するView
@@ -8,12 +11,20 @@ import javax.swing.*;
 public class MazeView extends JPanel implements Observer {
   protected MazeModel mazeModel;
   protected PlayerModel playerModel;
+  protected BufferedImage backgroundImage;
 
   public MazeView(MazeModel mazeModel, PlayerModel playerModel) {
     this.mazeModel = mazeModel;
     this.playerModel = playerModel;
 
-    this.setBackground(Color.white);
+    //backgroundImage = ImageIO.read(new File("image.png"));
+    try {
+      backgroundImage = ImageIO.read(new File("image.png"));
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println("image.png");
+    }
+    //this.setBackground(Color.white);
     this.setPreferredSize(
       new Dimension(
         MazeModel.MAZE_CELL_SIZE * mazeModel.getMazeWidth(),
@@ -29,6 +40,18 @@ public class MazeView extends JPanel implements Observer {
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
 
+    for (int x = 0; x < mazeModel.getMazeWidth(); x++) {
+      for (int y = 0; y < mazeModel.getMazeHeight(); y++) {
+        g.drawImage(
+          backgroundImage,
+          x * MazeModel.MAZE_CELL_SIZE,
+          y * MazeModel.MAZE_CELL_SIZE,
+          MazeModel.MAZE_CELL_SIZE,
+          MazeModel.MAZE_CELL_SIZE,
+          this
+        );
+      }
+    }
     //* 迷路を描画 */
     MazeElement elements[][] = mazeModel.getElements();
     for (int x = 0; x < mazeModel.getMazeWidth(); x++) {
