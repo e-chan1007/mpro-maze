@@ -7,7 +7,12 @@ abstract public class MazeElement {
   /**
    * 歩けるマスかどうか
    */
-  abstract public boolean canEnter();  
+  abstract public boolean canEnter();
+
+  /**
+   * マスに入ったときの処理
+   */
+  abstract public void onEnter(MazeModel mazeModel, PlayerModel playerModel);
 
   /**
    * 迷路の要素を描画する

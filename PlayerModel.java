@@ -19,6 +19,7 @@ public class PlayerModel extends Observable {
         if(mazeModel.getElementAt(playerX - 1, playerY) instanceof PathModel) {
             playerX--;
             notifyChange();
+            onMove();
         }
     }
 
@@ -26,7 +27,7 @@ public class PlayerModel extends Observable {
         if(mazeModel.getElementAt(playerX + 1, playerY) instanceof PathModel) {
             playerX++;
             notifyChange();
-
+            onMove();
         }
     }
 
@@ -34,7 +35,7 @@ public class PlayerModel extends Observable {
         if(mazeModel.getElementAt(playerX, playerY - 1) instanceof PathModel) {
             playerY--;
             notifyChange();
-
+            onMove();
         }
     }
 
@@ -42,8 +43,12 @@ public class PlayerModel extends Observable {
         if(mazeModel.getElementAt(playerX, playerY + 1) instanceof PathModel) {
             playerY++;
             notifyChange();
-
+            onMove();
         }
+    }
+
+    private void onMove() {
+        mazeModel.getElementAt(playerX, playerX).onEnter(mazeModel, this);
     }
 
     private void notifyChange() {
