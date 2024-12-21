@@ -2,7 +2,6 @@ package maze.maze.player;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import javax.swing.JPanel;
 import maze.maze.*;
 
 public class PlayerView {
@@ -14,6 +13,10 @@ public class PlayerView {
 
     public void draw(Graphics g) {
         g.setColor(Color.red);
-        g.fillOval(playerModel.getPlayerX() * MazeModel.MAZE_CELL_SIZE, playerModel.getPlayerY() * MazeModel.MAZE_CELL_SIZE, MazeModel.MAZE_CELL_SIZE, MazeModel.MAZE_CELL_SIZE);
+        g.fillOval(
+                playerModel.getPlayerX() * MazeModel.MAZE_CELL_SIZE + MazeModel.MAZE_CELL_SIZE / 4,
+                playerModel.getPlayerY() * MazeModel.MAZE_CELL_SIZE + MazeModel.MAZE_CELL_SIZE / 4,
+                MazeModel.MAZE_CELL_SIZE * 2 / 4,
+                MazeModel.MAZE_CELL_SIZE * 2 / 4);
     }
 }

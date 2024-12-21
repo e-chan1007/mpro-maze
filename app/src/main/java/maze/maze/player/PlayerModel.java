@@ -15,13 +15,13 @@ public class PlayerModel extends Observable {
         this.mazeModel.addObserver((Observable observable, Object object) -> {
             setStartPos();
         });
-        
+
         setStartPos();
     }
 
     private void setStartPos() {
         int startPos[] = mazeModel.locateElement(StartModel.class);
-        if(startPos != null) {
+        if (startPos != null) {
             playerX = startPos[0];
             playerY = startPos[1];
         }
@@ -36,7 +36,7 @@ public class PlayerModel extends Observable {
     }
 
     public void moveLeft() {
-        if(mazeModel.getElementAt(playerX-1, playerY).canEnter()) {
+        if (mazeModel.getElementAt(playerX - 1, playerY).canEnter()) {
             playerX--;
             notifyChange();
             onMove();
@@ -44,7 +44,7 @@ public class PlayerModel extends Observable {
     }
 
     public void moveRight() {
-        if(mazeModel.getElementAt(playerX+1, playerY).canEnter()) {
+        if (mazeModel.getElementAt(playerX + 1, playerY).canEnter()) {
             playerX++;
             notifyChange();
             onMove();
@@ -52,7 +52,7 @@ public class PlayerModel extends Observable {
     }
 
     public void moveUp() {
-        if(mazeModel.getElementAt(playerX, playerY-1).canEnter()) {
+        if (mazeModel.getElementAt(playerX, playerY - 1).canEnter()) {
             playerY--;
             notifyChange();
             onMove();
@@ -60,7 +60,7 @@ public class PlayerModel extends Observable {
     }
 
     public void moveDown() {
-        if(mazeModel.getElementAt(playerX, playerY+1).canEnter()) {
+        if (mazeModel.getElementAt(playerX, playerY + 1).canEnter()) {
             playerY++;
             notifyChange();
             onMove();

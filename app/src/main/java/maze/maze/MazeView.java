@@ -21,21 +21,19 @@ public class MazeView extends JPanel implements Observer {
 
     this.setBackground(Color.white);
     this.setPreferredSize(
-      new Dimension(
-        MazeModel.MAZE_CELL_SIZE * mazeModel.getMazeWidth(),
-        MazeModel.MAZE_CELL_SIZE * mazeModel.getMazeHeight()
-      )
-    );
+        new Dimension(
+            MazeModel.MAZE_CELL_SIZE * mazeModel.getMazeWidth(),
+            MazeModel.MAZE_CELL_SIZE * mazeModel.getMazeHeight()));
     this.setFocusable(true);
-    // model = m;
     mazeModel.addObserver(this);
+    mazeModel.setView(this);
   }
 
   @Override
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
 
-    //* 迷路を描画 */
+    // * 迷路を描画 */
     MazeElement elements[][] = mazeModel.getElements();
     for (int x = 0; x < mazeModel.getMazeWidth(); x++) {
       for (int y = 0; y < mazeModel.getMazeHeight(); y++) {
