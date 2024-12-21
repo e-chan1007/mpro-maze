@@ -9,6 +9,9 @@ import javax.swing.Timer;
 public class PlayerModel extends Observable {
     private float playerX = 1;
     private float playerY = 1;
+    private boolean keyAcc = true;
+    private int steps = 30;
+    private int delay = 1;
     MazeModel mazeModel = new MazeModel();
 
     public PlayerModel(MazeModel mazeModel) {
@@ -17,13 +20,13 @@ public class PlayerModel extends Observable {
         this.mazeModel.addObserver((Observable observable, Object object) -> {
             setStartPos();
         });
-        
+
         setStartPos();
     }
 
     private void setStartPos() {
         int startPos[] = mazeModel.locateElement(StartModel.class);
-        if(startPos != null) {
+        if (startPos != null) {
             playerX = startPos[0];
             playerY = startPos[1];
         }
@@ -37,48 +40,88 @@ public class PlayerModel extends Observable {
         return playerY;
     }
 
-    //* 連続的な動き試作 */
+    // * 連続的な動き試作 */
     public void moveLeft() {
-        if(mazeModel.getElementAt(Math.round(playerX-1), Math.round(playerY)).canEnter()) {
-            final int steps = 100;
-            final int[] currentStep = { 0 };
-
-            Timer timer = new Timer(10, e -> {
-                if ( currentStep[0] < steps) {
-                    playerX -= 0.01;
-                    notifyChange();
-                    currentStep[0]++;
-                } else {
-                    ((Timer) e.getSource()).stop();
-                }
-            });
-            timer.start();
-            // notifyChange();
-            onMove();
+        if (mazeModel.getElementAt(Math.round(playerX - 1), Math.round(playerY)).canEnter()) {
+            if (keyAcc) {
+                final int[] currentStep = { 0 };
+                keyAcc = false;
+                Timer timer = new Timer(delay, e -> {
+                    if (currentStep[0] < steps) {
+                        playerX -= 1.0 / steps;
+                        notifyChange();
+                        currentStep[0]++;
+                    } else {
+                        keyAcc = true;
+                        ((Timer) e.getSource()).stop();
+                    }
+                });
+                timer.start();
+                onMove();
+            }
         }
     }
 
     public void moveRight() {
-        if(mazeModel.getElementAt(Math.round(playerX+1), Math.round(playerY)).canEnter()) {
-            playerX++;
-            notifyChange();
-            onMove();
+        if (mazeModel.getElementAt(Math.round(playerX + 1), Math.round(playerY)).canEnter()) {
+            if (keyAcc) {
+                final int[] currentStep = { 0 };
+                keyAcc = false;
+                Timer timer = new Timer(delay, e -> {
+                    if (currentStep[0] < steps) {
+                        playerX += 1.0 / steps;
+                        notifyChange();
+                        currentStep[0]++;
+                    } else {
+                        keyAcc = true;
+                        ((Timer) e.getSource()).stop();
+                    }
+                });
+                timer.start();
+                onMove();
+            }
         }
     }
 
     public void moveUp() {
-        if(mazeModel.getElementAt(Math.round(playerX), Math.round(playerY-1)).canEnter()) {
-            playerY--;
-            notifyChange();
-            onMove();
+        if (mazeModel.getElementAt(Math.round(playerX), Math.round(playerY - 1)).canEnter()) {
+            if (keyAcc) {
+                final int[] currentStep = { 0 };
+                keyAcc = false;
+                Timer timer = new Timer(delay, e -> {
+                    if (currentStep[0] < steps) {
+                        playerY -= 1.0 / steps;
+                        notifyChange();
+                        currentStep[0]++;
+                    } else {
+                        keyAcc = true;
+                        ((Timer) e.getSource()).stop();
+                    }
+                });
+                timer.start();
+                onMove();
+            }
         }
     }
 
     public void moveDown() {
-        if(mazeModel.getElementAt(Math.round(playerX), Math.round(playerY+1)).canEnter()) {
-            playerY++;
-            notifyChange();
-            onMove();
+        if (mazeModel.getElementAt(Math.round(playerX), Math.round(playerY + 1)).canEnter()) {
+            if (keyAcc) {
+                final int[] currentStep = { 0 };
+                keyAcc = false;
+                Timer timer = new Timer(delay, e -> {
+                    if (currentStep[0] < steps) {
+                        playerY += 1.0 / steps;
+                        notifyChange();
+                        currentStep[0]++;
+                    } else {
+                        keyAcc = true;
+                        ((Timer) e.getSource()).stop();
+                    }
+                });
+                timer.start();
+                onMove();
+            }
         }
     }
 
