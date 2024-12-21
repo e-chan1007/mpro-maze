@@ -10,8 +10,8 @@ public class PlayerModel extends Observable {
     private float playerX = 1;
     private float playerY = 1;
     private boolean keyAcc = true;
-    private int steps = 30;
-    private int delay = 1;
+    private final int STEPS = 30;
+    private final int DELAY = 1;
     MazeModel mazeModel = new MazeModel();
 
     public PlayerModel(MazeModel mazeModel) {
@@ -46,9 +46,9 @@ public class PlayerModel extends Observable {
             if (keyAcc) {
                 final int[] currentStep = { 0 };
                 keyAcc = false;
-                Timer timer = new Timer(delay, e -> {
-                    if (currentStep[0] < steps) {
-                        playerX -= 1.0 / steps;
+                Timer timer = new Timer(DELAY, e -> {
+                    if (currentStep[0] < STEPS) {
+                        playerX -= 1.0 / STEPS;
                         notifyChange();
                         currentStep[0]++;
                     } else {
@@ -67,9 +67,9 @@ public class PlayerModel extends Observable {
             if (keyAcc) {
                 final int[] currentStep = { 0 };
                 keyAcc = false;
-                Timer timer = new Timer(delay, e -> {
-                    if (currentStep[0] < steps) {
-                        playerX += 1.0 / steps;
+                Timer timer = new Timer(DELAY, e -> {
+                    if (currentStep[0] < STEPS) {
+                        playerX += 1.0 / STEPS;
                         notifyChange();
                         currentStep[0]++;
                     } else {
@@ -88,9 +88,9 @@ public class PlayerModel extends Observable {
             if (keyAcc) {
                 final int[] currentStep = { 0 };
                 keyAcc = false;
-                Timer timer = new Timer(delay, e -> {
-                    if (currentStep[0] < steps) {
-                        playerY -= 1.0 / steps;
+                Timer timer = new Timer(DELAY, e -> {
+                    if (currentStep[0] < STEPS) {
+                        playerY -= 1.0 / STEPS;
                         notifyChange();
                         currentStep[0]++;
                     } else {
@@ -109,9 +109,9 @@ public class PlayerModel extends Observable {
             if (keyAcc) {
                 final int[] currentStep = { 0 };
                 keyAcc = false;
-                Timer timer = new Timer(delay, e -> {
-                    if (currentStep[0] < steps) {
-                        playerY += 1.0 / steps;
+                Timer timer = new Timer(DELAY, e -> {
+                    if (currentStep[0] < STEPS) {
+                        playerY += 1.0 / STEPS;
                         notifyChange();
                         currentStep[0]++;
                     } else {
