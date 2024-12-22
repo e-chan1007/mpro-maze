@@ -15,6 +15,8 @@ public class MazeFrame extends JFrame {
     MazeModel mazeModel = new MazeModel();
     PlayerModel playerModel = new PlayerModel(mazeModel);
     TaggerModel taggerModel = new TaggerModel(mazeModel);
+    TaggerSearchModel searchModel = new TaggerSearchModel(mazeModel, playerModel, taggerModel);
+    taggerModel.setSearchModel(searchModel);
 
     MazeView mazeView = new MazeView(mazeModel, playerModel, taggerModel);
     PlayerController playerController = new PlayerController(playerModel);
@@ -34,5 +36,7 @@ public class MazeFrame extends JFrame {
     this.add(mazeView);
     this.pack();
     this.setVisible(true);
+
+    searchModel.executeTaggerMovement();
   }
 }
