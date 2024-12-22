@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import maze.maze.player.*;
+import maze.maze.tagger.*;
 
 /**
  * 迷路の盤面を表示するJFrame
@@ -13,11 +14,13 @@ public class MazeFrame extends JFrame {
   public MazeFrame() {
     MazeModel mazeModel = new MazeModel();
     PlayerModel playerModel = new PlayerModel(mazeModel);
+    TaggerModel taggerModel = new TaggerModel(mazeModel);
 
-    MazeView mazeView = new MazeView(mazeModel, playerModel);
+    MazeView mazeView = new MazeView(mazeModel, playerModel, taggerModel);
     PlayerController playerController = new PlayerController(playerModel);
 
     playerModel.addObserver(mazeView);
+    taggerModel.addObserver(mazeView);
 
     mazeView.addKeyListener(playerController);
     mazeView.setFocusable(true);

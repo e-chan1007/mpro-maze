@@ -5,6 +5,7 @@ import javax.swing.*;
 import maze.util.*;
 import maze.maze.element.*;
 import maze.maze.player.*;
+import maze.maze.tagger.*;
 
 /**
  * 迷路の盤面を描画するView
@@ -13,11 +14,17 @@ public class MazeView extends JPanel implements Observer {
   protected MazeModel mazeModel;
   protected PlayerModel playerModel;
   protected PlayerView playerView;
+  protected TaggerModel taggerModel;
+  protected TaggerView taggerView;
 
-  public MazeView(MazeModel mazeModel, PlayerModel playerModel) {
+  public MazeView(MazeModel mazeModel, PlayerModel playerModel, TaggerModel taggerModel) {
     this.mazeModel = mazeModel;
+
     this.playerModel = playerModel;
     this.playerView = new PlayerView(playerModel);
+
+    this.taggerModel = taggerModel;
+    this.taggerView = new TaggerView(taggerModel);
 
     this.setBackground(Color.white);
     this.setPreferredSize(
@@ -42,6 +49,7 @@ public class MazeView extends JPanel implements Observer {
     }
 
     playerView.draw(g);
+    taggerView.draw(g);
   }
 
   public void update(Observable o, Object arg) {
