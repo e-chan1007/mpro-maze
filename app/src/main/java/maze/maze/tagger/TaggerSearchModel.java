@@ -111,32 +111,41 @@ public class TaggerSearchModel {
   }
 
   public void moveAlongPath(ArrayDeque<Coordinate> path) {
-    final int[] delay = { 100 }; // タイマーの遅延時間 (ms)
-    final Timer timer = new Timer(delay[0], null); // Swing Timer を作成
 
-    timer.addActionListener(e -> {
-      if (!path.isEmpty()) {
-        Coordinate next = path.pollLast();
-        if (next != null) {
-          int currentX = Math.round(taggerModel.getTaggerX());
-          int currentY = Math.round(taggerModel.getTaggerY());
-
-          if (next.x == currentX + 1) {
-            taggerModel.moveRight();
-          } else if (next.x == currentX - 1) {
-            taggerModel.moveLeft();
-          } else if (next.y == currentY + 1) {
-            taggerModel.moveDown();
-          } else if (next.y == currentY - 1) {
-            taggerModel.moveUp();
-          }
+    while (!path.isEmpty()) {
+      Coordinate next = path.pollLast();
+      if (next != null) {
+        try {
+          waitForCondition();
+        } catch (InterruptedException ex) {
+          Thread.currentThread().interrupt();
+          return;
         }
-      } else {
-        timer.stop(); // 経路が空になったらタイマーを停止
-      }
-    });
 
-    timer.start(); // タイマーを開始
+        int currentX = Math.round(taggerModel.getTaggerX());
+        int currentY = Math.round(taggerModel.getTaggerY());
+
+        if (next.x == currentX + 1) {
+          taggerModel.moveRight();
+        } else if (next.x == currentX - 1) {
+          taggerModel.moveLeft();
+        } else if (next.y == currentY + 1) {
+          taggerModel.moveDown();
+        } else if (next.y == currentY - 1) {
+          taggerModel.moveUp();
+        }
+      }
+    }
+  };
+
+  public synchronized void waitForCondition() throws InterruptedException {
+    while (!taggerModel.getFlag()) { // flagがtrueになるまで待機
+      wait();
+    }
+  }
+
+  public synchronized void signalConditionMet() {
+    notifyAll();
   }
 
   public void executeTaggerMovement() {

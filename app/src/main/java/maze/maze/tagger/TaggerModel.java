@@ -7,9 +7,10 @@ import maze.util.*;
 
 public class TaggerModel extends Observable {
   private float taggerX = 18;
-  private float taggerY =18;
+  private float taggerY = 17;
   private final int STEPS = 30;
   private final int DELAY = 1;
+  private boolean flag = true;
   MazeModel mazeModel = new MazeModel();
   private TaggerSearchModel searchModel;
 
@@ -29,82 +30,96 @@ public class TaggerModel extends Observable {
     return taggerY;
   }
 
+  public boolean getFlag() {
+    return flag;
+  }
+
   public void moveLeft() {
     if (mazeModel.getElementAt(Math.round(taggerX - 1), Math.round(taggerY)).canEnter()) {
-    //   final int[] currentStep = { 0 };
-    //   Timer timer = new Timer(DELAY, e -> {
-    //     if (currentStep[0] < STEPS) {
-    //       taggerX -= 1.0 / STEPS;
-    //       System.out.println("Moving Left: taggerX = " + taggerX); // デバッグログ
-    //       notifyChange();
-    //       currentStep[0]++;
-    //     } else {
-    //       ((Timer) e.getSource()).stop();
-    //     }
-    //   });
-    //   timer.start();
-    taggerX -= 1;
-    notifyChange();
+      if (flag) {
+        final int[] currentStep = { 0 };
+        flag = false;
+        Timer timer = new Timer(DELAY, e -> {
+          if (currentStep[0] < STEPS) {
+            taggerX -= 1.0 / STEPS;
+            System.out.println("Moving Left: taggerX = " + taggerX); // デバッグログ
+            notifyChange();
+            currentStep[0]++;
+          } else {
+            flag = true;
+            searchModel.signalConditionMet();
+            ((Timer) e.getSource()).stop();
+          }
+        });
+        timer.start();
+      }
+
     }
   }
 
   public void moveRight() {
     if (mazeModel.getElementAt(Math.round(taggerX + 1), Math.round(taggerY)).canEnter()) {
-      // final int[] currentStep = { 0 };
-      // Timer timer = new Timer(DELAY, e -> {
-      //   if (currentStep[0] < STEPS) {
-      //     taggerX += 1.0 / STEPS;
-      //     System.out.println("Moving Left: taggerX = " + taggerX); // デバッグログ
-
-      //     notifyChange();
-      //     currentStep[0]++;
-      //   } else {
-      //     ((Timer) e.getSource()).stop();
-      //   }
-      // });
-      // timer.start();
-      taggerX += 1.0;
-      notifyChange();
+      if (flag) {
+        final int[] currentStep = { 0 };
+        flag = false;
+        Timer timer = new Timer(DELAY, e -> {
+          if (currentStep[0] < STEPS) {
+            taggerX += 1.0 / STEPS;
+            System.out.println("Moving Right: taggerX = " + taggerX); // デバッグログ
+            notifyChange();
+            currentStep[0]++;
+          } else {
+            flag = true;
+            searchModel.signalConditionMet();
+            ((Timer) e.getSource()).stop();
+          }
+        });
+        timer.start();
+      }
     }
   }
 
   public void moveUp() {
     if (mazeModel.getElementAt(Math.round(taggerX), Math.round(taggerY - 1)).canEnter()) {
-      // final int[] currentStep = { 0 };
-      // Timer timer = new Timer(DELAY, e -> {
-      //   if (currentStep[0] < STEPS) {
-      //     taggerY -= 1.0 / STEPS;
-      //     System.out.println("Moving Left: taggerX = " + taggerX); // デバッグログ
-
-      //     notifyChange();
-      //     currentStep[0]++;
-      //   } else {
-      //     ((Timer) e.getSource()).stop();
-      //   }
-      // });
-      // timer.start();
-      taggerY -= 1.0;
-      notifyChange();
+      if (flag) {
+        final int[] currentStep = { 0 };
+        flag = false;
+        Timer timer = new Timer(DELAY, e -> {
+          if (currentStep[0] < STEPS) {
+            taggerY -= 1.0 / STEPS;
+            System.out.println("Moving Up: taggerY = " + taggerY); // デバッグログ
+            notifyChange();
+            currentStep[0]++;
+          } else {
+            flag = true;
+            searchModel.signalConditionMet();
+            ((Timer) e.getSource()).stop();
+          }
+        });
+        timer.start();
+      }
     }
   }
 
   public void moveDown() {
     if (mazeModel.getElementAt(Math.round(taggerX), Math.round(taggerY + 1)).canEnter()) {
-      // final int[] currentStep = { 0 };
-      // Timer timer = new Timer(DELAY, e -> {
-      //   if (currentStep[0] < STEPS) {
-      //     taggerY += 1.0 / STEPS;
-      //     System.out.println("Moving Left: taggerX = " + taggerX); // デバッグログ
-
-      //     notifyChange();
-      //     currentStep[0]++;
-      //   } else {
-      //     ((Timer) e.getSource()).stop();
-      //   }
-      // });
-      // timer.start();
-      taggerY += 1.0;
-      notifyChange();
+      if (flag) {
+        final int[] currentStep = { 0 };
+        flag = false;
+        Timer timer = new Timer(DELAY, e -> {
+          if (currentStep[0] < STEPS) {
+            taggerY += 1.0 / STEPS;
+            System.out.println("Moving Down: taggerY = " + taggerY); // デバッグログ
+            notifyChange();
+            currentStep[0]++;
+          } else {
+            flag = true;
+            searchModel.signalConditionMet();
+            ((Timer) e.getSource()).stop();
+          }
+        });
+        timer.start();
+      }
     }
   }
 
