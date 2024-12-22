@@ -1,5 +1,7 @@
 package maze.maze.tagger;
 
+import javax.swing.Timer;
+
 import maze.maze.*;
 import maze.util.*;
 
@@ -12,6 +14,7 @@ public class TaggerModel extends Observable {
 
   public TaggerModel(MazeModel mazeModel) {
     this.mazeModel = mazeModel;
+    TaggerSearchModel(mazeModel, this);
   }
 
   public float getTaggerX() {
@@ -20,5 +23,74 @@ public class TaggerModel extends Observable {
 
   public float getTaggerY() {
     return taggerY;
+  }
+
+  public void moveLeft() {
+    if (mazeModel.getElementAt(Math.round(taggerX - 1), Math.round(taggerY)).canEnter()) {
+      final int[] currentStep = { 0 };
+      Timer timer = new Timer(DELAY, e -> {
+        if (currentStep[0] < STEPS) {
+          taggerX -= 1.0 / STEPS;
+          notifyChange();
+          currentStep[0]++;
+        } else {
+          ((Timer) e.getSource()).stop();
+        }
+      });
+      timer.start();
+    }
+  }
+
+  public void moveRight() {
+    if (mazeModel.getElementAt(Math.round(taggerX + 1), Math.round(taggerY)).canEnter()) {
+      final int[] currentStep = { 0 };
+      Timer timer = new Timer(DELAY, e -> {
+        if (currentStep[0] < STEPS) {
+          taggerX += 1.0 / STEPS;
+          notifyChange();
+          currentStep[0]++;
+        } else {
+          ((Timer) e.getSource()).stop();
+        }
+      });
+      timer.start();
+    }
+  }
+
+  public void moveUp() {
+    if (mazeModel.getElementAt(Math.round(taggerX), Math.round(taggerY - 1)).canEnter()) {
+      final int[] currentStep = { 0 };
+      Timer timer = new Timer(DELAY, e -> {
+        if (currentStep[0] < STEPS) {
+          taggerY -= 1.0 / STEPS;
+          notifyChange();
+          currentStep[0]++;
+        } else {
+          ((Timer) e.getSource()).stop();
+        }
+      });
+      timer.start();
+    }
+  }
+
+  public void moveDown() {
+    if (mazeModel.getElementAt(Math.round(taggerX), Math.round(taggerY + 1)).canEnter()) {
+      final int[] currentStep = { 0 };
+      Timer timer = new Timer(DELAY, e -> {
+        if (currentStep[0] < STEPS) {
+          taggerY += 1.0 / STEPS;
+          notifyChange();
+          currentStep[0]++;
+        } else {
+          ((Timer) e.getSource()).stop();
+        }
+      });
+      timer.start();
+    }
+  }
+
+  private void notifyChange() {
+    setChanged();
+    notifyObservers();
   }
 }
