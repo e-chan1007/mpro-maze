@@ -1,11 +1,10 @@
 package maze.maze.tagger;
 
-import java.nio.charset.CoderResult;
 import java.util.ArrayDeque;
-import java.util.ConcurrentModificationException;
 import javax.swing.Timer;
-import maze.maze.MazeModel;
-import maze.maze.player.PlayerModel;
+
+import maze.maze.*;
+import maze.maze.player.*;
 
 class Coordinate {
   int x;
@@ -41,9 +40,10 @@ public class TaggerSearchModel {
 
     initializeDistance();
 
-    taggerModel.addObserver((observable, arg) -> {
-      System.out.println("Tagger位置が更新されました: (" + taggerModel.getTaggerX() + ", " + taggerModel.getTaggerY() + ")");
-    });
+    //* デバック */
+    // taggerModel.addObserver((observable, arg) -> {
+    //   System.out.println("Tagger位置が更新されました: (" + taggerModel.getTaggerX() + ", " + taggerModel.getTaggerY() + ")");
+    // });
 
     this.mazeWidth = mazeModel.getMazeWidth();
     this.mazeHeight = mazeModel.getMazeHeight();
@@ -85,14 +85,14 @@ public class TaggerSearchModel {
       }
     }
 
-    // デバッグ: BFS 結果を出力
-    System.out.println("Distance Map:");
-    for (int y = 0; y < mazeHeight; y++) {
-      for (int x = 0; x < mazeWidth; x++) {
-        System.out.print(dist[x][y] + " ");
-      }
-      System.out.println();
-    }
+    //* デバッグ: BFS 結果を出力 */ 
+    // System.out.println("Distance Map:");
+    // for (int y = 0; y < mazeHeight; y++) {
+    //   for (int x = 0; x < mazeWidth; x++) {
+    //     System.out.print(dist[x][y] + " ");
+    //   }
+    //   System.out.println();
+    // }
 
     ArrayDeque<Coordinate> stack = new ArrayDeque<>();
     if (dist[goal.x][goal.y] == -1) {
