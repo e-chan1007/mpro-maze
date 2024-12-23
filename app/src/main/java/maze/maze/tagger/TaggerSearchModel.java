@@ -1,7 +1,6 @@
 package maze.maze.tagger;
 
 import java.util.ArrayDeque;
-import javax.swing.Timer;
 
 import maze.maze.*;
 import maze.maze.player.*;
@@ -39,12 +38,9 @@ public class TaggerSearchModel {
     goal.y = Math.round(playerModel.getPlayerY());
 
     initializeDistance();
-
-    this.mazeWidth = mazeModel.getMazeWidth();
-    this.mazeHeight = mazeModel.getMazeHeight();
-
   }
 
+  // * dist[][] を初期化 */
   public void initializeDistance() {
     dist = new int[mazeWidth][mazeHeight];
     for (int x = 0; x < mazeWidth; x++) {
@@ -67,7 +63,6 @@ public class TaggerSearchModel {
         int nx = elem.x + dx[i];
         int ny = elem.y + dy[i];
 
-        // * 範囲チェック */
         if (nx >= 0 && nx < mazeWidth && ny >= 0 && ny < mazeHeight) {
           if (dist[nx][ny] == -1 && mazeModel.getElementAt(nx, ny).canEnter()) {
             Coordinate nextElem = new Coordinate();
@@ -78,17 +73,33 @@ public class TaggerSearchModel {
           }
         }
       }
+      // * プレイヤー位置までの距離が求まったらそこで探索終了 */
+      if (dist[goal.x][goal.y] != -1) {
+        break;
+      }
     }
 
+    // * dist[][] 確認用デバック */
+    for (int i = 0; i < mazeHeight; i++) {
+      for (int j = 0; j < mazeWidth; j++) {
+        System.out.printf("%3d", dist[j][i]);
+      }
+      System.out.print("\n");
+    }
+
+    // * プレイヤー位置までの移動が不可能な場合の処理 */
     ArrayDeque<Coordinate> stack = new ArrayDeque<>();
     if (dist[goal.x][goal.y] == -1) {
-      System.out.println("can not find player");
+      System.out.println("プレイヤー位置までの移動が不可能です.");
       return stack;
     }
 
     stack.add(goal);
     Coordinate elem = goal;
     int ptDistance = dist[goal.x][goal.y];
+
+    // * 目的地までの距離確認用デバック */
+    System.out.printf("Distance: %2d\n", ptDistance);
 
     while (ptDistance > 0) {
       for (int i = 0; i < 4; i++) {
@@ -106,14 +117,15 @@ public class TaggerSearchModel {
         }
       }
     }
-
     return stack;
   }
 
-  public void moveAlongPath(ArrayDeque<Coordinate> path) {
-
+  //* taggerの移動処理 */
+  public void moveToward(ArrayDeque<Coordinate> path) {
     while (!path.isEmpty()) {
       Coordinate next = path.pollLast();
+
+      //* taggerの前の移動が終わる(整数座標になる)まで待つ */
       if (next != null) {
         try {
           waitForCondition();
@@ -139,7 +151,7 @@ public class TaggerSearchModel {
   };
 
   public synchronized void waitForCondition() throws InterruptedException {
-    while (!taggerModel.getFlag()) { // flagがtrueになるまで待機
+    while (!taggerModel.getFlag()) {
       wait();
     }
   }
@@ -148,10 +160,11 @@ public class TaggerSearchModel {
     notifyAll();
   }
 
+  // * TaggerModel で呼び出す用のメソッド */
   public void executeTaggerMovement() {
     ArrayDeque<Coordinate> path = performBFS();
     if (!path.isEmpty()) {
-      moveAlongPath(path);
+      moveToward(path);
     }
   }
 }

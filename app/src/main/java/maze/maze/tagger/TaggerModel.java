@@ -6,8 +6,8 @@ import maze.maze.*;
 import maze.util.*;
 
 public class TaggerModel extends Observable {
-  private float taggerX = 18;
-  private float taggerY = 17;
+  private float taggerX = 1;
+  private float taggerY = 1;
   private final int STEPS = 30;
   private final int DELAY = 1;
   private boolean flag = true;
@@ -42,7 +42,7 @@ public class TaggerModel extends Observable {
         Timer timer = new Timer(DELAY, e -> {
           if (currentStep[0] < STEPS) {
             taggerX -= 1.0 / STEPS;
-            System.out.println("Moving Left: taggerX = " + taggerX); // デバッグログ
+            // System.out.println("Moving Left: taggerX = " + taggerX);
             notifyChange();
             currentStep[0]++;
           } else {
@@ -65,7 +65,7 @@ public class TaggerModel extends Observable {
         Timer timer = new Timer(DELAY, e -> {
           if (currentStep[0] < STEPS) {
             taggerX += 1.0 / STEPS;
-            System.out.println("Moving Right: taggerX = " + taggerX); // デバッグログ
+            // System.out.println("Moving Right: taggerX = " + taggerX);
             notifyChange();
             currentStep[0]++;
           } else {
@@ -87,7 +87,7 @@ public class TaggerModel extends Observable {
         Timer timer = new Timer(DELAY, e -> {
           if (currentStep[0] < STEPS) {
             taggerY -= 1.0 / STEPS;
-            System.out.println("Moving Up: taggerY = " + taggerY); // デバッグログ
+            // System.out.println("Moving Up: taggerY = " + taggerY);
             notifyChange();
             currentStep[0]++;
           } else {
@@ -109,7 +109,7 @@ public class TaggerModel extends Observable {
         Timer timer = new Timer(DELAY, e -> {
           if (currentStep[0] < STEPS) {
             taggerY += 1.0 / STEPS;
-            System.out.println("Moving Down: taggerY = " + taggerY); // デバッグログ
+            // System.out.println("Moving Down: taggerY = " + taggerY);
             notifyChange();
             currentStep[0]++;
           } else {
