@@ -53,7 +53,6 @@ public class TaggerModel extends Observable {
         });
         timer.start();
       }
-
     }
   }
 

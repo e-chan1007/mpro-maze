@@ -22,8 +22,8 @@ public class TaggerSearchModel {
   private Coordinate goal;
   private final int[] dx = { 1, 0, -1, 0 };
   private final int[] dy = { 0, 1, 0, -1 };
-  private final int[] numberOfSteps = { 0 };
   private final Object monitor1 = new Object();
+  private final int STEPLIMIT = 1;
 
   public TaggerSearchModel(MazeModel mazeModel, PlayerModel playerModel, TaggerModel taggerModel) {
     this.mazeModel = mazeModel;
@@ -84,12 +84,12 @@ public class TaggerSearchModel {
     }
 
     // * dist[][] 確認用デバック */
-    for (int i = 0; i < mazeHeight; i++) {
-      for (int j = 0; j < mazeWidth; j++) {
-        System.out.printf("%3d", dist[j][i]);
-      }
-      System.out.print("\n");
-    }
+    // for (int i = 0; i < mazeHeight; i++) {
+    // for (int j = 0; j < mazeWidth; j++) {
+    // System.out.printf("%3d", dist[j][i]);
+    // }
+    // System.out.print("\n");
+    // }
 
     // * プレイヤー位置までの移動が不可能な場合の処理 */
     ArrayDeque<Coordinate> stack = new ArrayDeque<>();
@@ -105,7 +105,7 @@ public class TaggerSearchModel {
     // * 目的地までの距離確認用デバック */
     // System.out.printf("Distance: %2d\n", ptDistance);
 
-    while (ptDistance > 0) {
+    while (ptDistance > 1) {
       for (int i = 0; i < 4; i++) {
         int nx = elem.x + dx[i];
         int ny = elem.y + dy[i];
@@ -125,11 +125,11 @@ public class TaggerSearchModel {
   }
 
   // * taggerの移動処理 */
-  public void moveToward(ArrayDeque<Coordinate> path) {
-    while (!path.isEmpty()) {
+  public void moveTowardPlayer(ArrayDeque<Coordinate> path, int stepLimit) {
+    int stepsTaken = 0;
 
+    while (!path.isEmpty() && stepsTaken < stepLimit) {
       Coordinate next = path.pollLast();
-
       // * taggerの前の移動が終わる(整数座標になる)まで待つ */
       if (next != null) {
         try {
@@ -152,10 +152,16 @@ public class TaggerSearchModel {
           taggerModel.moveUp();
         }
       }
+      stepsTaken++;
+
+      if (isTaggerAtPlayer()) {
+        break;
+      }
     }
+    return;
   }
 
-  // * 条件が達成されるまでずっとまってる関数 */
+  // * 条件が達成されるまで待つ */
   public void waitForCondition1() throws InterruptedException {
     synchronized (monitor1) {
       while (!taggerModel.getFlag()) {
@@ -164,39 +170,54 @@ public class TaggerSearchModel {
     }
   }
 
+  // * 条件が達成されたのを知らせる */
   public void signalConditionMet1() {
     synchronized (monitor1) {
       monitor1.notifyAll();
     }
   }
 
-  // * TaggerModel で呼び出す用のメソッド */
+  // * TaggerModel で呼び出す用 */
   public void executeTaggerMovement() {
-    numberOfSteps[0] = 0;
-    ArrayDeque<Coordinate> path = performBFS();
-    if (!path.isEmpty()) {
-      moveToward(path);
+    while (true) {
+      goal.x = Math.round(playerModel.getPlayerX());
+      goal.y = Math.round(playerModel.getPlayerY());
+
+      if (isTaggerAtPlayer()) {
+        System.out.println("Targetに到達しました.");
+        break;
+      }
+
+      ArrayDeque<Coordinate> path = performBFS();
+
+      if (path.isEmpty()) {
+        System.out.println("プレイヤーに到達できません.");
+        break;
+      }
+
+      moveTowardPlayer(path, STEPLIMIT);
+
+      // * 調整用 */
+      // try {
+      // Thread.sleep(300);
+      // } catch (InterruptedException ex) {
+      // Thread.currentThread().interrupt();
+      // }
+
+      if (isTaggerAtPlayer()) {
+        System.out.println("Targetに到達しました.");
+        break;
+      }
     }
-
-    // numberOfSteps[0] = 0;
-    // ArrayDeque<Coordinate> path2 = performBFS();
-    // if (!path2.isEmpty()) {
-    // moveToward(path2);
-    // }
-    // }
-
-    // public void waitForCondition2() throws InterruptedException {
-    // synchronized (monitor2) {
-    // while (numberOfSteps[0] < 5) {
-    // monitor2.wait();
-    // }
-    // }
-    // }
-
-    // public void signalConditionMet2() {
-    // synchronized (monitor2) {
-    // monitor2.notifyAll();
-    // }
-    // }
   }
+
+  private boolean isTaggerAtPlayer() {
+    int taggerX = Math.round(taggerModel.getTaggerX());
+    int taggerY = Math.round(taggerModel.getTaggerY());
+    int playerX = Math.round(playerModel.getPlayerX());
+    int playerY = Math.round(playerModel.getPlayerY());
+
+    return taggerX == playerX && taggerY == playerY;
+  }
+
 }
