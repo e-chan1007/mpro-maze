@@ -47,7 +47,7 @@ public class TaggerModel extends Observable {
             currentStep[0]++;
           } else {
             flag = true;
-            searchModel.signalConditionMet();
+            searchModel.signalConditionMet1();
             ((Timer) e.getSource()).stop();
           }
         });
@@ -70,7 +70,7 @@ public class TaggerModel extends Observable {
             currentStep[0]++;
           } else {
             flag = true;
-            searchModel.signalConditionMet();
+            searchModel.signalConditionMet1();
             ((Timer) e.getSource()).stop();
           }
         });
@@ -92,7 +92,7 @@ public class TaggerModel extends Observable {
             currentStep[0]++;
           } else {
             flag = true;
-            searchModel.signalConditionMet();
+            searchModel.signalConditionMet1();
             ((Timer) e.getSource()).stop();
           }
         });
@@ -114,7 +114,7 @@ public class TaggerModel extends Observable {
             currentStep[0]++;
           } else {
             flag = true;
-            searchModel.signalConditionMet();
+            searchModel.signalConditionMet1();
             ((Timer) e.getSource()).stop();
           }
         });

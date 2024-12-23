@@ -12,6 +12,7 @@ class Coordinate {
 
 public class TaggerSearchModel {
   private MazeModel mazeModel;
+  private PlayerModel playerModel;
   private TaggerModel taggerModel;
 
   private int mazeWidth;
@@ -21,17 +22,16 @@ public class TaggerSearchModel {
   private Coordinate goal;
   private final int[] dx = { 1, 0, -1, 0 };
   private final int[] dy = { 0, 1, 0, -1 };
+  private final int[] numberOfSteps = { 0 };
+  private final Object monitor1 = new Object();
 
   public TaggerSearchModel(MazeModel mazeModel, PlayerModel playerModel, TaggerModel taggerModel) {
     this.mazeModel = mazeModel;
+    this.playerModel = playerModel;
     this.taggerModel = taggerModel;
 
     this.mazeWidth = mazeModel.getMazeWidth();
     this.mazeHeight = mazeModel.getMazeHeight();
-
-    start = new Coordinate();
-    start.x = Math.round(taggerModel.getTaggerX());
-    start.y = Math.round(taggerModel.getTaggerY());
 
     goal = new Coordinate();
     goal.x = Math.round(playerModel.getPlayerX());
@@ -51,6 +51,10 @@ public class TaggerSearchModel {
   }
 
   public ArrayDeque<Coordinate> performBFS() {
+    initializeDistance();
+    start = new Coordinate();
+    start.x = Math.round(taggerModel.getTaggerX());
+    start.y = Math.round(taggerModel.getTaggerY());
     ArrayDeque<Coordinate> queue = new ArrayDeque<>();
     queue.add(start);
     dist[start.x][start.y] = 0;
@@ -99,7 +103,7 @@ public class TaggerSearchModel {
     int ptDistance = dist[goal.x][goal.y];
 
     // * 目的地までの距離確認用デバック */
-    System.out.printf("Distance: %2d\n", ptDistance);
+    // System.out.printf("Distance: %2d\n", ptDistance);
 
     while (ptDistance > 0) {
       for (int i = 0; i < 4; i++) {
@@ -120,15 +124,16 @@ public class TaggerSearchModel {
     return stack;
   }
 
-  //* taggerの移動処理 */
+  // * taggerの移動処理 */
   public void moveToward(ArrayDeque<Coordinate> path) {
     while (!path.isEmpty()) {
+
       Coordinate next = path.pollLast();
 
-      //* taggerの前の移動が終わる(整数座標になる)まで待つ */
+      // * taggerの前の移動が終わる(整数座標になる)まで待つ */
       if (next != null) {
         try {
-          waitForCondition();
+          waitForCondition1();
         } catch (InterruptedException ex) {
           Thread.currentThread().interrupt();
           return;
@@ -148,23 +153,50 @@ public class TaggerSearchModel {
         }
       }
     }
-  };
+  }
 
-  public synchronized void waitForCondition() throws InterruptedException {
-    while (!taggerModel.getFlag()) {
-      wait();
+  // * 条件が達成されるまでずっとまってる関数 */
+  public void waitForCondition1() throws InterruptedException {
+    synchronized (monitor1) {
+      while (!taggerModel.getFlag()) {
+        monitor1.wait();
+      }
     }
   }
 
-  public synchronized void signalConditionMet() {
-    notifyAll();
+  public void signalConditionMet1() {
+    synchronized (monitor1) {
+      monitor1.notifyAll();
+    }
   }
 
   // * TaggerModel で呼び出す用のメソッド */
   public void executeTaggerMovement() {
+    numberOfSteps[0] = 0;
     ArrayDeque<Coordinate> path = performBFS();
     if (!path.isEmpty()) {
       moveToward(path);
     }
+
+    // numberOfSteps[0] = 0;
+    // ArrayDeque<Coordinate> path2 = performBFS();
+    // if (!path2.isEmpty()) {
+    // moveToward(path2);
+    // }
+    // }
+
+    // public void waitForCondition2() throws InterruptedException {
+    // synchronized (monitor2) {
+    // while (numberOfSteps[0] < 5) {
+    // monitor2.wait();
+    // }
+    // }
+    // }
+
+    // public void signalConditionMet2() {
+    // synchronized (monitor2) {
+    // monitor2.notifyAll();
+    // }
+    // }
   }
 }
