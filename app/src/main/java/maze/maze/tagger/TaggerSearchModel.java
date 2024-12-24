@@ -211,7 +211,7 @@ public class TaggerSearchModel {
     }
   }
 
-  private boolean isTaggerAtPlayer() {
+  public boolean isTaggerAtPlayer() {
     int taggerX = Math.round(taggerModel.getTaggerX());
     int taggerY = Math.round(taggerModel.getTaggerY());
     int playerX = Math.round(playerModel.getPlayerX());

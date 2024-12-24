@@ -64,6 +64,7 @@ public class TaggerModel extends Observable {
         Timer timer = new Timer(DELAY, e -> {
           if (currentStep[0] < STEPS) {
             taggerX += 1.0 / STEPS;
+            
             // System.out.println("Moving Right: taggerX = " + taggerX);
             notifyChange();
             currentStep[0]++;
