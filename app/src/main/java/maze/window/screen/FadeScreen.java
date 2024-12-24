@@ -1,7 +1,9 @@
 package maze.window.screen;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.Timer;
 
@@ -10,34 +12,52 @@ import maze.window.AppScreenManager;
 public class FadeScreen extends AppScreen {
   float opacity = 0f;
 
-  public FadeScreen() {
+  public FadeScreen(Fader fader) {
+    this(fader, () -> AppScreenManager.getInstance().pop());
+  }
+
+  public FadeScreen(Fader fader, Runnable onFinished) {
     setOpaque(false);
-    Timer fadeOut = new Timer(1, e -> {
-      opacity -= 0.02f;
-      if (opacity <= 0) {
+    opacity = fader.getInitialOpacity();
+    Timer timer = new Timer(1, e -> {
+      opacity += 0.01f * fader.getSign();
+      if (opacity < 0 || opacity > 1) {
         ((Timer) e.getSource()).stop();
-        System.out.println("Fade out done");
-        AppScreenManager.getInstance().pop();
+        onFinished.run();
       }
       repaint();
     });
-    Timer fadeIn = new Timer(1, e -> {
-      opacity += 0.02f;
-      if (opacity >= 1) {
-        ((Timer) e.getSource()).stop();
-        fadeOut.start();
-        System.out.println("Fade out");
-      }
-      repaint();
-    });
-    fadeIn.start();
+
+    timer.start();
   }
 
   @Override
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
-    System.out.println("Painting fade screen" + opacity);
-    g.setColor(new Color(0, 0, 0, Math.clamp(opacity, 0.0f, 1.0f)));
-    g.fillRect(0, 0, getWidth(), getHeight());
+    Graphics2D g2d = (Graphics2D) g;
+    g2d.setColor(Color.BLACK);
+    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+    g2d.fillRect(0, 0, getWidth(), getHeight());
+  }
+
+  public static class Fader {
+    public static final Fader FADE_IN = new Fader(-1, 1);
+    public static final Fader FADE_OUT = new Fader(1, 0);
+
+    private final int sign;
+    private final float initialOpacity;
+
+    private Fader(int sign, float initialOpacity) {
+      this.sign = sign;
+      this.initialOpacity = initialOpacity;
+    }
+
+    public int getSign() {
+      return sign;
+    }
+
+    public float getInitialOpacity() {
+      return initialOpacity;
+    }
   }
 }

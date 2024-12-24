@@ -1,14 +1,17 @@
 package maze.maze;
 
-import java.awt.*;
+import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import javax.swing.*;
-import maze.util.*;
+import javax.swing.JPanel;
+
+import maze.maze.element.MazeElement;
+import maze.maze.player.PlayerModel;
+import maze.maze.player.PlayerView;
+import maze.util.Observable;
+import maze.util.Observer;
 import maze.window.AppWindow;
-import maze.maze.element.*;
-import maze.maze.player.*;
 
 /**
  * 迷路の盤面を描画するView
@@ -23,7 +26,6 @@ public class MazeView extends JPanel implements Observer {
     this.playerModel = playerModel;
     this.playerView = new PlayerView(playerModel, this);
 
-    this.setBackground(Color.yellow);
     this.setFocusable(true);
     this.requestFocusInWindow();
     mazeModel.addObserver(this);
@@ -40,14 +42,14 @@ public class MazeView extends JPanel implements Observer {
 
   private void updateSize() {
     int cellSize = getMazeCellSize();
-    setSize(new Dimension(AppWindow.getScreenWidth(), AppWindow.getScreenHeight()));
-    setPreferredSize(getSize());
-    revalidate();
+    setBounds(AppWindow.getInnerWidth() / 2 - cellSize * mazeModel.getMazeWidth() / 2,
+        AppWindow.getInnerHeight() / 2 - cellSize * mazeModel.getMazeHeight() / 2,
+        cellSize * mazeModel.getMazeWidth(), cellSize * mazeModel.getMazeHeight());
   }
 
   public int getMazeCellSize() {
-    int x = Math.clamp(AppWindow.getScreenWidth() / mazeModel.getMazeWidth(), 0, 128);
-    int y = Math.clamp(AppWindow.getScreenHeight() / mazeModel.getMazeHeight(), 0, 128);
+    int x = Math.clamp(AppWindow.getInnerWidth() / mazeModel.getMazeWidth(), 0, 128);
+    int y = Math.clamp(AppWindow.getInnerHeight() / mazeModel.getMazeHeight(), 0, 128);
     return Math.min(x, y);
   }
 
@@ -66,6 +68,7 @@ public class MazeView extends JPanel implements Observer {
     playerView.draw(g);
   }
 
+  @Override
   public void update(Observable o, Object arg) {
     repaint();
   }
