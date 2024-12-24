@@ -2,6 +2,7 @@ package maze.maze.player;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
 public class PlayerController implements KeyListener {
   private PlayerModel playerModel;
 
@@ -15,13 +16,13 @@ public class PlayerController implements KeyListener {
     if (keyCode == KeyEvent.VK_LEFT) {
       // Move player left
       playerModel.moveLeft();
-    } else if(keyCode == KeyEvent.VK_RIGHT) {
+    } else if (keyCode == KeyEvent.VK_RIGHT) {
       // Move player right
       playerModel.moveRight();
-    } else if(keyCode == KeyEvent.VK_UP) {
+    } else if (keyCode == KeyEvent.VK_UP) {
       // Move player up
       playerModel.moveUp();
-    } else if(keyCode == KeyEvent.VK_DOWN) {
+    } else if (keyCode == KeyEvent.VK_DOWN) {
       // Move player down
       playerModel.moveDown();
     }

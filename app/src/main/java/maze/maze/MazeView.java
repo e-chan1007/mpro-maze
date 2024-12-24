@@ -1,8 +1,12 @@
 package maze.maze;
 
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
 import javax.swing.*;
 import maze.util.*;
+import maze.window.AppWindow;
 import maze.maze.element.*;
 import maze.maze.player.*;
 
@@ -17,16 +21,34 @@ public class MazeView extends JPanel implements Observer {
   public MazeView(MazeModel mazeModel, PlayerModel playerModel) {
     this.mazeModel = mazeModel;
     this.playerModel = playerModel;
-    this.playerView = new PlayerView(playerModel);
+    this.playerView = new PlayerView(playerModel, this);
 
-    this.setBackground(Color.white);
-    this.setPreferredSize(
-        new Dimension(
-            MazeModel.MAZE_CELL_SIZE * mazeModel.getMazeWidth(),
-            MazeModel.MAZE_CELL_SIZE * mazeModel.getMazeHeight()));
+    this.setBackground(Color.yellow);
     this.setFocusable(true);
+    this.requestFocusInWindow();
     mazeModel.addObserver(this);
     mazeModel.setView(this);
+
+    addComponentListener(new ComponentAdapter() {
+      @Override
+      public void componentResized(ComponentEvent e) {
+        updateSize();
+      }
+    });
+    updateSize();
+  }
+
+  private void updateSize() {
+    int cellSize = getMazeCellSize();
+    setSize(new Dimension(AppWindow.getScreenWidth(), AppWindow.getScreenHeight()));
+    setPreferredSize(getSize());
+    revalidate();
+  }
+
+  public int getMazeCellSize() {
+    int x = Math.clamp(AppWindow.getScreenWidth() / mazeModel.getMazeWidth(), 0, 128);
+    int y = Math.clamp(AppWindow.getScreenHeight() / mazeModel.getMazeHeight(), 0, 128);
+    return Math.min(x, y);
   }
 
   @Override
@@ -37,7 +59,7 @@ public class MazeView extends JPanel implements Observer {
     MazeElement elements[][] = mazeModel.getElements();
     for (int x = 0; x < mazeModel.getMazeWidth(); x++) {
       for (int y = 0; y < mazeModel.getMazeHeight(); y++) {
-        elements[x][y].draw(g, x * MazeModel.MAZE_CELL_SIZE, y * MazeModel.MAZE_CELL_SIZE, MazeModel.MAZE_CELL_SIZE);
+        elements[x][y].draw(g, x * getMazeCellSize(), y * getMazeCellSize(), getMazeCellSize());
       }
     }
 

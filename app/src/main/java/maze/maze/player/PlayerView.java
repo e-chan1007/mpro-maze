@@ -9,16 +9,18 @@ import maze.maze.*;
 
 public class PlayerView {
     private PlayerModel playerModel;
+    private MazeView mazeView;
 
-    public PlayerView(PlayerModel playerModel) {
+    public PlayerView(PlayerModel playerModel, MazeView mazeView) {
         this.playerModel = playerModel;
+        this.mazeView = mazeView;
     }
 
     public void draw(Graphics g) {
         g.setColor(Color.red);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.fill(new Ellipse2D.Float(playerModel.getPlayerX() * MazeModel.MAZE_CELL_SIZE,
-                playerModel.getPlayerY() * MazeModel.MAZE_CELL_SIZE, MazeModel.MAZE_CELL_SIZE,
-                MazeModel.MAZE_CELL_SIZE));
+        g2d.fill(new Ellipse2D.Float(playerModel.getPlayerX() * mazeView.getMazeCellSize(),
+                playerModel.getPlayerY() * mazeView.getMazeCellSize(), mazeView.getMazeCellSize(),
+                mazeView.getMazeCellSize()));
     }
 }

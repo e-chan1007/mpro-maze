@@ -1,9 +1,9 @@
 package maze;
 
-import maze.maze.MazeFrame;
+import maze.window.AppWindow;
 
 public class Main {
   public static void main(String[] args) {
-    new MazeFrame();
-  }  
+    new AppWindow();
+  }
 }

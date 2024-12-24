@@ -11,7 +11,6 @@ import maze.maze.element.*;
  * 迷路の盤面を管理するモデル
  */
 public class MazeModel extends maze.util.Observable implements maze.util.Observer {
-  public static final int MAZE_CELL_SIZE = 48;
   private int mazeWidth;
   private int mazeHeight;
 
