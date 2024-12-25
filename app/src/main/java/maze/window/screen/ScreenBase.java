@@ -38,6 +38,12 @@ public abstract class ScreenBase extends JPanel {
     draw((Graphics2D) g);
   }
 
+  public void onShow() {
+  }
+
+  public void onHide() {
+  }
+
   public final void setBackgroundOpacity(float opacity) {
     bgOpacity = opacity;
     repaint();
@@ -91,6 +97,7 @@ public abstract class ScreenBase extends JPanel {
       fadeTimer = null;
       if (onFinished != null)
         onFinished.run();
+      onHide();
     });
     fadeTimer.start();
   }
@@ -110,6 +117,7 @@ public abstract class ScreenBase extends JPanel {
       fadeTimer = null;
       if (onFinished != null)
         onFinished.run();
+      onShow();
     });
     fadeTimer.start();
   }
