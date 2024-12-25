@@ -11,14 +11,13 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 
 import maze.util.Observable;
-import maze.window.screen.AppScreen;
-import maze.window.screen.FadeScreen;
-import maze.window.screen.MazeScreen;
+import maze.window.screen.MazePlayScreen;
+import maze.window.screen.ScreenBase;
 
 public class AppWindow extends JFrame {
   AppScreenManager screenManager = AppScreenManager.getInstance();
-  private static int innerWidth = 800;
-  private static int innerHeight = 600;
+  private static int innerWidth = 400;
+  private static int innerHeight = 300;
 
   public AppWindow() {
     setTitle("Maze");
@@ -29,24 +28,26 @@ public class AppWindow extends JFrame {
 
     int l[] = { 0 };
     screenManager.addObserver((Observable o, Object arg) -> {
-      List<AppScreen> visibleScreens = screenManager.getScreensAsList();
+      List<ScreenBase> visibleScreens = screenManager.getScreensAsList();
       List<Component> currentScreens = Arrays.asList(layeredPane.getComponents());
-      currentScreens.stream().filter(s -> s instanceof AppScreen && !visibleScreens.contains((AppScreen) s))
+      currentScreens.stream().filter(s -> s instanceof ScreenBase && !visibleScreens.contains((ScreenBase) s))
           .forEach(s -> {
-            layeredPane.remove(s);
-            l[0]--;
+            ((ScreenBase) s).fadeOut(() -> {
+              layeredPane.remove(s);
+              l[0]--;
+            });
           });
       visibleScreens.stream().filter(s -> !currentScreens.contains(s)).forEach(s -> {
         layeredPane.add(s);
+        s.fadeIn(null);
         layeredPane.setLayer(s, l[0]++);
       });
       revalidate();
       repaint();
-      transferFocus();
+      screenManager.peek().requestFocus();
     });
 
-    screenManager.push(new MazeScreen());
-    screenManager.push(new FadeScreen(FadeScreen.Fader.FADE_IN));
+    screenManager.push(new MazePlayScreen());
 
     add(layeredPane);
     setVisible(true);

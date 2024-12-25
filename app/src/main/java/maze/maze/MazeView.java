@@ -24,6 +24,8 @@ public class MazeView extends JPanel implements Observer {
   public MazeView(MazeModel mazeModel, PlayerModel playerModel) {
     this.mazeModel = mazeModel;
     this.playerModel = playerModel;
+    this.mazeModel.setPlayerModel(playerModel);
+    this.mazeModel.readFile("/test.txt");
     this.playerView = new PlayerView(playerModel, this);
 
     this.setFocusable(true);

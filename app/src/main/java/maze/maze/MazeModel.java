@@ -2,10 +2,20 @@ package maze.maze;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import maze.maze.element.*;
+import maze.maze.element.CollectTaskModel;
+import maze.maze.element.GoalModel;
+import maze.maze.element.MazeElement;
+import maze.maze.element.PathModel;
+import maze.maze.element.StartModel;
+import maze.maze.element.TaskElement;
+import maze.maze.element.WallModel;
+import maze.maze.player.PlayerModel;
 
 /**
  * 迷路の盤面を管理するモデル
@@ -14,9 +24,11 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
   private int mazeWidth;
   private int mazeHeight;
 
+  private PlayerModel playerModel;
   private MazeElement[][] elements;
   private List<TaskElement> tasks;
   private MazeView view;
+  private boolean isPaused = false;
 
   private Map<Character, Class<? extends MazeElement>> elementMap = new HashMap<>() {
     {
@@ -28,12 +40,12 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
     }
   };
 
-  public MazeModel() {
-    this.readFile("/test.txt");
-  }
-
   protected void setView(MazeView view) {
     this.view = view;
+  }
+
+  protected void setPlayerModel(PlayerModel playerModel) {
+    this.playerModel = playerModel;
   }
 
   /**
@@ -44,6 +56,18 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
    */
   public boolean isInMaze(int x, int y) {
     return 0 <= x && 0 <= y && x < mazeWidth && y < mazeHeight;
+  }
+
+  public void setPaused(boolean isPaused) {
+    this.isPaused = isPaused;
+  }
+
+  /**
+   * ゲームが一時停止中かどうか
+   * これがtrueの間に移動系の処理を行わないようにする
+   */
+  public boolean isPaused() {
+    return this.isPaused;
   }
 
   public MazeElement[][] getElements() {
@@ -102,7 +126,7 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
       this.mazeWidth = width;
       this.mazeHeight = height;
       this.elements = new MazeElement[width][height];
-      this.tasks = new ArrayList<TaskElement>();
+      this.tasks = new ArrayList<>();
 
       for (int y = 0; y < height; y++) {
         String line = lines.get(y);
@@ -110,7 +134,8 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
           char c = line.charAt(x);
           Class<? extends MazeElement> elementClass = elementMap.get(c);
           if (elementClass != null) {
-            MazeElement element = elementClass.getDeclaredConstructor().newInstance();
+            MazeElement element = elementClass.getDeclaredConstructor(MazeModel.class, PlayerModel.class)
+                .newInstance(this, playerModel);
             element.addObserver(this);
             this.elements[x][y] = element;
             if (element instanceof TaskElement) {

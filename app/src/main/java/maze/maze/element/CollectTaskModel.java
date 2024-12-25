@@ -6,8 +6,12 @@ import maze.maze.MazeModel;
 import maze.maze.player.PlayerModel;
 
 public class CollectTaskModel extends TaskElement {
+  public CollectTaskModel(MazeModel mazeModel, PlayerModel playerModel) {
+    super(mazeModel, playerModel);
+  }
+
   @Override
-  public void onEnter(MazeModel mazeModel, PlayerModel playerModel) {
+  public void onEnter() {
     if (!this.isTaskCompleted()) {
       this.setTaskCompleted(true);
     }

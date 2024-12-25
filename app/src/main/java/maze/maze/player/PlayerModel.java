@@ -1,10 +1,10 @@
 package maze.maze.player;
 
-import maze.maze.*;
-import maze.maze.element.StartModel;
-import maze.util.*;
-
 import javax.swing.Timer;
+
+import maze.maze.MazeModel;
+import maze.maze.element.StartModel;
+import maze.util.Observable;
 
 public class PlayerModel extends Observable {
     private float playerX = 1;
@@ -47,6 +47,8 @@ public class PlayerModel extends Observable {
                 final int[] currentStep = { 0 };
                 keyAcc = false;
                 Timer timer = new Timer(delay, e -> {
+                    if (mazeModel.isPaused())
+                        return;
                     if (currentStep[0] < steps) {
                         playerX -= 1.0 / steps;
                         notifyChange();
@@ -68,6 +70,8 @@ public class PlayerModel extends Observable {
                 final int[] currentStep = { 0 };
                 keyAcc = false;
                 Timer timer = new Timer(delay, e -> {
+                    if (mazeModel.isPaused())
+                        return;
                     if (currentStep[0] < steps) {
                         playerX += 1.0 / steps;
                         notifyChange();
@@ -89,6 +93,8 @@ public class PlayerModel extends Observable {
                 final int[] currentStep = { 0 };
                 keyAcc = false;
                 Timer timer = new Timer(delay, e -> {
+                    if (mazeModel.isPaused())
+                        return;
                     if (currentStep[0] < steps) {
                         playerY -= 1.0 / steps;
                         notifyChange();
@@ -110,6 +116,8 @@ public class PlayerModel extends Observable {
                 final int[] currentStep = { 0 };
                 keyAcc = false;
                 Timer timer = new Timer(delay, e -> {
+                    if (mazeModel.isPaused())
+                        return;
                     if (currentStep[0] < steps) {
                         playerY += 1.0 / steps;
                         notifyChange();
@@ -126,7 +134,7 @@ public class PlayerModel extends Observable {
     }
 
     private void onMove() {
-        mazeModel.getElementAt(Math.round(playerX), Math.round(playerY)).onEnter(mazeModel, this);
+        mazeModel.getElementAt(Math.round(playerX), Math.round(playerY)).onEnter();
     }
 
     private void notifyChange() {

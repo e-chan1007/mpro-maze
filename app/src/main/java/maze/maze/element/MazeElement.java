@@ -2,23 +2,34 @@ package maze.maze.element;
 
 import java.awt.Graphics;
 
-import maze.maze.*;
-import maze.maze.player.*;
+import maze.maze.MazeModel;
+import maze.maze.player.PlayerModel;
 import maze.util.Observable;
 
 /**
  * 迷路の構成要素(抽象クラス: 継承して使う)
  */
 abstract public class MazeElement extends Observable {
+  protected MazeModel mazeModel;
+  protected PlayerModel playerModel;
+
+  public MazeElement(MazeModel mazeModel, PlayerModel playerModel) {
+    this.mazeModel = mazeModel;
+    this.playerModel = playerModel;
+  }
+
   /**
    * 歩けるマスかどうか
    */
-  abstract public boolean canEnter();
+  public boolean canEnter() {
+    return true;
+  };
 
   /**
    * マスに入ったときの処理
    */
-  abstract public void onEnter(MazeModel mazeModel, PlayerModel playerModel);
+  public void onEnter() {
+  };
 
   /**
    * 迷路の要素を描画する
