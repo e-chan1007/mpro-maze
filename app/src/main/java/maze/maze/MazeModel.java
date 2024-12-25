@@ -44,6 +44,10 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
     this.view = view;
   }
 
+  public MazeView getView() {
+    return this.view;
+  }
+
   protected void setPlayerModel(PlayerModel playerModel) {
     this.playerModel = playerModel;
   }

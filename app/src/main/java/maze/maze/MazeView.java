@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import maze.maze.element.MazeElement;
 import maze.maze.player.PlayerModel;
 import maze.maze.player.PlayerView;
+import maze.maze.tagger.TaggerModel;
+import maze.maze.tagger.TaggerView;
 import maze.util.Observable;
 import maze.util.Observer;
 import maze.window.AppWindow;
@@ -20,13 +22,18 @@ public class MazeView extends JPanel implements Observer {
   protected MazeModel mazeModel;
   protected PlayerModel playerModel;
   protected PlayerView playerView;
+  protected TaggerModel taggerModel;
+  protected TaggerView taggerView;
 
-  public MazeView(MazeModel mazeModel, PlayerModel playerModel) {
+  public MazeView(MazeModel mazeModel, PlayerModel playerModel, TaggerModel taggerModel) {
     this.mazeModel = mazeModel;
+
     this.playerModel = playerModel;
     this.mazeModel.setPlayerModel(playerModel);
     this.mazeModel.readFile("/test.txt");
     this.playerView = new PlayerView(playerModel, this);
+    this.taggerModel = taggerModel;
+    this.taggerView = new TaggerView(taggerModel);
 
     this.setFocusable(true);
     this.requestFocusInWindow();
@@ -68,6 +75,7 @@ public class MazeView extends JPanel implements Observer {
     }
 
     playerView.draw(g);
+    taggerView.draw(g);
   }
 
   @Override

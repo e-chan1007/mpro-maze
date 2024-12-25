@@ -1,11 +1,11 @@
 package maze.maze.player;
 
-import java.awt.*;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 
-import maze.maze.*;
+import maze.maze.MazeView;
 
 public class PlayerView {
     private PlayerModel playerModel;
