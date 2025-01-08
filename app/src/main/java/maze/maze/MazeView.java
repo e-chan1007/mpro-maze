@@ -25,6 +25,9 @@ public class MazeView extends JPanel implements Observer {
   protected TaggerModel taggerModel;
   protected TaggerView taggerView;
 
+  private int anchorX = 0;
+  private int anchorY = 0;
+
   public MazeView(MazeModel mazeModel, PlayerModel playerModel, TaggerModel taggerModel) {
     this.mazeModel = mazeModel;
 
@@ -38,6 +41,7 @@ public class MazeView extends JPanel implements Observer {
     this.setFocusable(true);
     this.requestFocusInWindow();
     mazeModel.addObserver(this);
+    playerModel.addObserver(this);
     mazeModel.setView(this);
 
     addComponentListener(new ComponentAdapter() {
@@ -47,6 +51,7 @@ public class MazeView extends JPanel implements Observer {
       }
     });
     updateSize();
+    updateAnchor();
   }
 
   private void updateSize() {
@@ -57,8 +62,9 @@ public class MazeView extends JPanel implements Observer {
   }
 
   public int getMazeCellSize() {
-    int x = Math.clamp(AppWindow.getInnerWidth() / mazeModel.getMazeWidth(), 0, 128);
-    int y = Math.clamp(AppWindow.getInnerHeight() / mazeModel.getMazeHeight(), 0, 128);
+    int fovSize = 8;
+    int x = Math.clamp(AppWindow.getInnerWidth() / fovSize, 0, 256);
+    int y = Math.clamp(AppWindow.getInnerHeight() / fovSize, 0, 256);
     return Math.min(x, y);
   }
 
@@ -70,16 +76,27 @@ public class MazeView extends JPanel implements Observer {
     MazeElement elements[][] = mazeModel.getElements();
     for (int x = 0; x < mazeModel.getMazeWidth(); x++) {
       for (int y = 0; y < mazeModel.getMazeHeight(); y++) {
-        elements[x][y].draw(g, x * getMazeCellSize(), y * getMazeCellSize(), getMazeCellSize());
+        elements[x][y].draw(g, anchorX + x * getMazeCellSize(), anchorY + y * getMazeCellSize(), getMazeCellSize());
       }
     }
 
     playerView.draw(g);
-    taggerView.draw(g);
+    taggerView.draw(g, anchorX, anchorY);
+
+    MazeFogView.draw(g, getWidth(), getHeight());
+  }
+
+  private void updateAnchor() {
+    anchorX = (int) (((mazeModel.getMazeWidth() - 0.5) * getMazeCellSize()) / 2
+        - playerModel.getPlayerX() * getMazeCellSize());
+    anchorY = (int) (((mazeModel.getMazeHeight() - 0.5) * getMazeCellSize()) / 2
+        - playerModel.getPlayerY() * getMazeCellSize());
   }
 
   @Override
   public void update(Observable o, Object arg) {
+    if (o == playerModel)
+      updateAnchor();
     repaint();
   }
 }

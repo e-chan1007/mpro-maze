@@ -12,13 +12,13 @@ public class TaggerView {
     this.taggerModel = taggerModel;
   }
 
-  public void draw(Graphics g) {
+  public void draw(Graphics g, int anchorX, int anchorY) {
     g.setColor(Color.yellow);
     Graphics2D g2d = (Graphics2D) g;
     int mazeCellSize = taggerModel.getMazeModel().getView().getMazeCellSize();
     g2d.fill(new Ellipse2D.Float(
-        taggerModel.getTaggerX() * mazeCellSize,
-        taggerModel.getTaggerY() * mazeCellSize,
+        anchorX + taggerModel.getTaggerX() * mazeCellSize,
+        anchorY + taggerModel.getTaggerY() * mazeCellSize,
         mazeCellSize,
         mazeCellSize));
   }

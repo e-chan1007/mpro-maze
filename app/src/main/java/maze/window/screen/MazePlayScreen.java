@@ -1,6 +1,7 @@
 package maze.window.screen;
 
 import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import maze.maze.MazeModel;
 import maze.maze.MazeView;
@@ -34,9 +35,9 @@ public class MazePlayScreen extends ScreenBase {
 
     mazeView.addKeyListener(new KeyAdapter() {
       @Override
-      public void keyPressed(java.awt.event.KeyEvent e) {
+      public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-          case java.awt.event.KeyEvent.VK_ESCAPE -> {
+          case KeyEvent.VK_ESCAPE -> {
             mazeModel.setPaused(true);
             AppScreenManager.getInstance().push(new MazePauseScreen(mazeModel));
           }

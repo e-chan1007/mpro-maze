@@ -19,8 +19,15 @@ public class PlayerView {
     public void draw(Graphics g) {
         g.setColor(Color.red);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.fill(new Ellipse2D.Float(playerModel.getPlayerX() * mazeView.getMazeCellSize(),
-                playerModel.getPlayerY() * mazeView.getMazeCellSize(), mazeView.getMazeCellSize(),
+        g2d.fill(new Ellipse2D.Float(
+                (playerModel.mazeModel.getMazeWidth() - 0.5f) * mazeView.getMazeCellSize() / 2,
+                (playerModel.mazeModel.getMazeHeight() - 0.5f) * mazeView.getMazeCellSize() / 2,
+                mazeView.getMazeCellSize(),
                 mazeView.getMazeCellSize()));
+        // g2d.fill(new Ellipse2D.Float(playerModel.getPlayerX() *
+        // mazeView.getMazeCellSize(),
+        // playerModel.getPlayerY() * mazeView.getMazeCellSize(),
+        // mazeView.getMazeCellSize(),
+        // mazeView.getMazeCellSize()));
     }
 }
