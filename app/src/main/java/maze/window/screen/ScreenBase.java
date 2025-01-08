@@ -21,6 +21,7 @@ public abstract class ScreenBase extends JPanel {
 
   public ScreenBase() {
     setOpaque(false);
+    setOpacity(0);
     setSize(new Dimension(AppWindow.getInnerWidth(), AppWindow.getInnerHeight()));
   }
 

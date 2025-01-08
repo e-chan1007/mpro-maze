@@ -11,8 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 
 import maze.util.Observable;
-import maze.window.screen.MazePlayScreen;
 import maze.window.screen.ScreenBase;
+import maze.window.screen.StartScreen;
 
 public class AppWindow extends JFrame {
   AppScreenManager screenManager = AppScreenManager.getInstance();
@@ -47,7 +47,7 @@ public class AppWindow extends JFrame {
       screenManager.peek().requestFocus();
     });
 
-    screenManager.push(new MazePlayScreen());
+    screenManager.push(new StartScreen());
 
     add(layeredPane);
     setVisible(true);
