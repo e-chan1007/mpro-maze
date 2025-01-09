@@ -4,13 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import maze.maze.MazeModel;
-import maze.maze.player.PlayerModel;
 import maze.window.AppScreenManager;
 import maze.window.screen.MazeGoalScreen;
 
 public class GoalModel extends MazeElement {
-  public GoalModel(MazeModel mazeModel, PlayerModel playerModel) {
-    super(mazeModel, playerModel);
+  private final MazeModel mazeModel;
+
+  public GoalModel(MazeModel mazeModel) {
+    this.mazeModel = mazeModel;
   }
 
   @Override

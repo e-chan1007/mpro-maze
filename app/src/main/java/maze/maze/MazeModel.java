@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import maze.maze.element.CollectTaskModel;
@@ -29,16 +30,6 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
   private List<TaskElement> tasks;
   private MazeView view;
   private boolean isPaused = false;
-
-  private Map<Character, Class<? extends MazeElement>> elementMap = new HashMap<>() {
-    {
-      put('#', WallModel.class);
-      put(' ', PathModel.class);
-      put('G', GoalModel.class);
-      put('S', StartModel.class);
-      put('1', CollectTaskModel.class);
-    }
-  };
 
   protected void setView(MazeView view) {
     this.view = view;
@@ -132,19 +123,44 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
       this.elements = new MazeElement[width][height];
       this.tasks = new ArrayList<>();
 
+      final Map<Character, Supplier<? extends MazeElement>> elementMap = new HashMap<>() {
+        {
+          put('#', () -> new WallModel(WallModel.WallType.TOP_EDGE)); // 互換性
+          put(' ', () -> new PathModel());
+          put('G', () -> new GoalModel(MazeModel.this));
+          put('S', () -> new StartModel());
+          put('1', () -> new CollectTaskModel());
+
+          put('┌', () -> new WallModel(WallModel.WallType.LEFT_TOP_CORNER));
+          put('┬', () -> new WallModel(WallModel.WallType.TOP_EDGE));
+          put('┐', () -> new WallModel(WallModel.WallType.RIGHT_TOP_CORNER));
+          put('├', () -> new WallModel(WallModel.WallType.LEFT_EDGE));
+          put('┤', () -> new WallModel(WallModel.WallType.RIGHT_EDGE));
+          put('└', () -> new WallModel(WallModel.WallType.LEFT_BOTTOM_CORNER));
+          put('┴', () -> new WallModel(WallModel.WallType.BOTTOM_EDGE));
+          put('┘', () -> new WallModel(WallModel.WallType.RIGHT_BOTTOM_CORNER));
+          put('　', () -> new PathModel());
+          put('Ｓ', () -> new StartModel());
+          put('Ｇ', () -> new GoalModel(MazeModel.this));
+          put('１', () -> new CollectTaskModel());
+        }
+      };
+
       for (int y = 0; y < height; y++) {
         String line = lines.get(y);
         for (int x = 0; x < line.length(); x++) {
           char c = line.charAt(x);
-          Class<? extends MazeElement> elementClass = elementMap.get(c);
-          if (elementClass != null) {
-            MazeElement element = elementClass.getDeclaredConstructor(MazeModel.class, PlayerModel.class)
-                .newInstance(this, playerModel);
+          Supplier<? extends MazeElement> elementSupplier = elementMap.get(c);
+          if (elementSupplier != null) {
+            MazeElement element = elementSupplier.get();
             element.addObserver(this);
             this.elements[x][y] = element;
-            if (element instanceof TaskElement) {
-              this.tasks.add((TaskElement) element);
+            if (element instanceof TaskElement taskElement) {
+              this.tasks.add(taskElement);
             }
+          } else {
+            System.out.println("Unknown character: " + c);
+            System.exit(1);
           }
         }
       }

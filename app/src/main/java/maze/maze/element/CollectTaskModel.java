@@ -2,14 +2,7 @@ package maze.maze.element;
 
 import java.awt.Graphics;
 
-import maze.maze.MazeModel;
-import maze.maze.player.PlayerModel;
-
 public class CollectTaskModel extends TaskElement {
-  public CollectTaskModel(MazeModel mazeModel, PlayerModel playerModel) {
-    super(mazeModel, playerModel);
-  }
-
   @Override
   public void onEnter() {
     if (!this.isTaskCompleted()) {
