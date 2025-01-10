@@ -1,6 +1,7 @@
 package maze.maze.tagger;
 
 import java.util.ArrayDeque;
+import javax.swing.Timer;
 
 import maze.maze.MazeModel;
 import maze.maze.player.PlayerModel;
@@ -51,7 +52,7 @@ public class TaggerSearchModel {
 
   // * ランダムウォーク */
   public void randomWalk() {
-    int random = (int)(Math.random() * 4);
+    int random = (int) (Math.random() * 4);
     switch (random) {
       case 0:
         taggerModel.moveLeft();
@@ -162,8 +163,17 @@ public class TaggerSearchModel {
       }
       stepsTaken++;
 
-      if (isTaggerAtPlayer()) {
-        break;
+      final int DELAY = 3000;
+      // * taggerがプレイヤーに到達したら一時停止 */
+      if (taggerModel.taggerArrivedFlag) {
+        try {
+          Thread.sleep(DELAY);
+          taggerModel.taggerArrivedFlag = false;
+        } catch (InterruptedException ex) {
+          Thread.currentThread().interrupt();
+          return;
+        }
+        // break;
       }
     }
   }
@@ -171,7 +181,7 @@ public class TaggerSearchModel {
   // * 条件が達成されるまで待つ */
   private void waitForCondition1() throws InterruptedException {
     synchronized (monitor1) {
-      while (!taggerModel.getFlag()) {
+      while (!taggerModel.getCanMoveFlag()) {
         monitor1.wait();
       }
     }
@@ -190,10 +200,10 @@ public class TaggerSearchModel {
       goal.x = Math.round(playerModel.getPlayerX());
       goal.y = Math.round(playerModel.getPlayerY());
 
-      if (isTaggerAtPlayer()) {
-        System.out.println("Targetに到達しました.");
-        break;
-      }
+      // if (taggerModel.taggerArrivedFlag) {
+      //   System.out.println("Targetに到達しました.");
+      //   break;
+      // }
 
       if (isTaggerinRange()) {
         ArrayDeque<Coordinate> path = performBFS();
@@ -213,14 +223,14 @@ public class TaggerSearchModel {
       // Thread.currentThread().interrupt();
       // }
 
-      if (isTaggerAtPlayer()) {
-        System.out.println("Targetに到達しました.");
-        break;
-      }
+      // if (taggerModel.taggerArrivedFlag) {
+      //   System.out.println("Targetに到達しました.");
+      //   break;
+      // }
     }
   }
 
-  private boolean isTaggerAtPlayer() {
+  public boolean isTaggerAtPlayer() {
     int taggerX = Math.round(taggerModel.getTaggerX());
     int taggerY = Math.round(taggerModel.getTaggerY());
     int playerX = Math.round(playerModel.getPlayerX());
@@ -231,6 +241,7 @@ public class TaggerSearchModel {
 
   // * プレイヤーと鬼が RANGE 内にいるかどうかの判定*/
   private final int RANGE = 5;
+
   public boolean isTaggerinRange() {
     int taggerX = Math.round(taggerModel.getTaggerX());
     int taggerY = Math.round(taggerModel.getTaggerY());
@@ -238,10 +249,10 @@ public class TaggerSearchModel {
     int playerY = Math.round(playerModel.getPlayerY());
 
     if ((playerX * playerX + playerY * playerY) - (taggerX * taggerX + taggerY * taggerY) <= RANGE * RANGE) {
-      System.out.println("Tagger is in range");
+      // System.out.println("Tagger is in range");
       return true;
     } else {
-      System.out.println("Tagger is not in range");
+      // System.out.println("Tagger is not in range");
       return false;
     }
   }
