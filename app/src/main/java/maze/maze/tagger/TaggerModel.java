@@ -48,7 +48,6 @@ public class TaggerModel extends Observable {
             return;
           if (currentStep[0] < STEPS) {
             taggerX -= 1.0 / STEPS;
-            // System.out.println("Moving Left: taggerX = " + taggerX);
             notifyChange();
             currentStep[0]++;
           } else {
@@ -72,8 +71,6 @@ public class TaggerModel extends Observable {
             return;
           if (currentStep[0] < STEPS) {
             taggerX += 1.0 / STEPS;
-
-            // System.out.println("Moving Right: taggerX = " + taggerX);
             notifyChange();
             currentStep[0]++;
           } else {
@@ -97,7 +94,6 @@ public class TaggerModel extends Observable {
             return;
           if (currentStep[0] < STEPS) {
             taggerY -= 1.0 / STEPS;
-            // System.out.println("Moving Up: taggerY = " + taggerY);
             notifyChange();
             currentStep[0]++;
           } else {
@@ -121,7 +117,6 @@ public class TaggerModel extends Observable {
             return;
           if (currentStep[0] < STEPS) {
             taggerY += 1.0 / STEPS;
-            // System.out.println("Moving Down: taggerY = " + taggerY);
             notifyChange();
             currentStep[0]++;
           } else {

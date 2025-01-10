@@ -82,27 +82,17 @@ public class TaggerSearchModel {
       }
     }
 
-    // * dist[][] 確認用デバック */
-    // for (int i = 0; i < mazeHeight; i++) {
-    // for (int j = 0; j < mazeWidth; j++) {
-    // System.out.printf("%3d", dist[j][i]);
-    // }
-    // System.out.print("\n");
-    // }
+    ArrayDeque<Coordinate> stack = new ArrayDeque<>();
 
     // * プレイヤー位置までの移動が不可能な場合の処理 */
-    ArrayDeque<Coordinate> stack = new ArrayDeque<>();
-    if (dist[goal.x][goal.y] == -1) {
-      System.out.println("プレイヤー位置までの移動が不可能です.");
-      return stack;
-    }
+    // if (dist[goal.x][goal.y] == -1) {
+    //   System.out.println("プレイヤー位置までの移動が不可能です.");
+    //   return stack;
+    // }
 
     stack.add(goal);
     Coordinate elem = goal;
     int ptDistance = dist[goal.x][goal.y];
-
-    // * 目的地までの距離確認用デバック */
-    // System.out.printf("Distance: %2d\n", ptDistance);
 
     while (ptDistance > 1) {
       for (int i = 0; i < 4; i++) {
@@ -185,6 +175,8 @@ public class TaggerSearchModel {
         System.out.println("Targetに到達しました.");
         break;
       }
+
+      
 
       ArrayDeque<Coordinate> path = performBFS();
 
