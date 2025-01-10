@@ -11,7 +11,7 @@ public class PlayerModel extends Observable {
     private float playerY = 1;
     private boolean keyAcc = true;
     private final int STEPS = 15;
-    private final int DELAY = 1;
+    private final int DELAY = 1000 / 60;
     MazeModel mazeModel = new MazeModel();
 
     public PlayerModel(MazeModel mazeModel) {

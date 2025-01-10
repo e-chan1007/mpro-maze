@@ -9,7 +9,7 @@ public class TaggerModel extends Observable {
   private float taggerX = 1;
   private float taggerY = 1;
   private final int STEPS = 30;
-  private final int DELAY = 1;
+  private final int DELAY = 1000 / 60;
   private boolean flag = true;
   MazeModel mazeModel = new MazeModel();
   private TaggerSearchModel searchModel;
