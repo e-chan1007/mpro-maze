@@ -2,6 +2,7 @@ package maze.maze.element;
 
 import java.awt.Graphics;
 
+import maze.maze.MazeModel;
 import maze.util.Observable;
 
 /**
@@ -19,6 +20,9 @@ abstract public class MazeElement extends Observable {
    * マスに入ったときの処理
    */
   public void onEnter() {
+  };
+
+  public void onAllInitiated(MazeModel mazeModel, int myX, int myY) {
   };
 
   /**

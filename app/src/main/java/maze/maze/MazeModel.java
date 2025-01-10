@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import maze.maze.element.CollectTaskModel;
+import maze.maze.element.EmptyModel;
 import maze.maze.element.GoalModel;
 import maze.maze.element.MazeElement;
 import maze.maze.element.PathModel;
@@ -139,6 +140,10 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
           put('└', () -> new WallModel(WallModel.WallType.LEFT_BOTTOM_CORNER));
           put('┴', () -> new WallModel(WallModel.WallType.BOTTOM_EDGE));
           put('┘', () -> new WallModel(WallModel.WallType.RIGHT_BOTTOM_CORNER));
+
+          put('┏', () -> new WallModel(WallModel.WallType.TOP_LEFT_CORNER_2));
+          put('┓', () -> new WallModel(WallModel.WallType.TOP_RIGHT_CORNER_2));
+
           put('　', () -> new PathModel());
           put('Ｓ', () -> new StartModel());
           put('Ｇ', () -> new GoalModel(MazeModel.this));
@@ -159,9 +164,14 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
               this.tasks.add(taskElement);
             }
           } else {
+            this.elements[x][y] = new EmptyModel();
             System.out.println("Unknown character: " + c);
-            System.exit(1);
           }
+        }
+      }
+      for(int y = 0; y < height; y++) {
+        for(int x = 0; x < width; x++) {
+          this.elements[x][y].onAllInitiated(this, x, y);
         }
       }
     } catch (Exception e) {

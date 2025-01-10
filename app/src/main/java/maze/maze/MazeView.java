@@ -1,5 +1,6 @@
 package maze.maze;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -37,6 +38,7 @@ public class MazeView extends JPanel implements Observer {
     this.playerView = new PlayerView(playerModel, this);
     this.taggerModel = taggerModel;
     this.taggerView = new TaggerView(taggerModel);
+    setBackground(new Color(0x25, 0x13, 0x1A));
 
     this.setFocusable(true);
     this.requestFocusInWindow();

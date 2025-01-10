@@ -1,4 +1,4 @@
-package maze.sound;
+package maze.assets;
 
 import java.io.BufferedInputStream;
 

@@ -2,6 +2,10 @@ package maze.maze.element;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
+import maze.assets.ImageManager;
+import maze.assets.Sprite;
 
 public class WallModel extends MazeElement {
   private final WallType wallType;
@@ -17,24 +21,25 @@ public class WallModel extends MazeElement {
 
   @Override
   public void draw(Graphics g, int x, int y, int size) {
-    g.setColor(wallType.color);
-    g.fillRect(x, y, size, size);
+    g.drawImage(wallType.sprite, x, y, size, size, null);
   }
 
   public enum WallType {
-    LEFT_EDGE(Color.PINK),
-    RIGHT_EDGE(Color.RED),
-    TOP_EDGE(Color.CYAN),
-    BOTTOM_EDGE(Color.BLUE),
-    LEFT_TOP_CORNER(Color.GRAY),
-    RIGHT_TOP_CORNER(Color.GRAY),
-    LEFT_BOTTOM_CORNER(Color.GRAY),
-    RIGHT_BOTTOM_CORNER(Color.GRAY);
+    LEFT_EDGE(0, 1),
+    RIGHT_EDGE(5, 1),
+    TOP_EDGE(1, 0),
+    BOTTOM_EDGE(1, 4),
+    LEFT_TOP_CORNER(0, 0),
+    RIGHT_TOP_CORNER(5, 0),
+    LEFT_BOTTOM_CORNER(0, 4),
+    RIGHT_BOTTOM_CORNER(5, 4),
+    TOP_LEFT_CORNER_2(4, 5),
+    TOP_RIGHT_CORNER_2(5, 5);
 
-    public final Color color; // TODO: Color→画像パスとかにする
+    public BufferedImage sprite;
 
-    WallType(Color color) {
-      this.color = color;
+    WallType(int spriteX, int spriteY) {
+      this.sprite = ImageManager.DUNGEON_SPRITE.getImageAt(spriteX, spriteY);
     }
   }
 }
