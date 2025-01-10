@@ -49,6 +49,25 @@ public class TaggerSearchModel {
     }
   }
 
+  // * ランダムウォーク */
+  public void randomWalk() {
+    int random = (int)(Math.random() * 4);
+    switch (random) {
+      case 0:
+        taggerModel.moveLeft();
+        break;
+      case 1:
+        taggerModel.moveRight();
+        break;
+      case 2:
+        taggerModel.moveUp();
+        break;
+      case 3:
+        taggerModel.moveDown();
+        break;
+    }
+  }
+
   private ArrayDeque<Coordinate> performBFS() {
     initializeDistance();
     start = new Coordinate();
@@ -86,8 +105,8 @@ public class TaggerSearchModel {
 
     // * プレイヤー位置までの移動が不可能な場合の処理 */
     // if (dist[goal.x][goal.y] == -1) {
-    //   System.out.println("プレイヤー位置までの移動が不可能です.");
-    //   return stack;
+    // System.out.println("プレイヤー位置までの移動が不可能です.");
+    // return stack;
     // }
 
     stack.add(goal);
@@ -176,16 +195,16 @@ public class TaggerSearchModel {
         break;
       }
 
-      
-
-      ArrayDeque<Coordinate> path = performBFS();
-
-      if (path.isEmpty()) {
-        System.out.println("プレイヤーに到達できません.");
-        break;
+      if (isTaggerinRange()) {
+        ArrayDeque<Coordinate> path = performBFS();
+        if (path.isEmpty()) {
+          System.out.println("プレイヤーに到達できません.");
+          break;
+        }
+        moveTowardPlayer(path, STEPLIMIT);
+      } else {
+        randomWalk();
       }
-
-      moveTowardPlayer(path, STEPLIMIT);
 
       // * 調整用 */
       // try {
@@ -208,6 +227,23 @@ public class TaggerSearchModel {
     int playerY = Math.round(playerModel.getPlayerY());
 
     return taggerX == playerX && taggerY == playerY;
+  }
+
+  // * プレイヤーと鬼が RANGE 内にいるかどうかの判定*/
+  private final int RANGE = 5;
+  public boolean isTaggerinRange() {
+    int taggerX = Math.round(taggerModel.getTaggerX());
+    int taggerY = Math.round(taggerModel.getTaggerY());
+    int playerX = Math.round(playerModel.getPlayerX());
+    int playerY = Math.round(playerModel.getPlayerY());
+
+    if ((playerX * playerX + playerY * playerY) - (taggerX * taggerX + taggerY * taggerY) <= RANGE * RANGE) {
+      System.out.println("Tagger is in range");
+      return true;
+    } else {
+      System.out.println("Tagger is not in range");
+      return false;
+    }
   }
 
 }
