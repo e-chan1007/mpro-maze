@@ -11,6 +11,7 @@ public class ImageManager {
     private static final Map<String, Sprite> spriteCache = new HashMap<>();
 
     public static final Sprite DUNGEON_SPRITE = ImageManager.loadImageAsSprite("/Dungeon_Tileset.png", 16, 16);
+    public static final Sprite PLAYER_IDLE_SPRITE = ImageManager.loadImageAsSprite("/idle_down.png", 48, 64);
 
     public static BufferedImage loadImage(String path) {
         if(imageCache.containsKey(path)) return imageCache.get(path);

@@ -40,6 +40,10 @@ public class PlayerModel extends Observable {
         return playerY;
     }
 
+    public boolean isIdle() {
+        return keyAcc;
+    }
+
     // * 連続的な動き試作 */
     public void moveLeft() {
         if (mazeModel.getElementAt(Math.round(playerX - 1), Math.round(playerY)).canEnter()) {
