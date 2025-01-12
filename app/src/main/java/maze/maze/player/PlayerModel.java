@@ -23,7 +23,7 @@ public class PlayerModel extends Observable {
     public PlayerModel(MazeModel mazeModel) {
         this.mazeModel = mazeModel;
 
-        this.currentDirection = Direction.FOWARD;
+        this.currentDirection = Direction.FORWARD;
 
         this.mazeModel.addObserver((Observable observable, Object object) -> {
             setStartPos();
@@ -69,7 +69,7 @@ public class PlayerModel extends Observable {
     }
 
     public enum Direction {
-        FOWARD, BACK, LEFT, RIGHT
+        FORWARD, BACK, LEFT, RIGHT
     }
 
     public Direction getCurrentDirection() {
@@ -133,7 +133,7 @@ public class PlayerModel extends Observable {
         if (mazeModel.getElementAt(Math.round(playerX), Math.round(playerY - 1)).canEnter()) {
             if (keyAcc) {
                 isWalkingUp = true;
-                currentDirection = Direction.FOWARD;
+                currentDirection = Direction.FORWARD;
                 final int[] currentStep = { 0 };
                 keyAcc = false;
                 Timer timer = new Timer(DELAY, e -> {
