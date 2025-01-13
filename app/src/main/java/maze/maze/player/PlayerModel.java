@@ -5,6 +5,8 @@ import javax.swing.Timer;
 import maze.maze.MazeModel;
 import maze.maze.element.StartModel;
 import maze.util.Observable;
+import maze.window.AppScreenManager;
+import maze.window.screen.MazeGameOverScreen;
 
 public class PlayerModel extends Observable {
     private float playerX = 1;
@@ -13,6 +15,9 @@ public class PlayerModel extends Observable {
     private final int STEPS = 15;
     private final int DELAY = 1;
     MazeModel mazeModel = new MazeModel();
+
+    // * PlayerのHP */
+    private int hitPoint = 3;
 
     public PlayerModel(MazeModel mazeModel) {
         this.mazeModel = mazeModel;
@@ -38,6 +43,19 @@ public class PlayerModel extends Observable {
 
     public float getPlayerY() {
         return playerY;
+    }
+
+    public int getHitPoint() {
+        return hitPoint;
+    }
+
+    public void onHit() {
+        hitPoint--;
+        if (hitPoint == 0) {
+            // * ゲームオーバー処理 */
+            System.out.println("Game Over");
+            AppScreenManager.getInstance().push(new MazeGameOverScreen());
+        }
     }
 
     // * 連続的な動き試作 */

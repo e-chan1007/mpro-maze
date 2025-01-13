@@ -24,7 +24,8 @@ public class TaggerSearchModel {
   private final int[] dx = { 1, 0, -1, 0 };
   private final int[] dy = { 0, 1, 0, -1 };
   private final Object monitor1 = new Object();
-  private final int STEPLIMIT = 1;
+  private final int STEP_LIMIT = 1;
+  private final int STOP_DURATION = 3000;
 
   public TaggerSearchModel(MazeModel mazeModel, PlayerModel playerModel, TaggerModel taggerModel) {
     this.mazeModel = mazeModel;
@@ -163,17 +164,16 @@ public class TaggerSearchModel {
       }
       stepsTaken++;
 
-      final int DELAY = 3000;
       // * taggerがプレイヤーに到達したら一時停止 */
       if (taggerModel.taggerArrivedFlag) {
+        playerModel.onHit();
         try {
-          Thread.sleep(DELAY);
+          Thread.sleep(STOP_DURATION);
           taggerModel.taggerArrivedFlag = false;
         } catch (InterruptedException ex) {
           Thread.currentThread().interrupt();
           return;
         }
-        // break;
       }
     }
   }
@@ -201,8 +201,8 @@ public class TaggerSearchModel {
       goal.y = Math.round(playerModel.getPlayerY());
 
       // if (taggerModel.taggerArrivedFlag) {
-      //   System.out.println("Targetに到達しました.");
-      //   break;
+      // System.out.println("Targetに到達しました.");
+      // break;
       // }
 
       if (isTaggerinRange()) {
@@ -211,7 +211,7 @@ public class TaggerSearchModel {
           System.out.println("プレイヤーに到達できません.");
           break;
         }
-        moveTowardPlayer(path, STEPLIMIT);
+        moveTowardPlayer(path, STEP_LIMIT);
       } else {
         randomWalk();
       }
@@ -224,8 +224,8 @@ public class TaggerSearchModel {
       // }
 
       // if (taggerModel.taggerArrivedFlag) {
-      //   System.out.println("Targetに到達しました.");
-      //   break;
+      // System.out.println("Targetに到達しました.");
+      // break;
       // }
     }
   }
