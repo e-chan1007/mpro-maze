@@ -13,17 +13,13 @@ public class PlayerController implements KeyListener {
   @Override
   public void keyPressed(KeyEvent e) {
     int keyCode = e.getKeyCode();
-    if (keyCode == KeyEvent.VK_LEFT) {
-      // Move player left
+    if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_A) {
       playerModel.moveLeft();
-    } else if (keyCode == KeyEvent.VK_RIGHT) {
-      // Move player right
+    } else if (keyCode == KeyEvent.VK_RIGHT || keyCode == KeyEvent.VK_D) {
       playerModel.moveRight();
-    } else if (keyCode == KeyEvent.VK_UP) {
-      // Move player up
+    } else if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_W) {
       playerModel.moveUp();
-    } else if (keyCode == KeyEvent.VK_DOWN) {
-      // Move player down
+    } else if (keyCode == KeyEvent.VK_DOWN || keyCode == KeyEvent.VK_S) {
       playerModel.moveDown();
     }
   }
