@@ -3,16 +3,16 @@ package maze.maze.player;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.Timer;
 
+import maze.assets.ImageManager;
 import maze.maze.MazeView;
 import maze.maze.player.PlayerModel.Direction;
-import maze.assets.ImageManager;
 
 public class PlayerView {
   private PlayerModel playerModel;
@@ -66,7 +66,6 @@ public class PlayerView {
           || playerModel.isWalkingLeft() || playerModel.isWalkingRight()) {
         currentFrame = (currentFrame + 1) % walkSprites.get(direction).size();
       }
-      mazeView.repaint();
     });
     this.animationTimer.start();
   }

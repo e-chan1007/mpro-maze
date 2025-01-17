@@ -169,8 +169,8 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
           }
         }
       }
-      for(int y = 0; y < height; y++) {
-        for(int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
           this.elements[x][y].onAllInitiated(this, x, y);
         }
       }

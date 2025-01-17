@@ -47,18 +47,15 @@ public abstract class ScreenBase extends JPanel {
 
   public final void setBackgroundOpacity(float opacity) {
     bgOpacity = opacity;
-    repaint();
   }
 
   public final void setForegroundOpacity(float opacity) {
     fgOpacity = opacity;
-    repaint();
   }
 
   public final void setOpacity(float opacity) {
     bgOpacity = opacity;
     fgOpacity = opacity;
-    repaint();
   }
 
   public final void setMaxBackgroundOpacity(float opacity) {
@@ -93,7 +90,6 @@ public abstract class ScreenBase extends JPanel {
     fadeTimer = Fader.FADE_OUT.createTimer(v -> {
       bgOpacity = initialBgOpacity * v;
       fgOpacity = initialFgOpacity * v;
-      repaint();
     }, () -> {
       fadeTimer = null;
       if (onFinished != null)
@@ -113,7 +109,6 @@ public abstract class ScreenBase extends JPanel {
     fadeTimer = Fader.FADE_IN.createTimer(v -> {
       bgOpacity = initialBgOpacity + (maxBgOpacity - initialBgOpacity) * v;
       fgOpacity = initialFgOpacity + (maxFgOpacity - initialFgOpacity) * v;
-      repaint();
     }, () -> {
       fadeTimer = null;
       if (onFinished != null)

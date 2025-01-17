@@ -42,8 +42,6 @@ public class AppWindow extends JFrame {
         s.fadeIn(null);
         layeredPane.setLayer(s, l[0]++);
       });
-      revalidate();
-      repaint();
       screenManager.peek().requestFocus();
     });
 
@@ -62,6 +60,8 @@ public class AppWindow extends JFrame {
         });
       }
     });
+
+    new WindowUpdateWorker(this).execute();
   }
 
   public static int getInnerWidth() {

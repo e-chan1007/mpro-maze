@@ -25,10 +25,10 @@ public class MazePauseScreen extends TranslucentScreenBase {
       public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
           case KeyEvent.VK_ESCAPE -> {
+            mazeModel.setPaused(false);
             new Timer(1, (ActionEvent e2) -> {
               if (getBackgroundOpacity() == 0 && getForegroundOpacity() == 0) {
                 ((Timer) e2.getSource()).stop();
-                mazeModel.setPaused(false);
               }
             }).start();
             AppScreenManager.getInstance().pop();
