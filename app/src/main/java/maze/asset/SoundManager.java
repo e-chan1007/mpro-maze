@@ -1,4 +1,4 @@
-package maze.assets;
+package maze.asset;
 
 import java.io.BufferedInputStream;
 
@@ -9,7 +9,7 @@ import javax.sound.sampled.Clip;
 /**
  * @example SoundManager.playClip(SoundManager.loadClip("/se.wav"));
  */
-public class SoundManager extends Thread {
+public class SoundManager {
   /**
    * 音声クリップ(.wav)を読み込む
    *

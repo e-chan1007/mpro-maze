@@ -1,11 +1,9 @@
 package maze.maze.element;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import maze.assets.ImageManager;
-import maze.assets.Sprite;
+import maze.asset.ImageManager;
 
 public class WallModel extends MazeElement {
   private final WallType wallType;
@@ -36,7 +34,7 @@ public class WallModel extends MazeElement {
     TOP_LEFT_CORNER_2(4, 5),
     TOP_RIGHT_CORNER_2(5, 5);
 
-    public BufferedImage sprite;
+    public final BufferedImage sprite;
 
     WallType(int spriteX, int spriteY) {
       this.sprite = ImageManager.DUNGEON_SPRITE.getImageAt(spriteX, spriteY);

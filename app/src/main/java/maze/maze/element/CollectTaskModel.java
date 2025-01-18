@@ -5,14 +5,14 @@ import java.awt.Graphics;
 public class CollectTaskModel extends TaskElement {
   @Override
   public void onEnter() {
-    if (!this.isTaskCompleted()) {
-      this.setTaskCompleted(true);
+    if (!this.isCompleted()) {
+      this.setCompleted(true);
     }
   }
 
   @Override
   public void draw(Graphics g, int x, int y, int size) {
-    if (this.isTaskCompleted()) {
+    if (this.isCompleted()) {
       g.setColor(java.awt.Color.GREEN);
     } else {
       g.setColor(java.awt.Color.ORANGE);

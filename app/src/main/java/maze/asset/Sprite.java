@@ -1,11 +1,11 @@
-package maze.assets;
+package maze.asset;
 
 import java.awt.image.BufferedImage;
 
 public class Sprite {
-    private BufferedImage image;
-    private int cellWidth;
-    private int cellHeight;
+    private final BufferedImage image;
+    private final int cellWidth;
+    private final int cellHeight;
 
     public Sprite(BufferedImage image, int cellWidth, int cellHeight) {
         this.image = image;

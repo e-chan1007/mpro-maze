@@ -2,6 +2,7 @@ package maze.maze.player;
 
 import javax.swing.Timer;
 
+import maze.enums.Direction;
 import maze.maze.MazeModel;
 import maze.maze.element.StartModel;
 import maze.util.Observable;
@@ -23,7 +24,7 @@ public class PlayerModel extends Observable {
     public PlayerModel(MazeModel mazeModel) {
         this.mazeModel = mazeModel;
 
-        this.currentDirection = Direction.FORWARD;
+        this.currentDirection = Direction.UP;
 
         this.mazeModel.addObserver((Observable observable, Object object) -> {
             setStartPos();
@@ -66,10 +67,6 @@ public class PlayerModel extends Observable {
 
     public boolean isWalkingRight() {
         return isWalkingRight;
-    }
-
-    public enum Direction {
-        FORWARD, BACK, LEFT, RIGHT
     }
 
     public Direction getCurrentDirection() {
@@ -133,7 +130,7 @@ public class PlayerModel extends Observable {
         if (mazeModel.getElementAt(Math.round(playerX), Math.round(playerY - 1)).canEnter()) {
             if (keyAcc) {
                 isWalkingUp = true;
-                currentDirection = Direction.FORWARD;
+                currentDirection = Direction.UP;
                 final int[] currentStep = { 0 };
                 keyAcc = false;
                 Timer timer = new Timer(DELAY, e -> {
@@ -160,7 +157,7 @@ public class PlayerModel extends Observable {
         if (mazeModel.getElementAt(Math.round(playerX), Math.round(playerY + 1)).canEnter()) {
             if (keyAcc) {
                 isWalkingDown = true;
-                currentDirection = Direction.BACK;
+                currentDirection = Direction.DOWN;
                 final int[] currentStep = { 0 };
                 keyAcc = false;
                 Timer timer = new Timer(DELAY, e -> {

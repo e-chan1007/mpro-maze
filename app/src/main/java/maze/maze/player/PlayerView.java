@@ -10,9 +10,10 @@ import java.util.Map;
 
 import javax.swing.Timer;
 
-import maze.assets.ImageManager;
+import maze.asset.ImageManager;
+import maze.asset.Sprite;
+import maze.enums.Direction;
 import maze.maze.MazeView;
-import maze.maze.player.PlayerModel.Direction;
 
 public class PlayerView {
   private PlayerModel playerModel;
@@ -21,8 +22,25 @@ public class PlayerView {
   private Map<Direction, List<BufferedImage>> idleSprites;
   private Map<Direction, List<BufferedImage>> walkSprites;
 
+  private final Sprite PLAYER_IDLE_UP_SPRITE = ImageManager.loadImageAsSprite("/player/idle/idle_up.png", 48,
+      64);
+  private final Sprite PLAYER_IDLE_DOWN_SPRITE = ImageManager.loadImageAsSprite("/player/idle/idle_down.png", 48,
+      64);
+  private final Sprite PLAYER_IDLE_LEFT_SPRITE = ImageManager.loadImageAsSprite("/player/idle/idle_left.png", 48,
+      64);
+  private final Sprite PLAYER_IDLE_RIGHT_SPRITE = ImageManager.loadImageAsSprite("/player/idle/idle_right.png",
+      48, 64);
+  private final Sprite PLAYER_WALKUP_SPRITE = ImageManager.loadImageAsSprite("/player/walk/walk_up.png", 48,
+      64);
+  private final Sprite PLAYER_WALKDOWN_SPRITE = ImageManager.loadImageAsSprite("/player/walk/walk_down.png", 48,
+      64);
+  private final Sprite PLAYER_WALKLEFT_SPRITE = ImageManager.loadImageAsSprite("/player/walk/walk_left.png", 48,
+      64);
+  private final Sprite PLAYER_WALKRIGHT_SPRITE = ImageManager.loadImageAsSprite("/player/walk/walk_right.png",
+      48, 64);
+
   private int currentFrame;
-  private Timer animationTimer;
+  private final Timer animationTimer;
 
   public PlayerView(PlayerModel playerModel, MazeView mazeView) {
     this.playerModel = playerModel;
@@ -31,26 +49,21 @@ public class PlayerView {
     idleSprites = new HashMap<>();
     walkSprites = new HashMap<>();
 
-    idleSprites.put(Direction.FORWARD, new ArrayList<>());
-    idleSprites.put(Direction.BACK, new ArrayList<>());
-    idleSprites.put(Direction.LEFT, new ArrayList<>());
-    idleSprites.put(Direction.RIGHT, new ArrayList<>());
-
-    walkSprites.put(Direction.FORWARD, new ArrayList<>());
-    walkSprites.put(Direction.BACK, new ArrayList<>());
-    walkSprites.put(Direction.LEFT, new ArrayList<>());
-    walkSprites.put(Direction.RIGHT, new ArrayList<>());
+    for (Direction direction : Direction.values()) {
+      idleSprites.put(direction, new ArrayList<>());
+      walkSprites.put(direction, new ArrayList<>());
+    }
 
     for (int i = 0; i < 8; i++) {
-      idleSprites.get(Direction.FORWARD).add(ImageManager.PLAYER_IDLE_UP_SPRITE.getImageAt(i, 0));
-      idleSprites.get(Direction.BACK).add(ImageManager.PLAYER_IDLE_DOWN_SPRITE.getImageAt(i, 0));
-      idleSprites.get(Direction.LEFT).add(ImageManager.PLAYER_IDLE_LEFT_SPRITE.getImageAt(i, 0));
-      idleSprites.get(Direction.RIGHT).add(ImageManager.PLAYER_IDLE_RIGHT_SPRITE.getImageAt(i, 0));
+      idleSprites.get(Direction.UP).add(PLAYER_IDLE_UP_SPRITE.getImageAt(i, 0));
+      idleSprites.get(Direction.DOWN).add(PLAYER_IDLE_DOWN_SPRITE.getImageAt(i, 0));
+      idleSprites.get(Direction.LEFT).add(PLAYER_IDLE_LEFT_SPRITE.getImageAt(i, 0));
+      idleSprites.get(Direction.RIGHT).add(PLAYER_IDLE_RIGHT_SPRITE.getImageAt(i, 0));
 
-      walkSprites.get(Direction.FORWARD).add(ImageManager.PLAYER_WALKUP_SPRITE.getImageAt(i, 0));
-      walkSprites.get(Direction.BACK).add(ImageManager.PLAYER_WALKDOWN_SPRITE.getImageAt(i, 0));
-      walkSprites.get(Direction.LEFT).add(ImageManager.PLAYER_WALKLEFT_SPRITE.getImageAt(i, 0));
-      walkSprites.get(Direction.RIGHT).add(ImageManager.PLAYER_WALKRIGHT_SPRITE.getImageAt(i, 0));
+      walkSprites.get(Direction.UP).add(PLAYER_WALKUP_SPRITE.getImageAt(i, 0));
+      walkSprites.get(Direction.DOWN).add(PLAYER_WALKDOWN_SPRITE.getImageAt(i, 0));
+      walkSprites.get(Direction.LEFT).add(PLAYER_WALKLEFT_SPRITE.getImageAt(i, 0));
+      walkSprites.get(Direction.RIGHT).add(PLAYER_WALKRIGHT_SPRITE.getImageAt(i, 0));
     }
 
     this.currentFrame = 0;

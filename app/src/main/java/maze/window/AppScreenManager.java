@@ -8,8 +8,8 @@ import java.util.Stack;
 import maze.window.screen.ScreenBase;
 
 public class AppScreenManager extends maze.util.Observable {
-  private static AppScreenManager INSTANCE = new AppScreenManager();
-  private Stack<ScreenBase> stack = new Stack<>();
+  private static final AppScreenManager INSTANCE = new AppScreenManager();
+  private final Stack<ScreenBase> stack = new Stack<>();
 
   public List<ScreenBase> getScreensAsList() {
     List<ScreenBase> list = new LinkedList<>(stack);

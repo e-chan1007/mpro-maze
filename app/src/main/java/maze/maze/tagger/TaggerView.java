@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 
 public class TaggerView {
-  private TaggerModel taggerModel;
+  private final TaggerModel taggerModel;
 
   public TaggerView(TaggerModel taggerModel) {
     this.taggerModel = taggerModel;
