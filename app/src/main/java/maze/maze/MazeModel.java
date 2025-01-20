@@ -130,7 +130,7 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
           put(' ', () -> new PathModel());
           put('G', () -> new GoalModel(MazeModel.this));
           put('S', () -> new StartModel());
-          put('1', () -> new CollectTaskModel());
+          put('1', () -> new CollectTaskModel(MazeModel.this, playerModel));
 
           put('┌', () -> new WallModel(WallModel.WallType.LEFT_TOP_CORNER));
           put('┬', () -> new WallModel(WallModel.WallType.TOP_EDGE));
@@ -147,7 +147,7 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
           put('　', () -> new PathModel());
           put('Ｓ', () -> new StartModel());
           put('Ｇ', () -> new GoalModel(MazeModel.this));
-          put('１', () -> new CollectTaskModel());
+          put('１', () -> new CollectTaskModel(MazeModel.this, playerModel));
         }
       };
 
