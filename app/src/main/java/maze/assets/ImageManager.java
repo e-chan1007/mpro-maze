@@ -28,6 +28,8 @@ public class ImageManager {
 	public static final Sprite PLAYER_WALKRIGHT_SPRITE = ImageManager.loadImageAsSprite("/player/walk/walk_right.png",
 			48, 64);
 
+	public static final Sprite TAGGER_WALK_SPRITE = ImageManager.loadImageAsSprite("/tagger/move.png", 32, 32);
+
 	public static BufferedImage loadImage(String path) {
 		if (imageCache.containsKey(path))
 			return imageCache.get(path);

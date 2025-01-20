@@ -10,12 +10,14 @@ public class TaggerModel extends Observable {
   private float taggerY = 1;
   private final int STEPS = 30;
   private final int DELAY = 1000 / 60;
-  private boolean flag = true;
+  private boolean canMove = true;
+  private Direction currentDirection;
   MazeModel mazeModel = new MazeModel();
   private TaggerSearchModel searchModel;
 
   public TaggerModel(MazeModel mazeModel) {
     this.mazeModel = mazeModel;
+    this.currentDirection = Direction.LEFT;
   }
 
   public MazeModel getMazeModel() {
@@ -35,24 +37,32 @@ public class TaggerModel extends Observable {
   }
 
   public boolean getFlag() {
-    return flag;
+    return canMove;
+  }
+
+  public enum Direction {
+    LEFT, RIGHT
+  }
+
+  public Direction getCurrentDirection() {
+    return currentDirection;
   }
 
   public void moveLeft() {
     if (mazeModel.getElementAt(Math.round(taggerX - 1), Math.round(taggerY)).canEnter()) {
-      if (flag) {
+      if (canMove) {
+        currentDirection = Direction.LEFT;
         final int[] currentStep = { 0 };
-        flag = false;
+        canMove = false;
         Timer timer = new Timer(DELAY, e -> {
           if (mazeModel.isPaused())
             return;
           if (currentStep[0] < STEPS) {
             taggerX -= 1.0 / STEPS;
-            // System.out.println("Moving Left: taggerX = " + taggerX);
             notifyChange();
             currentStep[0]++;
           } else {
-            flag = true;
+            canMove = true;
             searchModel.signalConditionMet1();
             ((Timer) e.getSource()).stop();
           }
@@ -64,20 +74,19 @@ public class TaggerModel extends Observable {
 
   public void moveRight() {
     if (mazeModel.getElementAt(Math.round(taggerX + 1), Math.round(taggerY)).canEnter()) {
-      if (flag) {
+      if (canMove) {
         final int[] currentStep = { 0 };
-        flag = false;
+        currentDirection = Direction.RIGHT;
+        canMove = false;
         Timer timer = new Timer(DELAY, e -> {
           if (mazeModel.isPaused())
             return;
           if (currentStep[0] < STEPS) {
             taggerX += 1.0 / STEPS;
-
-            // System.out.println("Moving Right: taggerX = " + taggerX);
             notifyChange();
             currentStep[0]++;
           } else {
-            flag = true;
+            canMove = true;
             searchModel.signalConditionMet1();
             ((Timer) e.getSource()).stop();
           }
@@ -89,19 +98,18 @@ public class TaggerModel extends Observable {
 
   public void moveUp() {
     if (mazeModel.getElementAt(Math.round(taggerX), Math.round(taggerY - 1)).canEnter()) {
-      if (flag) {
+      if (canMove) {
         final int[] currentStep = { 0 };
-        flag = false;
+        canMove = false;
         Timer timer = new Timer(DELAY, e -> {
           if (mazeModel.isPaused())
             return;
           if (currentStep[0] < STEPS) {
             taggerY -= 1.0 / STEPS;
-            // System.out.println("Moving Up: taggerY = " + taggerY);
             notifyChange();
             currentStep[0]++;
           } else {
-            flag = true;
+            canMove = true;
             searchModel.signalConditionMet1();
             ((Timer) e.getSource()).stop();
           }
@@ -113,19 +121,18 @@ public class TaggerModel extends Observable {
 
   public void moveDown() {
     if (mazeModel.getElementAt(Math.round(taggerX), Math.round(taggerY + 1)).canEnter()) {
-      if (flag) {
+      if (canMove) {
         final int[] currentStep = { 0 };
-        flag = false;
+        canMove = false;
         Timer timer = new Timer(DELAY, e -> {
           if (mazeModel.isPaused())
             return;
           if (currentStep[0] < STEPS) {
             taggerY += 1.0 / STEPS;
-            // System.out.println("Moving Down: taggerY = " + taggerY);
             notifyChange();
             currentStep[0]++;
           } else {
-            flag = true;
+            canMove = true;
             searchModel.signalConditionMet1();
             ((Timer) e.getSource()).stop();
           }
@@ -133,6 +140,10 @@ public class TaggerModel extends Observable {
         timer.start();
       }
     }
+  }
+
+  public boolean isTaggerinRange() {
+    double distance = Math.pow(getTaggerX() - getPlayerX(), 2) + Math.pow(getTaggerY() - getPlayerY(), 2);
   }
 
   private void notifyChange() {

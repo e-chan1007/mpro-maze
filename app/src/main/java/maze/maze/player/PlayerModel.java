@@ -9,7 +9,7 @@ import maze.util.Observable;
 public class PlayerModel extends Observable {
     private float playerX = 1;
     private float playerY = 1;
-    private boolean keyAcc = true;
+    private boolean canMove = true;
     private boolean isWalkingUp = false;
     private boolean isWalkingDown = false;
     private boolean isWalkingLeft = false;
@@ -49,7 +49,7 @@ public class PlayerModel extends Observable {
     }
 
     public boolean isIdle() {
-        return keyAcc;
+        return canMove;
     }
 
     public boolean isWalkingUp() {
@@ -79,11 +79,11 @@ public class PlayerModel extends Observable {
     // * 連続的な動き試作 */
     public void moveLeft() {
         if (mazeModel.getElementAt(Math.round(playerX - 1), Math.round(playerY)).canEnter()) {
-            if (keyAcc) {
+            if (canMove) {
                 isWalkingLeft = true;
                 currentDirection = Direction.LEFT;
                 final int[] currentStep = { 0 };
-                keyAcc = false;
+                canMove = false;
                 Timer timer = new Timer(DELAY, e -> {
                     if (mazeModel.isPaused())
                         return;
@@ -92,7 +92,7 @@ public class PlayerModel extends Observable {
                         notifyChange();
                         currentStep[0]++;
                     } else {
-                        keyAcc = true;
+                        canMove = true;
                         isWalkingLeft = false;
                         ((Timer) e.getSource()).stop();
                         onMove();
@@ -105,11 +105,11 @@ public class PlayerModel extends Observable {
 
     public void moveRight() {
         if (mazeModel.getElementAt(Math.round(playerX + 1), Math.round(playerY)).canEnter()) {
-            if (keyAcc) {
+            if (canMove) {
                 isWalkingRight = true;
                 currentDirection = Direction.RIGHT;
                 final int[] currentStep = { 0 };
-                keyAcc = false;
+                canMove = false;
                 Timer timer = new Timer(DELAY, e -> {
                     if (mazeModel.isPaused())
                         return;
@@ -118,7 +118,7 @@ public class PlayerModel extends Observable {
                         notifyChange();
                         currentStep[0]++;
                     } else {
-                        keyAcc = true;
+                        canMove = true;
                         isWalkingRight = false;
                         ((Timer) e.getSource()).stop();
                         onMove();
@@ -131,11 +131,11 @@ public class PlayerModel extends Observable {
 
     public void moveUp() {
         if (mazeModel.getElementAt(Math.round(playerX), Math.round(playerY - 1)).canEnter()) {
-            if (keyAcc) {
+            if (canMove) {
                 isWalkingUp = true;
                 currentDirection = Direction.FORWARD;
                 final int[] currentStep = { 0 };
-                keyAcc = false;
+                canMove = false;
                 Timer timer = new Timer(DELAY, e -> {
                     if (mazeModel.isPaused())
                         return;
@@ -144,7 +144,7 @@ public class PlayerModel extends Observable {
                         notifyChange();
                         currentStep[0]++;
                     } else {
-                        keyAcc = true;
+                        canMove = true;
                         isWalkingUp = false;
                         ((Timer) e.getSource()).stop();
                         isWalkingUp = false;
@@ -158,11 +158,11 @@ public class PlayerModel extends Observable {
 
     public void moveDown() {
         if (mazeModel.getElementAt(Math.round(playerX), Math.round(playerY + 1)).canEnter()) {
-            if (keyAcc) {
+            if (canMove) {
                 isWalkingDown = true;
                 currentDirection = Direction.BACK;
                 final int[] currentStep = { 0 };
-                keyAcc = false;
+                canMove = false;
                 Timer timer = new Timer(DELAY, e -> {
                     if (mazeModel.isPaused())
                         return;
@@ -171,7 +171,7 @@ public class PlayerModel extends Observable {
                         notifyChange();
                         currentStep[0]++;
                     } else {
-                        keyAcc = true;
+                        canMove = true;
                         isWalkingDown = false;
                         ((Timer) e.getSource()).stop();
                         onMove();
