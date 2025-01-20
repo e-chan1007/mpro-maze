@@ -51,11 +51,6 @@ public class MazePlayScreen extends ScreenBase {
   }
 
   @Override
-  public void show() {
-    System.out.println(".()");
-  }
-
-  @Override
   public void requestFocus() {
     mazeView.requestFocus();
   }

@@ -33,7 +33,6 @@ public class MazeView extends JPanel implements Observer {
     this.mazeModel = mazeModel;
 
     this.playerModel = playerModel;
-    this.mazeModel.setPlayerModel(playerModel);
     this.mazeModel.readFile("/test.txt");
     this.playerView = new PlayerView(playerModel, this);
     this.taggerModel = taggerModel;
@@ -99,6 +98,5 @@ public class MazeView extends JPanel implements Observer {
   public void update(Observable o, Object arg) {
     if (o == playerModel)
       updateAnchor();
-    repaint();
   }
 }

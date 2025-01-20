@@ -11,15 +11,15 @@ class Coordinate {
 }
 
 public class TaggerSearchModel {
-  private MazeModel mazeModel;
-  private PlayerModel playerModel;
-  private TaggerModel taggerModel;
+  private final MazeModel mazeModel;
+  private final PlayerModel playerModel;
+  private final TaggerModel taggerModel;
 
   private int mazeWidth;
   private int mazeHeight;
   private int[][] dist;
   private Coordinate start;
-  private Coordinate goal;
+  private final Coordinate goal;
   private final int[] dx = { 1, 0, -1, 0 };
   private final int[] dy = { 0, 1, 0, -1 };
   private final Object monitor1 = new Object();

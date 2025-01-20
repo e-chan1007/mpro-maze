@@ -33,6 +33,7 @@ public class CollectTaskModel extends TaskElement {
 
   @Override
   public void onEnter() {
+<<<<<<< HEAD
     if (!this.isTaskCompleted()) {
       timer.addActionListener(new ActionListener() {
         private boolean isOnOval = false;
@@ -141,12 +142,16 @@ public class CollectTaskModel extends TaskElement {
 
     public boolean isRedLineInYellowRange() {
       return redLineX + 5 >= yellowLineX && redLineX <= yellowLineX + 15;
+=======
+    if (!this.isCompleted()) {
+      this.setCompleted(true);
+>>>>>>> 5f65b26d9d7774a1ad3f92cac3ffcef6b691d9de
     }
   }
 
   @Override
   public void draw(Graphics g, int x, int y, int size) {
-    if (this.isTaskCompleted()) {
+    if (this.isCompleted()) {
       g.setColor(java.awt.Color.GREEN);
     } else {
       g.setColor(java.awt.Color.ORANGE);

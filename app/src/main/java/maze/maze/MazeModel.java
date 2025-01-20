@@ -17,7 +17,6 @@ import maze.maze.element.PathModel;
 import maze.maze.element.StartModel;
 import maze.maze.element.TaskElement;
 import maze.maze.element.WallModel;
-import maze.maze.player.PlayerModel;
 
 /**
  * 迷路の盤面を管理するモデル
@@ -26,7 +25,6 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
   private int mazeWidth;
   private int mazeHeight;
 
-  private PlayerModel playerModel;
   private MazeElement[][] elements;
   private List<TaskElement> tasks;
   private MazeView view;
@@ -38,10 +36,6 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
 
   public MazeView getView() {
     return this.view;
-  }
-
-  protected void setPlayerModel(PlayerModel playerModel) {
-    this.playerModel = playerModel;
   }
 
   /**
@@ -169,8 +163,8 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
           }
         }
       }
-      for(int y = 0; y < height; y++) {
-        for(int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
           this.elements[x][y].onAllInitiated(this, x, y);
         }
       }
@@ -183,13 +177,10 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
 
   @Override
   public void update(maze.util.Observable observable, Object object) {
-    if (observable instanceof TaskElement) {
-      TaskElement task = (TaskElement) observable;
-      if (task.isTaskCompleted()) {
-        this.tasks.remove(task);
-        if (this.tasks.isEmpty()) {
-          System.out.println("All tasks are completed!");
-        }
+    if (observable instanceof TaskElement task && task.isCompleted()) {
+      this.tasks.remove(task);
+      if (this.tasks.isEmpty()) {
+        System.out.println("All tasks are completed!");
       }
     }
   }

@@ -9,17 +9,17 @@ abstract public class TaskElement extends MazeElement {
   /**
    * タスクが完了しているかどうか
    */
-  public boolean isTaskCompleted() {
+  public boolean isCompleted() {
     return this.isTaskCompleted;
   }
 
   /**
    * タスクが完了しているかどうかを設定する
    *
-   * @param isTaskCompleted タスクの完了状態
+   * @param isCompleted タスクの完了状態
    */
-  public void setTaskCompleted(boolean isTaskCompleted) {
-    this.isTaskCompleted = isTaskCompleted;
+  public void setCompleted(boolean isCompleted) {
+    this.isTaskCompleted = isCompleted;
     this.setChanged();
     this.notifyObservers();
   }
