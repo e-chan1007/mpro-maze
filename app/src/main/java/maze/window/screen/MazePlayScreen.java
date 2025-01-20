@@ -24,6 +24,7 @@ public class MazePlayScreen extends ScreenBase {
     MazeModel mazeModel = new MazeModel();
     PlayerModel playerModel = new PlayerModel(mazeModel);
     TaggerModel taggerModel = new TaggerModel(mazeModel);
+    mazeModel.setPlayerModel(playerModel);
     searchModel = new TaggerSearchModel(mazeModel, playerModel, taggerModel);
     taggerModel.setSearchModel(searchModel);
     mazeView = new MazeView(mazeModel, playerModel, taggerModel);

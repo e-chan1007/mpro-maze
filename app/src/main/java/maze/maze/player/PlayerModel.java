@@ -58,6 +58,30 @@ public class PlayerModel extends Observable {
         return hitPoint;
     }
 
+    public boolean isIdle() {
+        return keyAcc;
+    }
+
+    public boolean isWalkingUp() {
+        return isWalkingUp;
+    }
+
+    public boolean isWalkingDown() {
+        return isWalkingDown;
+    }
+
+    public boolean isWalkingLeft() {
+        return isWalkingLeft;
+    }
+
+    public boolean isWalkingRight() {
+        return isWalkingRight;
+    }
+
+    public Direction getCurrentDirection() {
+        return currentDirection;
+    }
+
     public void onHit() {
         hitPoint--;
         if (hitPoint == 0) {

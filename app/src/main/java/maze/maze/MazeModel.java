@@ -17,6 +17,7 @@ import maze.maze.element.PathModel;
 import maze.maze.element.StartModel;
 import maze.maze.element.TaskElement;
 import maze.maze.element.WallModel;
+import maze.maze.player.PlayerModel;
 
 /**
  * 迷路の盤面を管理するモデル
@@ -25,12 +26,17 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
   private int mazeWidth;
   private int mazeHeight;
 
+  private PlayerModel playerModel;
   private MazeElement[][] elements;
   private List<TaskElement> tasks;
   private MazeView view;
   private boolean isPaused = false;
 
-  protected void setView(MazeView view) {
+  public void setPlayerModel(PlayerModel playerModel) {
+    this.playerModel = playerModel;
+  }
+
+  public void setView(MazeView view) {
     this.view = view;
   }
 

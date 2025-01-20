@@ -33,7 +33,7 @@ public class CollectTaskModel extends TaskElement {
 
   @Override
   public void onEnter() {
-    if (!this.isTaskCompleted()) {
+    if (!this.isCompleted()) {
       timer.addActionListener(new ActionListener() {
         private boolean isOnOval = false;
 
@@ -49,7 +49,7 @@ public class CollectTaskModel extends TaskElement {
               timer.stop();
             }
             if (count == COUNT) {
-              setTaskCompleted(true);
+              setCompleted(true);
               System.out.println("The task is completed.");
               timer.stop();
             }
