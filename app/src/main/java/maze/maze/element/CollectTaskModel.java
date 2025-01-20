@@ -33,7 +33,6 @@ public class CollectTaskModel extends TaskElement {
 
   @Override
   public void onEnter() {
-<<<<<<< HEAD
     if (!this.isTaskCompleted()) {
       timer.addActionListener(new ActionListener() {
         private boolean isOnOval = false;
@@ -81,20 +80,21 @@ public class CollectTaskModel extends TaskElement {
 
     frame.setLocation(frame.getX() + 400, frame.getY());
 
-    frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "closeWindow");
+    frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
+        "closeWindow");
     frame.getRootPane().getActionMap().put("closeWindow", new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          if (panel.isRedLineInYellowRange()) {
-            System.out.println("success!");
-          } else {
-            System.out.println("failure...");
-            count--;
-          }
-          frame.dispose();
-          moveTimer.stop();
-          timer.start();
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (panel.isRedLineInYellowRange()) {
+          System.out.println("success!");
+        } else {
+          System.out.println("failure...");
+          count--;
         }
+        frame.dispose();
+        moveTimer.stop();
+        timer.start();
+      }
     });
 
     frame.addWindowListener(new WindowAdapter() {
@@ -142,10 +142,6 @@ public class CollectTaskModel extends TaskElement {
 
     public boolean isRedLineInYellowRange() {
       return redLineX + 5 >= yellowLineX && redLineX <= yellowLineX + 15;
-=======
-    if (!this.isCompleted()) {
-      this.setCompleted(true);
->>>>>>> 5f65b26d9d7774a1ad3f92cac3ffcef6b691d9de
     }
   }
 

@@ -6,6 +6,8 @@ import maze.enums.Direction;
 import maze.maze.MazeModel;
 import maze.maze.element.StartModel;
 import maze.util.Observable;
+import maze.window.AppScreenManager;
+import maze.window.screen.MazeGameOverScreen;
 
 public class PlayerModel extends Observable {
     private float playerX = 1;
@@ -20,6 +22,9 @@ public class PlayerModel extends Observable {
     private Direction currentDirection;
 
     MazeModel mazeModel = new MazeModel();
+
+    // * PlayerのHP */
+    private int hitPoint = 3;
 
     public PlayerModel(MazeModel mazeModel) {
         this.mazeModel = mazeModel;
@@ -49,28 +54,17 @@ public class PlayerModel extends Observable {
         return playerY;
     }
 
-    public boolean isIdle() {
-        return keyAcc;
+    public int getHitPoint() {
+        return hitPoint;
     }
 
-    public boolean isWalkingUp() {
-        return isWalkingUp;
-    }
-
-    public boolean isWalkingDown() {
-        return isWalkingDown;
-    }
-
-    public boolean isWalkingLeft() {
-        return isWalkingLeft;
-    }
-
-    public boolean isWalkingRight() {
-        return isWalkingRight;
-    }
-
-    public Direction getCurrentDirection() {
-        return currentDirection;
+    public void onHit() {
+        hitPoint--;
+        if (hitPoint == 0) {
+            // * ゲームオーバー処理 */
+            System.out.println("Game Over");
+            AppScreenManager.getInstance().push(new MazeGameOverScreen());
+        }
     }
 
     // * 連続的な動き試作 */

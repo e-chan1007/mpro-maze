@@ -10,7 +10,7 @@ public class TaggerModel extends Observable {
   private float taggerY = 1;
   private final int STEPS = 30;
   private final int DELAY = 1000 / 60;
-  private boolean flag = true;
+  private boolean canMoveFlag = true;
   MazeModel mazeModel = new MazeModel();
   private TaggerSearchModel searchModel;
 
@@ -34,25 +34,33 @@ public class TaggerModel extends Observable {
     return taggerY;
   }
 
-  public boolean getFlag() {
-    return flag;
+  public boolean getCanMoveFlag() {
+    return canMoveFlag;
+  }
+
+  public boolean taggerArrivedFlag = false;
+
+  public boolean getTaggerArrived() {
+    return taggerArrivedFlag;
   }
 
   public void moveLeft() {
     if (mazeModel.getElementAt(Math.round(taggerX - 1), Math.round(taggerY)).canEnter()) {
-      if (flag) {
+      if (canMoveFlag) {
         final int[] currentStep = { 0 };
-        flag = false;
+        canMoveFlag = false;
         Timer timer = new Timer(DELAY, e -> {
           if (mazeModel.isPaused())
             return;
           if (currentStep[0] < STEPS) {
             taggerX -= 1.0 / STEPS;
-            // System.out.println("Moving Left: taggerX = " + taggerX);
+            if (!taggerArrivedFlag) {
+              taggerArrivedFlag = searchModel.isTaggerAtPlayer();
+            }
             notifyChange();
             currentStep[0]++;
           } else {
-            flag = true;
+            canMoveFlag = true;
             searchModel.signalConditionMet1();
             ((Timer) e.getSource()).stop();
           }
@@ -64,20 +72,21 @@ public class TaggerModel extends Observable {
 
   public void moveRight() {
     if (mazeModel.getElementAt(Math.round(taggerX + 1), Math.round(taggerY)).canEnter()) {
-      if (flag) {
+      if (canMoveFlag) {
         final int[] currentStep = { 0 };
-        flag = false;
+        canMoveFlag = false;
         Timer timer = new Timer(DELAY, e -> {
           if (mazeModel.isPaused())
             return;
           if (currentStep[0] < STEPS) {
             taggerX += 1.0 / STEPS;
-
-            // System.out.println("Moving Right: taggerX = " + taggerX);
+            if (!taggerArrivedFlag) {
+              taggerArrivedFlag = searchModel.isTaggerAtPlayer();
+            }
             notifyChange();
             currentStep[0]++;
           } else {
-            flag = true;
+            canMoveFlag = true;
             searchModel.signalConditionMet1();
             ((Timer) e.getSource()).stop();
           }
@@ -89,19 +98,21 @@ public class TaggerModel extends Observable {
 
   public void moveUp() {
     if (mazeModel.getElementAt(Math.round(taggerX), Math.round(taggerY - 1)).canEnter()) {
-      if (flag) {
+      if (canMoveFlag) {
         final int[] currentStep = { 0 };
-        flag = false;
+        canMoveFlag = false;
         Timer timer = new Timer(DELAY, e -> {
           if (mazeModel.isPaused())
             return;
           if (currentStep[0] < STEPS) {
             taggerY -= 1.0 / STEPS;
-            // System.out.println("Moving Up: taggerY = " + taggerY);
+            if (!taggerArrivedFlag) {
+              taggerArrivedFlag = searchModel.isTaggerAtPlayer();
+            }
             notifyChange();
             currentStep[0]++;
           } else {
-            flag = true;
+            canMoveFlag = true;
             searchModel.signalConditionMet1();
             ((Timer) e.getSource()).stop();
           }
@@ -113,19 +124,21 @@ public class TaggerModel extends Observable {
 
   public void moveDown() {
     if (mazeModel.getElementAt(Math.round(taggerX), Math.round(taggerY + 1)).canEnter()) {
-      if (flag) {
+      if (canMoveFlag) {
         final int[] currentStep = { 0 };
-        flag = false;
+        canMoveFlag = false;
         Timer timer = new Timer(DELAY, e -> {
           if (mazeModel.isPaused())
             return;
           if (currentStep[0] < STEPS) {
             taggerY += 1.0 / STEPS;
-            // System.out.println("Moving Down: taggerY = " + taggerY);
+            if (!taggerArrivedFlag) {
+              taggerArrivedFlag = searchModel.isTaggerAtPlayer();
+            }
             notifyChange();
             currentStep[0]++;
           } else {
-            flag = true;
+            canMoveFlag = true;
             searchModel.signalConditionMet1();
             ((Timer) e.getSource()).stop();
           }

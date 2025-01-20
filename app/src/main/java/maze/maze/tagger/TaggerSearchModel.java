@@ -1,6 +1,7 @@
 package maze.maze.tagger;
 
 import java.util.ArrayDeque;
+import javax.swing.Timer;
 
 import maze.maze.MazeModel;
 import maze.maze.player.PlayerModel;
@@ -23,7 +24,8 @@ public class TaggerSearchModel {
   private final int[] dx = { 1, 0, -1, 0 };
   private final int[] dy = { 0, 1, 0, -1 };
   private final Object monitor1 = new Object();
-  private final int STEPLIMIT = 1;
+  private final int STEP_LIMIT = 1;
+  private final int STOP_DURATION = 3000;
 
   public TaggerSearchModel(MazeModel mazeModel, PlayerModel playerModel, TaggerModel taggerModel) {
     this.mazeModel = mazeModel;
@@ -46,6 +48,25 @@ public class TaggerSearchModel {
       for (int y = 0; y < mazeHeight; y++) {
         dist[x][y] = -1;
       }
+    }
+  }
+
+  // * ランダムウォーク */
+  public void randomWalk() {
+    int random = (int) (Math.random() * 4);
+    switch (random) {
+      case 0:
+        taggerModel.moveLeft();
+        break;
+      case 1:
+        taggerModel.moveRight();
+        break;
+      case 2:
+        taggerModel.moveUp();
+        break;
+      case 3:
+        taggerModel.moveDown();
+        break;
     }
   }
 
@@ -82,27 +103,17 @@ public class TaggerSearchModel {
       }
     }
 
-    // * dist[][] 確認用デバック */
-    // for (int i = 0; i < mazeHeight; i++) {
-    // for (int j = 0; j < mazeWidth; j++) {
-    // System.out.printf("%3d", dist[j][i]);
-    // }
-    // System.out.print("\n");
-    // }
+    ArrayDeque<Coordinate> stack = new ArrayDeque<>();
 
     // * プレイヤー位置までの移動が不可能な場合の処理 */
-    ArrayDeque<Coordinate> stack = new ArrayDeque<>();
-    if (dist[goal.x][goal.y] == -1) {
-      System.out.println("プレイヤー位置までの移動が不可能です.");
-      return stack;
-    }
+    // if (dist[goal.x][goal.y] == -1) {
+    // System.out.println("プレイヤー位置までの移動が不可能です.");
+    // return stack;
+    // }
 
     stack.add(goal);
     Coordinate elem = goal;
     int ptDistance = dist[goal.x][goal.y];
-
-    // * 目的地までの距離確認用デバック */
-    // System.out.printf("Distance: %2d\n", ptDistance);
 
     while (ptDistance > 1) {
       for (int i = 0; i < 4; i++) {
@@ -153,8 +164,16 @@ public class TaggerSearchModel {
       }
       stepsTaken++;
 
-      if (isTaggerAtPlayer()) {
-        break;
+      // * taggerがプレイヤーに到達したら一時停止 */
+      if (taggerModel.taggerArrivedFlag) {
+        playerModel.onHit();
+        try {
+          Thread.sleep(STOP_DURATION);
+          taggerModel.taggerArrivedFlag = false;
+        } catch (InterruptedException ex) {
+          Thread.currentThread().interrupt();
+          return;
+        }
       }
     }
   }
@@ -162,7 +181,7 @@ public class TaggerSearchModel {
   // * 条件が達成されるまで待つ */
   private void waitForCondition1() throws InterruptedException {
     synchronized (monitor1) {
-      while (!taggerModel.getFlag()) {
+      while (!taggerModel.getCanMoveFlag()) {
         monitor1.wait();
       }
     }
@@ -181,19 +200,21 @@ public class TaggerSearchModel {
       goal.x = Math.round(playerModel.getPlayerX());
       goal.y = Math.round(playerModel.getPlayerY());
 
-      if (isTaggerAtPlayer()) {
-        System.out.println("Targetに到達しました.");
-        break;
+      // if (taggerModel.taggerArrivedFlag) {
+      // System.out.println("Targetに到達しました.");
+      // break;
+      // }
+
+      if (isTaggerinRange()) {
+        ArrayDeque<Coordinate> path = performBFS();
+        if (path.isEmpty()) {
+          System.out.println("プレイヤーに到達できません.");
+          break;
+        }
+        moveTowardPlayer(path, STEP_LIMIT);
+      } else {
+        randomWalk();
       }
-
-      ArrayDeque<Coordinate> path = performBFS();
-
-      if (path.isEmpty()) {
-        System.out.println("プレイヤーに到達できません.");
-        break;
-      }
-
-      moveTowardPlayer(path, STEPLIMIT);
 
       // * 調整用 */
       // try {
@@ -202,20 +223,38 @@ public class TaggerSearchModel {
       // Thread.currentThread().interrupt();
       // }
 
-      if (isTaggerAtPlayer()) {
-        System.out.println("Targetに到達しました.");
-        break;
-      }
+      // if (taggerModel.taggerArrivedFlag) {
+      // System.out.println("Targetに到達しました.");
+      // break;
+      // }
     }
   }
 
-  private boolean isTaggerAtPlayer() {
+  public boolean isTaggerAtPlayer() {
     int taggerX = Math.round(taggerModel.getTaggerX());
     int taggerY = Math.round(taggerModel.getTaggerY());
     int playerX = Math.round(playerModel.getPlayerX());
     int playerY = Math.round(playerModel.getPlayerY());
 
     return taggerX == playerX && taggerY == playerY;
+  }
+
+  // * プレイヤーと鬼が RANGE 内にいるかどうかの判定*/
+  private final int RANGE = 5;
+
+  public boolean isTaggerinRange() {
+    int taggerX = Math.round(taggerModel.getTaggerX());
+    int taggerY = Math.round(taggerModel.getTaggerY());
+    int playerX = Math.round(playerModel.getPlayerX());
+    int playerY = Math.round(playerModel.getPlayerY());
+
+    if ((playerX * playerX + playerY * playerY) - (taggerX * taggerX + taggerY * taggerY) <= RANGE * RANGE) {
+      // System.out.println("Tagger is in range");
+      return true;
+    } else {
+      // System.out.println("Tagger is not in range");
+      return false;
+    }
   }
 
 }
