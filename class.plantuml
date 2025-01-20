@@ -1,0 +1,371 @@
+@startuml class
+
+hide empty members
+
+!pragma useIntermediatePackages false
+package javax.swing {
+  class JFrame {}
+  class JPanel {}
+  class SwingWorker{}
+  class Timer{}
+}
+
+package java.awt.event {
+  interface KeyListener {}
+}
+
+package maze {
+  class Main {
+    {static} + void main(String[] args)
+  }
+
+  package asset {
+    class ImageManager {
+      {static} + BufferedImage loadImage(String path)
+      {static} + Sprite loadImageAsSprite(String path, int cellWidth, int cellHeight)
+    }
+    class SoundManager {
+      {static} + Clip loadClip(String path)
+      {static} + void playClip(Clip clip)
+    }
+    class Sprite {
+      - BufferedImage image
+      - int cellWidth
+      - int cellHeight
+      + BufferedImage getImageAt(int x, int y)
+      + BufferedImage getRandomImage(int fromX, int fromY, int toX, int toY)
+    }
+  }
+
+  package enums {
+    enum Direction {
+      UP, DOWN, LEFT, RIGHT
+    }
+  }
+
+  package util {
+    class Observable {}
+    interface Observer {}
+    class Fader {
+      {static} + Fader FADE_IN
+      {static} + Fader FADE_OUT
+      - int sign
+      - float initialValue
+      - float currentValue
+      + Timer createTimer(Consumer<Float> onUpdate, Runnable onFinished)
+    }
+  }
+
+  package maze {
+    class MazeView extends javax.swing.JPanel implements maze.util.Observer {
+      - MazeModel mazeModel
+      - PlayerModel playerModel
+      - PlayerView playerView
+      - TaggerModel taggerModel
+      - TaggerView taggerView
+      - int anchorX
+      - int anchorY
+      - void updateSize()
+      - void updateAnchor()
+      + int getMazeCellSize()
+      + void paintComponent(Graphics g)
+      + void update(Observable o, Object arg)
+    }
+
+    class MazeModel extends maze.util.Observable implements maze.util.Observer {
+      - int mazeWidth
+      - int mazeHeight
+      - MazeElement[][] elements
+      - List<TaskElement> tasks
+      - MazeView view
+      - boolean isPaused
+
+      + void setView(MazeView view)
+      + void setPaused(boolean isPaused)
+      + MazeView getView()
+      + boolean canGoal()
+      + boolean isInMaze(int x, int y)
+      + boolean isPaused()
+      + int getMazeWidth()
+      + int getMazeHeight()
+      + MazeElement getElementAt(int x, int y)
+      + MazeElement[][] getElements()
+      + int[] locateElement(Class<? extends MazeElement> c)
+      + void readFile(String path)
+      + void update(maze.util.Observable obserbable, Object object)
+    }
+
+    class MazeFogView {
+      {static} + void draw(Graphics g, int width, int height)
+    }
+
+    package element {
+      abstract class MazeElement extends maze.util.Observable {
+        + boolean canEnter()
+        + void onAllInitialized(MazeModel mazeModel. int myX, int myY)
+        + void onEnter()
+        {abstract} + void draw(Graphics g, int x, int y, int size)
+      }
+      abstract class TaskElement extends MazeElement {
+        - boolean isCompleted
+        + boolean isCompleted()
+        + void setCompleted(boolean isCompleted)
+      }
+      class CollectTaskModel extends TaskElement {
+        - Timer timer
+        - int count
+        {static} - int COUNT
+        - int window_count
+        - PlayerModel playerModel
+        - int ovalX
+        - int ovalY
+        - boolean windowShown
+        - Random random
+        + void onAllInitialized(MazeModel mazeModel, int myX, int myY)
+        + void onEnter()
+        + void draw(Graphics g, int x, int y, int size)
+        - void showNewWindow()
+      }
+      class "CollectTaskModel.MovingPanel" as MovingPanel extends javax.swing.JPanel {
+        - int yellowLineX
+        - int redLineX
+        - int direction
+        + void paintComponent(Graphics g)
+        + void moveRedLine()
+        + boolean isRedLineInYellowRange()
+      }
+      class EmptyModel extends MazeElement {
+        + void draw(Graphics g, int x, int y, int size)
+      }
+      class PathModel extends MazeElement {
+        - BufferedImage pathSprite
+        + void onAllInitialized(MazeModel mazeModel, int myX, int myY)
+        + void draw(Graphics g, int x, int y, int size)
+      }
+      class WallModel extends MazeElement {
+        - WallType wallType
+        + boolean canEnter()
+        + void draw(Graphics g, int x, int y, int size)
+      }
+      enum "WallModel.WallType" as WallType {
+        LEFT_EDGE, RIGHT_EDGE, TOP_EDGE, BOTTOM_EDGE,
+        LEFT_TOP_CORNER, RIGHT_TOP_CORNER, LEFT_BOTTOM_CORNER, RIGHT_BOTTOM_CORNER,
+        TOP_LEFT_CORNER_2, TOP_RIGHT_CORNER_2
+
+        + BufferedImage sprite
+      }
+      class StartModel extends PathModel {}
+      class GoalModel extends MazeElement {
+        - MazeModel mazeModel
+        + void onEnter()
+        + void draw(Graphics g, int x, int y, int size)
+      }
+    }
+
+    package tagger {
+      class Coordinate {
+        + int x
+        + int y
+      }
+      class TaggerModel {
+        - float taggerX
+        - float taggerY
+        - int STEPS
+        - int DELAY
+        - boolean canMoveFlag
+        - MazeModel mazeModel
+        - TaggerSearchModel searchModel
+        - int RANGE
+        + MazeModel getMazeModel()
+        + void setSearchModel(TaggerSearchModel searchModel)
+        + float getTaggerX()
+        + float getTaggerY()
+        + float getCanMoveFlag()
+        + void moveLeft()
+        + void moveRight()
+        + void moveUp()
+        + void moveDown()
+        - void notifyChange()
+        }
+
+      class TaggerSearchModel {
+        - MazeModel mazeModel
+        - PlayerModel playerModel
+        - TaggerModel taggerModel
+        - int mazeWidth
+        - int mazeHeight
+        - int[][] dist
+        - Coordinate start
+        - Coordinate goal
+        - int[] dx
+        - int[] dy
+        - Object monitor1
+        - int STEP_LIMIT
+        - int STOP_DURATION
+        - void initializeDistance()
+        - ArrayDeque<Coordinate> performBFS()
+        - void moveTowardPlayer(ArrayDeque<Coordinate> path, int stepLimit)
+        - void randomWalk()
+        - void waitForCondition1()
+        - void signalConditionMet1()
+        - boolean isTaggerAtPlayer()
+        + boolean isTaggerInRange()
+        + void executeTaggerMovement()
+      }
+
+      class TaggerView {
+        - TaggerModel taggerModel
+        + void draw(Graphics g, int anchorX, int anchorY)
+      }
+    }
+
+    package player {
+      class PlayerView {
+        - PlayerModel playerModel
+        - MazeView mazeView
+        - Map<Direction, List<BufferedImage>> idleSprites
+        - Map<Direction, List<BufferedImage>> walkSprites
+        - Sprite PLAYER_IDLE_UP_SPRITE
+        - Sprite PLAYER_IDLE_DOWN_SPRITE
+        - Sprite PLAYER_IDLE_LEFT_SPRITE
+        - Sprite PLAYER_IDLE_RIGHT_SPRITE
+        - Sprite PLAYER_WALKUP_SPRITE
+        - Sprite PLAYER_WALKDOWN_SPRITE
+        - Sprite PLAYER_WALKLEFT_SPRITE
+        - Sprite PLAYER_WALKRIGHT_SPRITE
+        - int currentFrame
+        - Timer animationTimer
+        + draw(Graphics g)
+      }
+
+      class PlayerModel extends maze.util.Observable {
+        - float playerX
+        - float playerY
+        - boolean keyAcc
+        - boolean isWalkingUp
+        - boolean isWalkingDown
+        - boolean isWalkingLeft
+        - boolean isWalkingRight
+        - int STEPS
+        - int DELAY
+        - Direction currentDirection
+        - MazeModel mazeModel
+        - int hitPoint
+        - void setStartPos()
+        + float getPlayerX()
+        + float getPlayerY()
+        + void onHit()
+        + void moveUp()
+        + void moveDown()
+        + void moveLeft()
+        + void moveRight()
+        - void onMove()
+        - void notifyChange()
+      }
+
+      class PlayerController implements java.awt.event.KeyListener {
+        - PlayerModel playerModel
+        + void keyPressed(KeyEvent e)
+        + void keyReleased(KeyEvent e)
+        + void keyTyped(KeyEvent e)
+      }
+    }
+
+    MazeModel *-- MazeElement
+    MazeModel *-- TaskElement
+    MazeModel o-o MazeView
+
+    MazeView *-- PlayerView
+    MazeView *-- TaggerView
+    MazeView o-- PlayerModel
+    MazeView o-o TaggerModel
+    MazeView --> MazeFogView
+
+    PlayerModel o-- MazeModel
+    PlayerView o-- PlayerModel
+    PlayerView o-- Sprite
+    PlayerView --> Direction
+    PlayerView --> PlayerController
+    PlayerView --> ImageManager
+    PlayerController o-- PlayerModel
+
+    TaggerView o-- TaggerModel
+    TaggerSearchModel o-o TaggerModel
+    TaggerSearchModel o-- PlayerModel
+    TaggerSearchModel o-- MazeModel
+    TaggerSearchModel o-- Coordinate
+
+    PathModel --> ImageManager
+    WallModel --> ImageManager
+    WallModel --> WallType
+    GoalModel o-- MazeModel
+    CollectTaskModel o-- MovingPanel
+  }
+
+  package window {
+    class AppScreenManager extends maze.util.Observable {
+      {static} - AppScreenManager INSTANCE
+      - Stack<ScreenBase> stack
+      + List<ScreenBase> getScreensAsList()
+      + void push(ScreenBase screen)
+      + void pop()
+      + void clear()
+      + void peek()
+      {static} + AppScreenManager getInstance()
+    }
+    class AppWindow extends javax.swing.JFrame {
+      - AppScreenManager screenManager
+      {static} - int innerWidth
+      {static} - int innerHeight
+      {static} + int getInnerWidth()
+      {static} + int getInnerHeight()
+    }
+    class WindowUpdateWorker extends javax.swing.SwingWorker {
+      - AppWindow window
+      # Void doInBackground
+    }
+
+    package screen {
+      abstract class ScreenBase extends javax.swing.JPanel {
+        - Timer fadeTimer
+        - float bgOpacity
+        - float fgOpacity
+        - float maxBgOpacity
+        - float maxFgOpacity
+        + void paintComponent(Graphics g)
+        + void draw()
+        + void onShow()
+        + void onHide()
+        + void setBackgroundOpacity(float opacity)
+        + void setForegroundOpacity(float opacity)
+        + void setOpacity(float opacity)
+        + void setMaxBackgroundOpacity(float opacity)
+        + void setMaxForegroundOpacity(float opacity)
+        + float getBackgroundOpacity()
+        + float getForegroundOpacity()
+        + void fadeOut(Runnable onFinished)
+        + void fadeIn(Runnable onFinished)
+      }
+
+      abstract class TrunsculentScreenBase extends ScreenBase {}
+
+      class MazeGoalScreen extends TrunsculentScreenBase {}
+      class MazePauseScreen extends TrunsculentScreenBase {}
+      class MazeGameOverScreen extends TrunsculentScreenBase {}
+      class MazePlayScreen extends ScreenBase {}
+      class StartScreen extends ScreenBase {}
+    }
+
+    AppScreenManager o-- ScreenBase
+    AppWindow o-- AppScreenManager
+    AppWindow o-> WindowUpdateWorker
+    Fader --> Timer
+    PlayerView o-- Timer
+    ScreenBase o-- Timer
+
+  }
+
+  Main <-- AppWindow
+}
+
+@enduml

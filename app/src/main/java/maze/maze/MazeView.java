@@ -20,11 +20,11 @@ import maze.window.AppWindow;
  * 迷路の盤面を描画するView
  */
 public class MazeView extends JPanel implements Observer {
-  protected MazeModel mazeModel;
-  protected PlayerModel playerModel;
-  protected PlayerView playerView;
-  protected TaggerModel taggerModel;
-  protected TaggerView taggerView;
+  private final MazeModel mazeModel;
+  private final PlayerModel playerModel;
+  private final PlayerView playerView;
+  private final TaggerModel taggerModel;
+  private final TaggerView taggerView;
 
   private int anchorX = 0;
   private int anchorY = 0;

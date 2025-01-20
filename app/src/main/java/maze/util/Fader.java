@@ -9,37 +9,29 @@ public class Fader {
   public static final Fader FADE_IN = new Fader(1, 0);
 
   private final int sign;
-  private final float initialOpacity;
-  private float opacity;
+  private final float initialValue;
+  private float currentValue;
 
   private Fader(int sign, float initialOpacity) {
     this.sign = sign;
-    this.initialOpacity = initialOpacity;
+    this.initialValue = initialOpacity;
   }
 
-  public int getSign() {
-    return sign;
-  }
-
-  public float getInitialOpacity() {
-    return initialOpacity;
-  }
-
-  private void updateOpacity() {
-    opacity += 0.08f * sign;
-    if (opacity < 0)
-      opacity = 0;
-    if (opacity > 1)
-      opacity = 1;
+  private void updateCurrentValue() {
+    currentValue += 0.08f * sign;
+    if (currentValue < 0)
+      currentValue = 0;
+    if (currentValue > 1)
+      currentValue = 1;
   }
 
   public Timer createTimer(Consumer<Float> onUpdate, Runnable onFinished) {
     try {
       Fader newFader = (Fader) clone();
       Timer timer = new Timer(1000 / 60, e -> {
-        newFader.updateOpacity();
-        onUpdate.accept(newFader.opacity);
-        if (newFader.opacity == 0 || newFader.opacity == 1) {
+        newFader.updateCurrentValue();
+        onUpdate.accept(newFader.currentValue);
+        if (newFader.currentValue == 0 || newFader.currentValue == 1) {
           ((Timer) e.getSource()).stop();
           if (onFinished != null)
             onFinished.run();
@@ -47,7 +39,7 @@ public class Fader {
       }) {
         @Override
         public void start() {
-          newFader.opacity = newFader.initialOpacity;
+          newFader.currentValue = newFader.initialValue;
           super.start();
         }
       };
@@ -60,6 +52,6 @@ public class Fader {
 
   @Override
   protected Object clone() throws CloneNotSupportedException {
-    return new Fader(sign, initialOpacity);
+    return new Fader(sign, initialValue);
   }
 }

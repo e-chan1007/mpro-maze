@@ -15,7 +15,7 @@ import maze.window.screen.ScreenBase;
 import maze.window.screen.StartScreen;
 
 public class AppWindow extends JFrame {
-  AppScreenManager screenManager = AppScreenManager.getInstance();
+  private AppScreenManager screenManager = AppScreenManager.getInstance();
   private static int innerWidth = 400;
   private static int innerHeight = 300;
 

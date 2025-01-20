@@ -17,10 +17,6 @@ public class AppScreenManager extends maze.util.Observable {
     return list;
   }
 
-  public Stack<ScreenBase> getStackCopy() {
-    return (Stack<ScreenBase>) stack.clone();
-  }
-
   public void push(ScreenBase window) {
     stack.push(window);
     setChanged();

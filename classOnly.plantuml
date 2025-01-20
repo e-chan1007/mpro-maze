@@ -1,0 +1,149 @@
+@startuml class
+
+hide empty members
+
+!pragma useIntermediatePackages false
+package javax.swing {
+  class JFrame {}
+  class JPanel {}
+  class SwingWorker{}
+  class Timer{}
+}
+
+package java.awt.event {
+  interface KeyListener {}
+}
+
+package maze {
+  class Main {}
+
+  package asset {
+    class ImageManager {}
+    class SoundManager {}
+    class Sprite {}
+  }
+
+  package enums {
+    enum Direction {}
+  }
+
+  package util {
+    class Observable {}
+    interface Observer {}
+    class Fader {}
+  }
+
+  package maze {
+    class MazeView extends javax.swing.JPanel implements maze.util.Observer {}
+
+    class MazeModel extends maze.util.Observable implements maze.util.Observer {}
+
+    class MazeFogView {}
+
+    package element {
+      abstract class MazeElement extends maze.util.Observable {
+      }
+      abstract class TaskElement extends MazeElement {
+      }
+      class CollectTaskModel extends TaskElement {
+      }
+      class EmptyModel extends MazeElement {
+      }
+      class PathModel extends MazeElement {
+      }
+      class WallModel extends MazeElement {
+      }
+      enum "WallModel.WallType" as WallType {
+      }
+      class StartModel extends PathModel {}
+      class GoalModel extends MazeElement {
+      }
+    }
+
+    package tagger {
+      class Coordinate {
+      }
+      class TaggerModel {
+        }
+
+      class TaggerSearchModel {
+      }
+
+      class TaggerView {
+      }
+    }
+
+    package player {
+      class PlayerView {
+      }
+
+      class PlayerModel extends maze.util.Observable {
+      }
+
+      class PlayerController implements java.awt.event.KeyListener {
+      }
+    }
+
+    MazeModel *-- MazeElement
+    MazeModel *-- TaskElement
+    MazeModel o-o MazeView
+
+    MazeView *-- PlayerView
+    MazeView *-- TaggerView
+    MazeView o-- PlayerModel
+    MazeView o-o TaggerModel
+    MazeView --> MazeFogView
+
+    PlayerModel o-- MazeModel
+    PlayerView o-- PlayerModel
+    PlayerView o-- Sprite
+    PlayerView --> Direction
+    PlayerView --> PlayerController
+    PlayerView --> ImageManager
+    PlayerController o-- PlayerModel
+
+    TaggerView o-- TaggerModel
+    TaggerSearchModel o-o TaggerModel
+    TaggerSearchModel o-- PlayerModel
+    TaggerSearchModel o-- MazeModel
+    TaggerSearchModel o-- Coordinate
+
+    PathModel --> ImageManager
+    WallModel --> ImageManager
+    WallModel --> WallType
+    GoalModel o-- MazeModel
+  }
+
+  package window {
+    class AppScreenManager extends maze.util.Observable {
+    }
+    class AppWindow extends javax.swing.JFrame {
+    }
+    class WindowUpdateWorker extends javax.swing.SwingWorker {
+    }
+
+    package screen {
+      abstract class ScreenBase extends javax.swing.JPanel {
+      }
+
+      abstract class TrunsculentScreenBase extends ScreenBase {}
+
+      class MazeGoalScreen extends TrunsculentScreenBase {}
+      class MazePauseScreen extends TrunsculentScreenBase {}
+      class MazePlayScreen extends ScreenBase {}
+      class StartScreen extends ScreenBase {}
+    }
+
+    AppScreenManager o-- ScreenBase
+    AppWindow o-- AppScreenManager
+    AppWindow o-> WindowUpdateWorker
+    Fader --> Timer
+    PlayerView o-- Timer
+    ScreenBase o-- Timer
+
+  }
+
+  Main <-- AppWindow
+}
+
+@enduml
