@@ -10,10 +10,6 @@ public class PlayerModel extends Observable {
     private float playerX = 1;
     private float playerY = 1;
     private boolean canMove = true;
-    private boolean isWalkingUp = false;
-    private boolean isWalkingDown = false;
-    private boolean isWalkingLeft = false;
-    private boolean isWalkingRight = false;
     private final int STEPS = 15;
     private final int DELAY = 1000 / 60;
     private Direction currentDirection;
@@ -23,7 +19,7 @@ public class PlayerModel extends Observable {
     public PlayerModel(MazeModel mazeModel) {
         this.mazeModel = mazeModel;
 
-        this.currentDirection = Direction.FORWARD;
+        this.currentDirection = Direction.UP;
 
         this.mazeModel.addObserver((Observable observable, Object object) -> {
             setStartPos();
@@ -52,132 +48,55 @@ public class PlayerModel extends Observable {
         return canMove;
     }
 
-    public boolean isWalkingUp() {
-        return isWalkingUp;
-    }
-
-    public boolean isWalkingDown() {
-        return isWalkingDown;
-    }
-
-    public boolean isWalkingLeft() {
-        return isWalkingLeft;
-    }
-
-    public boolean isWalkingRight() {
-        return isWalkingRight;
-    }
-
     public enum Direction {
-        FORWARD, BACK, LEFT, RIGHT
+        UP, DOWN, LEFT, RIGHT
     }
 
     public Direction getCurrentDirection() {
         return currentDirection;
     }
 
-    // * 連続的な動き試作 */
-    public void moveLeft() {
-        if (mazeModel.getElementAt(Math.round(playerX - 1), Math.round(playerY)).canEnter()) {
-            if (canMove) {
-                isWalkingLeft = true;
-                currentDirection = Direction.LEFT;
-                final int[] currentStep = { 0 };
-                canMove = false;
-                Timer timer = new Timer(DELAY, e -> {
-                    if (mazeModel.isPaused())
-                        return;
-                    if (currentStep[0] < STEPS) {
-                        playerX -= 1.0 / STEPS;
-                        notifyChange();
-                        currentStep[0]++;
-                    } else {
-                        canMove = true;
-                        isWalkingLeft = false;
-                        ((Timer) e.getSource()).stop();
-                        onMove();
-                    }
-                });
-                timer.start();
-            }
-        }
-    }
-
-    public void moveRight() {
-        if (mazeModel.getElementAt(Math.round(playerX + 1), Math.round(playerY)).canEnter()) {
-            if (canMove) {
-                isWalkingRight = true;
-                currentDirection = Direction.RIGHT;
-                final int[] currentStep = { 0 };
-                canMove = false;
-                Timer timer = new Timer(DELAY, e -> {
-                    if (mazeModel.isPaused())
-                        return;
-                    if (currentStep[0] < STEPS) {
-                        playerX += 1.0 / STEPS;
-                        notifyChange();
-                        currentStep[0]++;
-                    } else {
-                        canMove = true;
-                        isWalkingRight = false;
-                        ((Timer) e.getSource()).stop();
-                        onMove();
-                    }
-                });
-                timer.start();
-            }
-        }
-    }
-
     public void moveUp() {
-        if (mazeModel.getElementAt(Math.round(playerX), Math.round(playerY - 1)).canEnter()) {
-            if (canMove) {
-                isWalkingUp = true;
-                currentDirection = Direction.FORWARD;
-                final int[] currentStep = { 0 };
-                canMove = false;
-                Timer timer = new Timer(DELAY, e -> {
-                    if (mazeModel.isPaused())
-                        return;
-                    if (currentStep[0] < STEPS) {
-                        playerY -= 1.0 / STEPS;
-                        notifyChange();
-                        currentStep[0]++;
-                    } else {
-                        canMove = true;
-                        isWalkingUp = false;
-                        ((Timer) e.getSource()).stop();
-                        isWalkingUp = false;
-                        onMove();
-                    }
-                });
-                timer.start();
-            }
-        }
+        move(0, -1, Direction.UP);
     }
 
     public void moveDown() {
-        if (mazeModel.getElementAt(Math.round(playerX), Math.round(playerY + 1)).canEnter()) {
-            if (canMove) {
-                isWalkingDown = true;
-                currentDirection = Direction.BACK;
-                final int[] currentStep = { 0 };
-                canMove = false;
-                Timer timer = new Timer(DELAY, e -> {
-                    if (mazeModel.isPaused())
-                        return;
-                    if (currentStep[0] < STEPS) {
-                        playerY += 1.0 / STEPS;
-                        notifyChange();
-                        currentStep[0]++;
-                    } else {
-                        canMove = true;
-                        isWalkingDown = false;
-                        ((Timer) e.getSource()).stop();
-                        onMove();
-                    }
-                });
-                timer.start();
+        move(0, 1, Direction.DOWN);
+    }
+
+    public void moveLeft() {
+        move(-1, 0, Direction.LEFT);
+    }
+
+    public void moveRight() {
+        move(1, 0, Direction.RIGHT);
+    }
+
+    private void move(float deltaX, float deltaY, Direction direction) {
+        int targetX = Math.round(playerX + deltaX);
+        int targetY = Math.round(playerY + deltaY);
+        if (mazeModel.isInMaze(targetX, targetY)) {
+            if (mazeModel.getElementAt(targetX, targetY).canEnter()) {
+                if (canMove) {
+                    currentDirection = direction;
+                    final int[] currentStep = { 0 };
+                    canMove = false;
+                    Timer timer = new Timer(DELAY, e -> {
+                        if (mazeModel.isPaused())
+                            return;
+                        if (currentStep[0] < STEPS) {
+                            playerX += deltaX / STEPS;
+                            playerY += deltaY / STEPS;
+                            notifyChange();
+                            currentStep[0]++;
+                        } else {
+                            canMove = true;
+                            ((Timer) e.getSource()).stop();
+                            onMove();
+                        }
+                    });
+                    timer.start();
+                }
             }
         }
     }

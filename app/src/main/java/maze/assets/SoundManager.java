@@ -21,8 +21,10 @@ public class SoundManager extends Thread {
         .getAudioInputStream(new BufferedInputStream(SoundManager.class.getResourceAsStream(path)))) {
       Clip clip = AudioSystem.getClip();
       clip.open(inputStream);
+      System.out.println("Loaded: " + path);
       return clip;
     } catch (Exception e) {
+      System.out.println("Error: " + path);
       e.printStackTrace();
     }
     return null;
@@ -36,5 +38,13 @@ public class SoundManager extends Thread {
       clip.setFramePosition(0);
       clip.start();
     }).start();
+  }
+
+  public static void stopClip(Clip clip) {
+    if (clip == null) {
+      return;
+    } else {
+      clip.stop();
+    }
   }
 }

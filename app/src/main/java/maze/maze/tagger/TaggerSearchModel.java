@@ -82,14 +82,6 @@ public class TaggerSearchModel {
       }
     }
 
-    // * dist[][] 確認用デバック */
-    // for (int i = 0; i < mazeHeight; i++) {
-    // for (int j = 0; j < mazeWidth; j++) {
-    // System.out.printf("%3d", dist[j][i]);
-    // }
-    // System.out.print("\n");
-    // }
-
     // * プレイヤー位置までの移動が不可能な場合の処理 */
     ArrayDeque<Coordinate> stack = new ArrayDeque<>();
     if (dist[goal.x][goal.y] == -1) {
@@ -100,9 +92,6 @@ public class TaggerSearchModel {
     stack.add(goal);
     Coordinate elem = goal;
     int ptDistance = dist[goal.x][goal.y];
-
-    // * 目的地までの距離確認用デバック */
-    // System.out.printf("Distance: %2d\n", ptDistance);
 
     while (ptDistance > 1) {
       for (int i = 0; i < 4; i++) {
@@ -194,13 +183,6 @@ public class TaggerSearchModel {
       }
 
       moveTowardPlayer(path, STEPLIMIT);
-
-      // * 調整用 */
-      // try {
-      // Thread.sleep(300);
-      // } catch (InterruptedException ex) {
-      // Thread.currentThread().interrupt();
-      // }
 
       if (isTaggerAtPlayer()) {
         System.out.println("Targetに到達しました.");

@@ -31,24 +31,24 @@ public class PlayerView {
     idleSprites = new HashMap<>();
     walkSprites = new HashMap<>();
 
-    idleSprites.put(Direction.FORWARD, new ArrayList<>());
-    idleSprites.put(Direction.BACK, new ArrayList<>());
+    idleSprites.put(Direction.UP, new ArrayList<>());
+    idleSprites.put(Direction.DOWN, new ArrayList<>());
     idleSprites.put(Direction.LEFT, new ArrayList<>());
     idleSprites.put(Direction.RIGHT, new ArrayList<>());
 
-    walkSprites.put(Direction.FORWARD, new ArrayList<>());
-    walkSprites.put(Direction.BACK, new ArrayList<>());
+    walkSprites.put(Direction.UP, new ArrayList<>());
+    walkSprites.put(Direction.DOWN, new ArrayList<>());
     walkSprites.put(Direction.LEFT, new ArrayList<>());
     walkSprites.put(Direction.RIGHT, new ArrayList<>());
 
     for (int i = 0; i < 8; i++) {
-      idleSprites.get(Direction.FORWARD).add(ImageManager.PLAYER_IDLE_UP_SPRITE.getImageAt(i, 0));
-      idleSprites.get(Direction.BACK).add(ImageManager.PLAYER_IDLE_DOWN_SPRITE.getImageAt(i, 0));
+      idleSprites.get(Direction.UP).add(ImageManager.PLAYER_IDLE_UP_SPRITE.getImageAt(i, 0));
+      idleSprites.get(Direction.DOWN).add(ImageManager.PLAYER_IDLE_DOWN_SPRITE.getImageAt(i, 0));
       idleSprites.get(Direction.LEFT).add(ImageManager.PLAYER_IDLE_LEFT_SPRITE.getImageAt(i, 0));
       idleSprites.get(Direction.RIGHT).add(ImageManager.PLAYER_IDLE_RIGHT_SPRITE.getImageAt(i, 0));
 
-      walkSprites.get(Direction.FORWARD).add(ImageManager.PLAYER_WALKUP_SPRITE.getImageAt(i, 0));
-      walkSprites.get(Direction.BACK).add(ImageManager.PLAYER_WALKDOWN_SPRITE.getImageAt(i, 0));
+      walkSprites.get(Direction.UP).add(ImageManager.PLAYER_WALKUP_SPRITE.getImageAt(i, 0));
+      walkSprites.get(Direction.DOWN).add(ImageManager.PLAYER_WALKDOWN_SPRITE.getImageAt(i, 0));
       walkSprites.get(Direction.LEFT).add(ImageManager.PLAYER_WALKLEFT_SPRITE.getImageAt(i, 0));
       walkSprites.get(Direction.RIGHT).add(ImageManager.PLAYER_WALKRIGHT_SPRITE.getImageAt(i, 0));
     }
@@ -62,8 +62,7 @@ public class PlayerView {
       Direction direction = playerModel.getCurrentDirection();
       if (playerModel.isIdle()) {
         currentFrame = (currentFrame + 1) % idleSprites.get(direction).size();
-      } else if (playerModel.isWalkingUp() || playerModel.isWalkingDown()
-          || playerModel.isWalkingLeft() || playerModel.isWalkingRight()) {
+      } else {
         currentFrame = (currentFrame + 1) % walkSprites.get(direction).size();
       }
       mazeView.repaint();
@@ -80,8 +79,7 @@ public class PlayerView {
 
     if (playerModel.isIdle()) {
       playerSprite = idleSprites.get(direction).get(currentFrame);
-    } else if (playerModel.isWalkingUp() || playerModel.isWalkingDown()
-        || playerModel.isWalkingLeft() || playerModel.isWalkingRight()) {
+    } else {
       playerSprite = walkSprites.get(direction).get(currentFrame);
     }
 

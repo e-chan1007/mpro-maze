@@ -26,11 +26,13 @@ public class MazePlayScreen extends ScreenBase {
     TaggerModel taggerModel = new TaggerModel(mazeModel);
     searchModel = new TaggerSearchModel(mazeModel, playerModel, taggerModel);
     taggerModel.setSearchModel(searchModel);
+    mazeModel.setPlayerModel(playerModel);
     mazeView = new MazeView(mazeModel, playerModel, taggerModel);
     PlayerController playerController = new PlayerController(playerModel);
 
     playerModel.addObserver(mazeView);
     taggerModel.addObserver(mazeView);
+    mazeModel.addObserver(mazeView);
     mazeView.addKeyListener(playerController);
 
     mazeView.addKeyListener(new KeyAdapter() {

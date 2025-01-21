@@ -34,10 +34,14 @@ public class TaggerView {
 
     walkSprites.put(Direction.LEFT, new ArrayList<>());
     walkSprites.put(Direction.RIGHT, new ArrayList<>());
+    walkSprites.put(Direction.UP, new ArrayList<>());
+    walkSprites.put(Direction.DOWN, new ArrayList<>());
 
     for (int i = 0; i < 8; i++) {
       walkSprites.get(Direction.LEFT).add(ImageManager.TAGGER_WALK_SPRITE.getImageAt(i, 1));
       walkSprites.get(Direction.RIGHT).add(ImageManager.TAGGER_WALK_SPRITE.getImageAt(i, 1));
+      walkSprites.get(Direction.UP).add(ImageManager.TAGGER_WALK_SPRITE.getImageAt(i, 1));
+      walkSprites.get(Direction.DOWN).add(ImageManager.TAGGER_WALK_SPRITE.getImageAt(i, 1));
     }
 
     this.currentFrame = 0;
