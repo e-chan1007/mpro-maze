@@ -37,11 +37,11 @@ public class TaggerView {
     walkSprites.put(Direction.UP, new ArrayList<>());
     walkSprites.put(Direction.DOWN, new ArrayList<>());
 
-    for (int i = 0; i < 8; i++) {
-      walkSprites.get(Direction.LEFT).add(ImageManager.TAGGER_WALK_SPRITE.getImageAt(i, 1));
-      walkSprites.get(Direction.RIGHT).add(ImageManager.TAGGER_WALK_SPRITE.getImageAt(i, 1));
-      walkSprites.get(Direction.UP).add(ImageManager.TAGGER_WALK_SPRITE.getImageAt(i, 1));
-      walkSprites.get(Direction.DOWN).add(ImageManager.TAGGER_WALK_SPRITE.getImageAt(i, 1));
+    for (int i = 0; i < 10; i++) {
+      walkSprites.get(Direction.LEFT).add(ImageManager.TAGGER_WALKLEFT_SPRITE.getImageAt(i, 0));
+      walkSprites.get(Direction.RIGHT).add(ImageManager.TAGGER_WALKRIGHT_SPRITE.getImageAt(i, 0));
+      // walkSprites.get(Direction.UP).add(ImageManager.TAGGER_WALK_SPRITE.getImageAt(i, 0));
+      // walkSprites.get(Direction.DOWN).add(ImageManager.TAGGER_WALK_SPRITE.getImageAt(i, 0));
     }
 
     this.currentFrame = 0;
@@ -60,7 +60,7 @@ public class TaggerView {
 
   public void draw(Graphics g, int anchorX, int anchorY) {
     Graphics2D g2d = (Graphics2D) g;
-    double MAGNIFICATION = 1.5;
+    double MAGNIFICATION = 0.8;
 
     BufferedImage taggerSprite = null;
     Direction direction = taggerModel.getCurrentDirection();

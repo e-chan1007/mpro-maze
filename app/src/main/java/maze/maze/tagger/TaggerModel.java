@@ -62,19 +62,23 @@ public class TaggerModel extends Observable {
   }
 
   public void moveLeft() {
-    move(-1.0f, 0.0f, Direction.LEFT);
+    currentDirection = Direction.LEFT;
+    move(-1.0f, 0.0f, currentDirection);
   }
 
   public void moveRight() {
-    move(1.0f, 0.0f, Direction.RIGHT);
+    currentDirection = Direction.RIGHT;
+    move(1.0f, 0.0f, currentDirection);
   }
 
+  //* currentDirectionは更新しない */
   public void moveUp() {
-    move(0.0f, -1.0f, Direction.UP);
+    move(0.0f, -1.0f, currentDirection);
   }
 
+  //* currentDirectionは更新しない */
   public void moveDown() {
-    move(0.0f, 1.0f, Direction.DOWN);
+    move(0.0f, 1.0f, currentDirection);
   }
 
   public boolean isTaggerInRange() {
