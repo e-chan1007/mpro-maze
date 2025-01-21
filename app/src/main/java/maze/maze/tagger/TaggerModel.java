@@ -188,15 +188,6 @@ public class TaggerModel extends Observable {
     currentStage = newStage;
   }
 
-  // private void stopHeartbeatSound() {
-  // if (isHeartbeatPlaying) {
-  // SoundManager.stopClip(heartbeatSoundSlow);
-  // SoundManager.stopClip(heartbeatSoundMedium);
-  // SoundManager.stopClip(heartbeatSoundFast);
-  // }
-  // isHeartbeatPlaying = false;
-  // }
-
   private void move(float deltaX, float deltaY, Direction direction) {
     int targetX = Math.round(taggerX + deltaX);
     int targetY = Math.round(taggerY + deltaY);
