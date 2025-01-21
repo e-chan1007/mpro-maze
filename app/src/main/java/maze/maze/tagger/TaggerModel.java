@@ -112,11 +112,11 @@ public class TaggerModel extends Observable {
 
     double distanceSquared = Math.pow(taggerX - playerX, 2) + Math.pow(taggerY - playerY, 2);
 
-    if (distanceSquared <= 3.0 * 3.0) {
+    if (distanceSquared <= 0 * 0) {
       return 3;
-    } else if (distanceSquared <= 5.0 * 5.0) {
-      return 2;
     } else if (distanceSquared <= 7.0 * 7.0) {
+      return 2;
+    } else if (distanceSquared <= 15.0 * 5.0) {
       return 1;
     } else {
       return 0;
@@ -125,44 +125,66 @@ public class TaggerModel extends Observable {
 
   private void handleHeartbeatSound() {
     int newStage = getCurrentStage();
+    if (newStage == currentStage) {
+      // ステージが同じなら、何もしない(継続)
+      return;
+    }
 
-    if (newStage != currentStage) {
-      stopHeartbeatSound();
-
-      switch (newStage) {
+    // 以前のStageのクリップをフェードアウト
+    // (isHeartbeatPlaying が true の場合に限る)
+    if (isHeartbeatPlaying) {
+      switch (currentStage) {
         case 3:
-          SoundManager.playClip(heartbeatSoundFast);
-          isHeartbeatPlaying = true;
+          SoundManager.fadeOutAndStop(heartbeatSoundFast, 500, 0.0f, -80.0f);
           break;
         case 2:
-          SoundManager.playClip(heartbeatSoundMedium);
-          isHeartbeatPlaying = true;
+          SoundManager.fadeOutAndStop(heartbeatSoundMedium, 500, 0.0f, -80.0f);
           break;
         case 1:
-          SoundManager.playClip(heartbeatSoundSlow);
-          isHeartbeatPlaying = true;
+          SoundManager.fadeOutAndStop(heartbeatSoundSlow, 500, 0.0f, -80.0f);
           break;
         default:
-          isHeartbeatPlaying = false;
-          break;
+          // do nothing
       }
-      currentStage = newStage;
     }
+
+    // 新しいステージに応じたクリップをフェードイン
+    switch (newStage) {
+      case 3:
+        SoundManager.fadeInAndLoop(heartbeatSoundFast, 500, -80.0f, 0.0f);
+        isHeartbeatPlaying = true;
+        break;
+      case 2:
+        SoundManager.fadeInAndLoop(heartbeatSoundMedium, 500, -80.0f, 0.0f);
+        isHeartbeatPlaying = true;
+        break;
+      case 1:
+        SoundManager.fadeInAndLoop(heartbeatSoundSlow, 500, -80.0f, 0.0f);
+        isHeartbeatPlaying = true;
+        break;
+      default:
+        // Stage 0: 音は鳴らさない
+        // フェードアウトした後は再生しないので何もしない
+        isHeartbeatPlaying = false;
+        break;
+    }
+
+    currentStage = newStage;
   }
 
-  private void stopHeartbeatSound() {
-    if (isHeartbeatPlaying) {
-      SoundManager.stopClip(heartbeatSoundSlow);
-      SoundManager.stopClip(heartbeatSoundMedium);
-      SoundManager.stopClip(heartbeatSoundFast);
-    }
-    isHeartbeatPlaying = false;
-  }
+  // private void stopHeartbeatSound() {
+  //   if (isHeartbeatPlaying) {
+  //     SoundManager.stopClip(heartbeatSoundSlow);
+  //     SoundManager.stopClip(heartbeatSoundMedium);
+  //     SoundManager.stopClip(heartbeatSoundFast);
+  //   }
+  //   isHeartbeatPlaying = false;
+  // }
 
   private void move(float deltaX, float deltaY, Direction direction) {
     int targetX = Math.round(taggerX + deltaX);
     int targetY = Math.round(taggerY + deltaY);
-    if(mazeModel.isInMaze(targetX, targetY)) {
+    if (mazeModel.isInMaze(targetX, targetY)) {
       if (mazeModel.getElementAt(targetX, targetY).canEnter()) {
         if (canMove) {
           currentDirection = direction;

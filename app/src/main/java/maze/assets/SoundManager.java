@@ -5,6 +5,7 @@ import java.io.BufferedInputStream;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 
 /**
  * @example SoundManager.playClip(SoundManager.loadClip("/se.wav"));
@@ -28,6 +29,81 @@ public class SoundManager extends Thread {
       e.printStackTrace();
     }
     return null;
+  }
+
+  public static void setVolume(Clip clip, float volume) {
+    if (clip == null) {
+      return;
+    } else {
+      try {
+        FloatControl volumecontrol = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        volumecontrol.setValue(volume);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  /**
+   * 
+   * @param clip
+   * @param fadeMillis
+   * @param startDb
+   * @param endDb
+   */
+
+  public static void fadeOutAndStop(Clip clip, int fadeMillis, float startDb, float endDb) {
+    if (clip == null)
+      return;
+
+    // フェードステップの数(細かくすると滑らかになるが時間のオーバーヘッドが増える)
+    int steps = 20;
+    float delta = (endDb - startDb) / steps;
+    long sleepDuration = fadeMillis / steps;
+
+    new Thread(() -> {
+      for (int i = 0; i < steps; i++) {
+        float currentDb = startDb + delta * i;
+        setVolume(clip, currentDb);
+        try {
+          Thread.sleep(sleepDuration);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+      // 最後に無音に近づけて完全にstop
+      setVolume(clip, endDb);
+      clip.stop();
+    }).start();
+  }
+
+  public static void fadeInAndLoop(Clip clip, int fadeMillis, float startDb, float endDb) {
+    if (clip == null)
+      return;
+
+    clip.setFramePosition(0);
+    clip.loop(Clip.LOOP_CONTINUOUSLY); // ループ再生開始
+
+    int steps = 20;
+    float delta = (endDb - startDb) / steps;
+    long sleepDuration = fadeMillis / steps;
+
+    // 最初は無音にしてから再生開始
+    setVolume(clip, startDb);
+
+    new Thread(() -> {
+      for (int i = 0; i < steps; i++) {
+        float currentDb = startDb + delta * i;
+        setVolume(clip, currentDb);
+        try {
+          Thread.sleep(sleepDuration);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+      // フェードイン完了後、最終値にしておく
+      setVolume(clip, endDb);
+    }).start();
   }
 
   /**
