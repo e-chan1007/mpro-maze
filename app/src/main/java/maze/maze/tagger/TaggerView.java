@@ -1,11 +1,8 @@
 package maze.maze.tagger;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.DirectColorModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
