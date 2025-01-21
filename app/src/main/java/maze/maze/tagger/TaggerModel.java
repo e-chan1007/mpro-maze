@@ -9,8 +9,10 @@ import maze.maze.player.PlayerModel;
 import maze.util.Observable;
 
 public class TaggerModel extends Observable {
-  private float taggerX = 1;
-  private float taggerY = 1;
+  private float startX = 1;
+  private float startY = 1;
+  private float taggerX;
+  private float taggerY;
   private final int STEPS = 30;
   private final int DELAY = 1000 / 60;
   private boolean canMove = true;
@@ -27,6 +29,8 @@ public class TaggerModel extends Observable {
   public TaggerModel(MazeModel mazeModel) {
     this.mazeModel = mazeModel;
     this.currentDirection = Direction.LEFT;
+    this.taggerX = startX;
+    this.taggerY = startY;
 
     this.heartbeatSoundSlow = SoundManager.loadClip("/sounds/heartbeat/HeartbeatSlow.wav");
     this.heartbeatSoundMedium = SoundManager.loadClip("/sounds/heartbeat/HeartbeatMedium.wav");
@@ -53,6 +57,14 @@ public class TaggerModel extends Observable {
     return canMove;
   }
 
+  public void setStartPosition(float x, float y) {
+    this.startX = x;
+    this.startY = y;
+    this.taggerX = x;
+    this.taggerY = y;
+    notifyChange();
+  }
+
   public enum Direction {
     LEFT, RIGHT, UP, DOWN
   }
@@ -71,12 +83,12 @@ public class TaggerModel extends Observable {
     move(1.0f, 0.0f, currentDirection);
   }
 
-  //* currentDirectionは更新しない */
+  // * currentDirectionは更新しない */
   public void moveUp() {
     move(0.0f, -1.0f, currentDirection);
   }
 
-  //* currentDirectionは更新しない */
+  // * currentDirectionは更新しない */
   public void moveDown() {
     move(0.0f, 1.0f, currentDirection);
   }
@@ -177,12 +189,12 @@ public class TaggerModel extends Observable {
   }
 
   // private void stopHeartbeatSound() {
-  //   if (isHeartbeatPlaying) {
-  //     SoundManager.stopClip(heartbeatSoundSlow);
-  //     SoundManager.stopClip(heartbeatSoundMedium);
-  //     SoundManager.stopClip(heartbeatSoundFast);
-  //   }
-  //   isHeartbeatPlaying = false;
+  // if (isHeartbeatPlaying) {
+  // SoundManager.stopClip(heartbeatSoundSlow);
+  // SoundManager.stopClip(heartbeatSoundMedium);
+  // SoundManager.stopClip(heartbeatSoundFast);
+  // }
+  // isHeartbeatPlaying = false;
   // }
 
   private void move(float deltaX, float deltaY, Direction direction) {
