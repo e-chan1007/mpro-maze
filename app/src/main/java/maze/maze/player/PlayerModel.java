@@ -25,6 +25,28 @@ public class PlayerModel extends Observable {
 
     // * PlayerのHP */
     private int hitPoint = 3;
+    private int keys = 0;
+    private int score = 0;
+
+    public void addKey() {
+        keys++;
+    }
+
+    public void heal(int amount) {
+        hitPoint = Math.min(3, hitPoint + amount);
+    }
+
+    public void addScore(int points) {
+        score += points;
+    }
+
+    public int getKeys() {
+        return keys;
+    }
+
+    public int getScore() {
+        return score;
+    }
 
     public PlayerModel(MazeModel mazeModel) {
         this.mazeModel = mazeModel;

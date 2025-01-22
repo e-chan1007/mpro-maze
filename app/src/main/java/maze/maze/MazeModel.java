@@ -18,6 +18,9 @@ import maze.maze.element.StartModel;
 import maze.maze.element.TaskElement;
 import maze.maze.element.WallModel;
 import maze.maze.player.PlayerModel;
+import maze.maze.item.ItemElement;
+import maze.maze.item.ItemModel;
+import maze.maze.item.ItemType;
 
 /**
  * 迷路の盤面を管理するモデル
@@ -148,6 +151,7 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
           put('Ｓ', () -> new StartModel());
           put('Ｇ', () -> new GoalModel(MazeModel.this));
           put('１', () -> new CollectTaskModel(MazeModel.this, playerModel));
+          put('Ⅰ', () -> new ItemModel(ItemType.POTION));
         }
       };
 
