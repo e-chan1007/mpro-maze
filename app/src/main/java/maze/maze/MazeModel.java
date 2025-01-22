@@ -20,7 +20,6 @@ import maze.maze.element.WallModel;
 import maze.maze.player.PlayerModel;
 import maze.maze.item.ItemElement;
 import maze.maze.item.ItemModel;
-import maze.maze.item.ItemType;
 
 /**
  * 迷路の盤面を管理するモデル

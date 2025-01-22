@@ -58,14 +58,14 @@ public class MazePlayScreen extends ScreenBase {
     taggerModel.addObserver(mazeView);
 
     layeredPane = new JLayeredPane();
-    layeredPane.setPreferredSize(new Dimension(1920, 1080));
+    layeredPane.setPreferredSize(new Dimension(400, 300));
 
-    mazeView.setBounds(0, 0, 1920, 1080);
+    mazeView.setBounds(0, 0, 400, 300);
     layeredPane.add(mazeView, JLayeredPane.DEFAULT_LAYER);
 
     inventoryOverlay = new InventoryOverlay(playerModel);
     playerModel.addObserver(inventoryOverlay);
-    inventoryOverlay.setBounds(0, 0, 400, 300);
+    inventoryOverlay.setBounds(0, 0, 100, 50);
     layeredPane.add(inventoryOverlay, JLayeredPane.PALETTE_LAYER);
 
     add(layeredPane);
