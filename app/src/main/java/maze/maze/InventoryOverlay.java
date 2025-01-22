@@ -2,18 +2,21 @@ package maze.maze;
 
 import java.awt.Graphics;
 import java.util.List;
-import java.awt.Image;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
-import javax.swing.ImageIcon;
 
 import maze.maze.player.PlayerModel;
 import maze.util.Observable;
-import maze.maze.item.ItemEffect;
+import maze.maze.item.Item;
+import maze.maze.item.ItemModel;
 
 public class InventoryOverlay extends JPanel implements maze.util.Observer {
 
   private PlayerModel playerModel;
+
+  private static final int MAX_SLOTS = 3;
 
   public InventoryOverlay(PlayerModel playerModel) {
     this.playerModel = playerModel;
@@ -23,25 +26,39 @@ public class InventoryOverlay extends JPanel implements maze.util.Observer {
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    
-    List<ItemEffect> inventory = playerModel.getInventory();
 
-    int iconSize = 48;
-    int padding = 8;
-    int startX = 8;
+    List<Item> inventory = playerModel.getInventory();
+
+    int iconSize = 60;
+    int padding = 20;
+    int startX = 100;
     int bottomY = getHeight() - 8;
 
-    for (ItemEffect item : inventory) {
-      ImageIcon icon = new ImageIcon(getClass().getResource(item.getImagePath()));
-      Image img = icon.getImage();
+    int totalWidth = MAX_SLOTS * (iconSize + padding) + padding;
+    int totalHeight = iconSize + padding * 2;
 
-      int x = startX;
+    int rectX = startX - padding / 2;
+    int rectY = bottomY - iconSize - padding;
+
+    g.setColor(new Color(255, 255, 255, 150));
+    g.fillRect(rectX, rectY, totalWidth, totalHeight);
+    g.setColor(Color.WHITE);
+    g.drawRect(rectX, rectY, totalWidth, totalHeight);
+
+    for (int i = 0; i < MAX_SLOTS; i++) {
+      int x = startX + i * (iconSize + padding);
       int y = bottomY - iconSize;
 
-      g.drawImage(img, x, y, iconSize, iconSize, this);
-
-      startX += iconSize + padding;
+      if (i < inventory.size()) {
+        Item item = inventory.get(i);
+        BufferedImage image = ItemModel.getImage(item.getName());
+        g.drawImage(image, x, y, iconSize, iconSize, null);
+      } else {
+        g.setColor(Color.GRAY);
+        g.fillRect(x, y, iconSize, iconSize);
+      }
     }
+
   }
 
   @Override
@@ -53,5 +70,4 @@ public class InventoryOverlay extends JPanel implements maze.util.Observer {
       }
     }
   }
-  
 }

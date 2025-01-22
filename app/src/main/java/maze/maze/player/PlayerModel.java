@@ -13,7 +13,8 @@ import maze.maze.element.StartModel;
 import maze.util.Observable;
 import maze.window.AppScreenManager;
 import maze.window.screen.MazeGameOverScreen;
-import maze.maze.item.ItemEffect;
+import maze.maze.item.Item;
+import maze.maze.item.ItemModel;
 
 public class PlayerModel extends maze.util.Observable {
     private float playerX = 1;
@@ -23,22 +24,35 @@ public class PlayerModel extends maze.util.Observable {
     private boolean isWalkingDown = false;
     private boolean isWalkingLeft = false;
     private boolean isWalkingRight = false;
-    private final int STEPS = 15;
+    private int steps = 15;
     private final int DELAY = 1000 / 60;
     private Direction currentDirection;
-    private List<ItemEffect> inventory;
+    private List<Item> inventory;
 
     MazeModel mazeModel = new MazeModel();
 
     // * PlayerのHP */
-    private static final int MAX_HITPOINT =3;
+    private static final int MAX_HITPOINT = 3;
     private int hitPoint;
-
 
     public void heal(int amount) {
         hitPoint = Math.min(hitPoint + amount, MAX_HITPOINT);
         setChanged();
         notifyObservers();
+    }
+
+    public void boostSpeed() {
+        steps = 7;
+        setChanged();
+        notifyObservers();
+
+        Timer timer = new Timer(5000, e -> {
+            steps = 15;
+            setChanged();
+            notifyObservers();
+            ((Timer) e.getSource()).stop();
+        });
+        timer.start();
     }
 
     public PlayerModel(MazeModel mazeModel) {
@@ -56,24 +70,34 @@ public class PlayerModel extends maze.util.Observable {
         setStartPos();
     }
 
-    public void addItemEffect(ItemEffect effect) {
-        inventory.add(effect);
-        setChanged();
-        notifyObservers("inventoryChanged");
-    }
-
-    public void useItem(int index) {
-        if (index >= 0 && index < inventory.size()) {
-            ItemEffect effect = inventory.get(index);
-            effect.applyEffect(this);
-
-            inventory.remove(index);
+    public void addItem(Item item) {
+        if (inventory.size() < 3) {
+            inventory.add(item);
             setChanged();
             notifyObservers("inventoryChanged");
+            System.out.println("Item added: " + item.getName());
+        } else {
+            System.out.println("Inventory is full");
         }
     }
 
-    public List<ItemEffect> getInventory() {
+    public void useItem(int index) {
+        if (!mazeModel.isPaused() && keyAcc) {
+            if (index >= 0 && index < inventory.size()) {
+                Item item = inventory.get(index);
+                item.applyEffect(this);
+                inventory.remove(index);
+                setChanged();
+                notifyObservers("inventoryChanged");
+                System.out.println("Item used: " + item.getName());
+            } else {
+                System.out.println("Invalid item index");
+            }
+        }
+
+    }
+
+    public List<Item> getInventory() {
         return Collections.unmodifiableList(this.inventory);
     }
 
@@ -141,8 +165,8 @@ public class PlayerModel extends maze.util.Observable {
                 Timer timer = new Timer(DELAY, e -> {
                     if (mazeModel.isPaused())
                         return;
-                    if (currentStep[0] < STEPS) {
-                        playerX -= 1.0 / STEPS;
+                    if (currentStep[0] < steps) {
+                        playerX -= 1.0 / steps;
                         notifyChange();
                         currentStep[0]++;
                     } else {
@@ -167,8 +191,8 @@ public class PlayerModel extends maze.util.Observable {
                 Timer timer = new Timer(DELAY, e -> {
                     if (mazeModel.isPaused())
                         return;
-                    if (currentStep[0] < STEPS) {
-                        playerX += 1.0 / STEPS;
+                    if (currentStep[0] < steps) {
+                        playerX += 1.0 / steps;
                         notifyChange();
                         currentStep[0]++;
                     } else {
@@ -193,8 +217,8 @@ public class PlayerModel extends maze.util.Observable {
                 Timer timer = new Timer(DELAY, e -> {
                     if (mazeModel.isPaused())
                         return;
-                    if (currentStep[0] < STEPS) {
-                        playerY -= 1.0 / STEPS;
+                    if (currentStep[0] < steps) {
+                        playerY -= 1.0 / steps;
                         notifyChange();
                         currentStep[0]++;
                     } else {
@@ -220,8 +244,8 @@ public class PlayerModel extends maze.util.Observable {
                 Timer timer = new Timer(DELAY, e -> {
                     if (mazeModel.isPaused())
                         return;
-                    if (currentStep[0] < STEPS) {
-                        playerY += 1.0 / STEPS;
+                    if (currentStep[0] < steps) {
+                        playerY += 1.0 / steps;
                         notifyChange();
                         currentStep[0]++;
                     } else {

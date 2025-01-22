@@ -14,7 +14,7 @@ abstract public class ItemElement extends MazeElement {
     }
 
     /**
-     * アイテムが取得されているかどうかを設定する
+     * アイテムが取得されているかどうかを設定
      *
      * @param isCollected アイテムの取得状態
      */
