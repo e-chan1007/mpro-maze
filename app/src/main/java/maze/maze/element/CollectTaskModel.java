@@ -1,13 +1,22 @@
 package maze.maze.element;
 
-import java.awt.Graphics;
-import javax.swing.*;
-import java.awt.event.*;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Random;
+
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+import javax.swing.Timer;
 
 import maze.maze.MazeModel;
 import maze.maze.player.PlayerModel;
+import maze.window.AppScreenManager;
+import maze.window.screen.TranslucentScreenBase;
 
 public class CollectTaskModel extends TaskElement {
   private Timer timer;
@@ -63,81 +72,74 @@ public class CollectTaskModel extends TaskElement {
   }
 
   private void showNewWindow() {
-    JFrame frame = new JFrame("New Window");
-    frame.setSize(400, 300);
-    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-    MovingPanel panel = new MovingPanel();
-    frame.add(panel);
-
-    Timer moveTimer = new Timer(10, new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        panel.moveRedLine();
-      }
-    });
-    moveTimer.start();
-
-    frame.setLocation(frame.getX() + 400, frame.getY());
-
-    frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
-        "closeWindow");
-    frame.getRootPane().getActionMap().put("closeWindow", new AbstractAction() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (panel.isRedLineInYellowRange()) {
-          System.out.println("success!");
-        } else {
-          System.out.println("failure...");
-          count--;
-        }
-        frame.dispose();
-        moveTimer.stop();
-        timer.start();
-      }
-    });
-
-    frame.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosed(WindowEvent e) {
-        timer.start(); // ウィンドウが閉じられたらタイマーを再開
-      }
-    });
-
-    frame.setVisible(true);
+    AppScreenManager.getInstance().push(new MovingScreen());
   }
 
-  private class MovingPanel extends JPanel {
+  private class MovingScreen extends TranslucentScreenBase {
     private int yellowLineX;
     private int redLineX = 70;
     private int direction = 2;
+    private final int anchorX = 1920 / 2 - 300 / 2;
+    private final int anchorY = 1080 / 2 - 160 / 2;
+    private final Timer moveTimer;
 
-    public MovingPanel() {
+    public MovingScreen() {
+      setOpacity(0);
+      setBounds(0, 0, 1920, 1080);
       Random rand = new Random();
       yellowLineX = 130 + rand.nextInt(81);
+
+      moveTimer = new Timer(1000 / 60, (ActionEvent e) -> {
+        moveRedLine();
+      });
+      moveTimer.start();
+
+      getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+          KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
+          "closeWindow");
+      getActionMap().put("closeWindow", new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          if (AppScreenManager.getInstance().peek() != MovingScreen.this)
+            return;
+          if (isRedLineInYellowRange()) {
+            System.out.println("success!");
+          } else {
+            System.out.println("failure...");
+            count--;
+          }
+          AppScreenManager.getInstance().pop();
+          moveTimer.stop();
+          timer.start();
+        }
+      });
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-      super.paintComponent(g);
-      g.setColor(Color.BLACK);
-      g.fillRect(0, 0, getWidth(), getHeight());
+    public void onHide() {
+      timer.start();
+    }
+
+    @Override
+    public void draw(Graphics2D g) {
       g.setColor(Color.WHITE);
-      g.fillRect(70, 140, 260, 20);
+      g.fillRect(anchorX, anchorY + 140, 300, 20);
       g.setColor(Color.YELLOW);
-      g.fillRect(yellowLineX, 140, 20, 20);
+      g.fillRect(anchorX + yellowLineX, anchorY + 140, 20, 20);
       g.setColor(Color.RED);
-      g.fillRect(redLineX, 100, 10, 60);
+      g.fillRect(anchorX + redLineX, anchorY + 100, 10, 60);
     }
 
     public void moveRedLine() {
       redLineX += direction;
-      if (redLineX == 320) {
+      if (redLineX >= 320) {
         System.out.println("failure...");
+        moveTimer.stop();
         count--;
-        SwingUtilities.getWindowAncestor(this).dispose();
+        if (AppScreenManager.getInstance().peek() == this) {
+          AppScreenManager.getInstance().pop();
+        }
       }
-      repaint();
     }
 
     public boolean isRedLineInYellowRange() {

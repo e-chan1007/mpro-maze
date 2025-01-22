@@ -88,9 +88,9 @@ public class MazeView extends JPanel implements Observer {
   }
 
   private void updateAnchor() {
-    anchorX = (int) (((mazeModel.getMazeWidth() - 0.5) * getMazeCellSize()) / 2
+    anchorX = (int) (((mazeModel.getMazeWidth() - 1) * getMazeCellSize()) / 2
         - playerModel.getPlayerX() * getMazeCellSize());
-    anchorY = (int) (((mazeModel.getMazeHeight() - 0.5) * getMazeCellSize()) / 2
+    anchorY = (int) (((mazeModel.getMazeHeight() - 1) * getMazeCellSize()) / 2
         - playerModel.getPlayerY() * getMazeCellSize());
   }
 

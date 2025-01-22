@@ -2,6 +2,8 @@ package maze.window;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Arrays;
@@ -16,13 +18,20 @@ import maze.window.screen.StartScreen;
 
 public class AppWindow extends JFrame {
   private AppScreenManager screenManager = AppScreenManager.getInstance();
-  private static int innerWidth = 400;
-  private static int innerHeight = 300;
+  private static int innerWidth = 1920;
+  private static int innerHeight = 1080;
 
   public AppWindow() {
-    setTitle("Maze");
+    setUndecorated(true);
+    setVisible(true);
     setSize(innerWidth, innerHeight);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    GraphicsDevice gd = ge.getDefaultScreenDevice();
+    gd.setFullScreenWindow(this);
+    gd.setDisplayMode(Arrays.stream(gd.getDisplayModes())
+        .filter(dm -> dm.getWidth() == innerWidth && dm.getHeight() == innerHeight).findFirst().get());
 
     JLayeredPane layeredPane = new JLayeredPane();
 
@@ -34,10 +43,12 @@ public class AppWindow extends JFrame {
           .forEach(s -> {
             ((ScreenBase) s).fadeOut(() -> {
               layeredPane.remove(s);
+              ((ScreenBase) s).onHide();
               l[0]--;
             });
           });
       visibleScreens.stream().filter(s -> !currentScreens.contains(s)).forEach(s -> {
+        s.setOpacity(0);
         layeredPane.add(s);
         s.fadeIn(null);
         layeredPane.setLayer(s, l[0]++);

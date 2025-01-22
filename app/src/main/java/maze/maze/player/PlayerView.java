@@ -111,8 +111,8 @@ public class PlayerView {
       int xOffset = (cellSize - scaleWidth) / 2;
       int yOffset = (cellSize - scaleHeight) / 2;
 
-      int mazeX = (int) ((playerModel.mazeModel.getMazeWidth() - 0.5f) * mazeView.getMazeCellSize() / 2);
-      int mazeY = (int) ((playerModel.mazeModel.getMazeHeight() - 0.5f) * mazeView.getMazeCellSize() / 2);
+      int mazeX = (int) ((playerModel.mazeModel.getMazeWidth() - 1) * mazeView.getMazeCellSize() / 2);
+      int mazeY = (int) ((playerModel.mazeModel.getMazeHeight() - 1) * mazeView.getMazeCellSize() / 2);
 
       g2d.drawImage(playerSprite,
           mazeX + xOffset,
