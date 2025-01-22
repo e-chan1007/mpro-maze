@@ -15,7 +15,7 @@ import maze.window.AppScreenManager;
 import maze.window.screen.MazeGameOverScreen;
 import maze.maze.item.ItemEffect;
 
-public class PlayerModel extends Observable {
+public class PlayerModel extends maze.util.Observable {
     private float playerX = 1;
     private float playerY = 1;
     private boolean keyAcc = true;
@@ -58,6 +58,8 @@ public class PlayerModel extends Observable {
 
     public void addItemEffect(ItemEffect effect) {
         inventory.add(effect);
+        setChanged();
+        notifyObservers("inventoryChanged");
     }
 
     public void useItem(int index) {
@@ -66,6 +68,8 @@ public class PlayerModel extends Observable {
             effect.applyEffect(this);
 
             inventory.remove(index);
+            setChanged();
+            notifyObservers("inventoryChanged");
         }
     }
 
