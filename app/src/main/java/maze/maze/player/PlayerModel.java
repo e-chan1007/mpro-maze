@@ -24,6 +24,7 @@ public class PlayerModel extends Observable {
     MazeModel mazeModel = new MazeModel();
 
     // * PlayerのHP */
+    private static final int MAX_HITPOINT = 5;
     private int hitPoint = 3;
     private int keys = 0;
     private int score = 0;
@@ -33,7 +34,9 @@ public class PlayerModel extends Observable {
     }
 
     public void heal(int amount) {
-        hitPoint = Math.min(3, hitPoint + amount);
+        hitPoint = Math.min(hitPoint + amount, MAX_HITPOINT);
+        setChanged();
+        notifyObservers();
     }
 
     public void addScore(int points) {

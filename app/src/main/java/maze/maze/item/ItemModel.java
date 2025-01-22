@@ -1,43 +1,25 @@
 package maze.maze.item;
 
 import java.awt.Graphics;
-
-import maze.asset.SoundManager;
 import maze.maze.player.PlayerModel;
 
 public class ItemModel extends ItemElement {
+
   private PlayerModel playerModel;
 
-  public ItemModel(ItemType type) {
+  public ItemModel(ItemType type, PlayerModel playerModel) {
     super(type);
-  }
-
-  public void setPlayerModel(PlayerModel playerModel) {
-    this.playerModel = playerModel;
   }
 
   @Override
   public void onEnter() {
-    if (!isCollected()) {
-      // アイテム取得処理
-      collect(playerModel);
-
-      // 効果音再生
-      // switch (getType()) {
-      // case KEY:
-      // SoundManager.getInstance().play("key");
-      // break;
-      // case POTION:
-      // SoundManager.getInstance().play("potion");
-      // break;
-      // case TREASURE:
-      // SoundManager.getInstance().play("treasure");
-      // break;
-    }
+    // 親クラスのcollectメソッドが適切に処理を行う
+    collect(playerModel);
   }
-  
+
+  @Override
   public void draw(Graphics g, int x, int y, int size) {
-    if (!this.isCollected()) {
+    if (!isCollected()) {
       g.setColor(java.awt.Color.RED);
       g.fillRect(x, y, size, size);
     } else {

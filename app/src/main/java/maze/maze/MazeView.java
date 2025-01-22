@@ -106,7 +106,9 @@ public class MazeView extends JPanel implements Observer {
 
   @Override
   public void update(Observable o, Object arg) {
-    if (o == playerModel)
+    if (o == playerModel) {
       updateAnchor();
+      repaint();
+    }
   }
 }

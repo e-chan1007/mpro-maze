@@ -55,4 +55,5 @@ abstract public class ItemElement extends MazeElement {
         this.setChanged();
         this.notifyObservers();
     }
+
 }
