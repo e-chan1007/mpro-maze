@@ -27,13 +27,7 @@ public class PathModel extends MazeElement {
         this.pathSprite = ImageManager.DUNGEON_SPRITE.getRandomImage(2, 1, 3, 1);
       }
     } else if (isBottomWall) {
-      if (isLeftWall) {
-        this.pathSprite = ImageManager.DUNGEON_SPRITE.getImageAt(1, 3);
-      } else if (isRightWall) {
-        this.pathSprite = ImageManager.DUNGEON_SPRITE.getImageAt(4, 3);
-      } else {
-        this.pathSprite = ImageManager.DUNGEON_SPRITE.getRandomImage(2, 3, 3, 3);
-      }
+      this.pathSprite = ImageManager.DUNGEON_SPRITE.getRandomImage(2, 3, 3, 3);
     } else if (isLeftWall) {
       this.pathSprite = ImageManager.DUNGEON_SPRITE.getImageAt(1, 2);
     } else {

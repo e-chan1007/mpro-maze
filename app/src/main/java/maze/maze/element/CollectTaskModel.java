@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import javax.swing.AbstractAction;
@@ -13,6 +14,7 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
+import maze.asset.ImageManager;
 import maze.maze.MazeModel;
 import maze.maze.player.PlayerModel;
 import maze.window.AppScreenManager;
@@ -29,6 +31,10 @@ public class CollectTaskModel extends TaskElement {
   private boolean windowShown = false;
   private boolean windowShown2 = false;
   private Random random = new Random();
+  private BufferedImage pathSprite;
+
+  private final BufferedImage INITIAL_IMAGE = ImageManager.DUNGEON_SPRITE.getImageAt(6, 9);
+  private final BufferedImage DONE_IMAGE = ImageManager.DUNGEON_SPRITE.getImageAt(5, 9);
 
   public CollectTaskModel(MazeModel mazeModel, PlayerModel playerModel) {
     this.timer = new Timer(500, null);
@@ -41,6 +47,29 @@ public class CollectTaskModel extends TaskElement {
   public void onAllInitiated(MazeModel mazeModel, int x, int y) {
     this.ovalX = x;
     this.ovalY = y;
+
+    boolean isTopWall = mazeModel.getElementAt(x, y - 1) instanceof WallModel;
+    boolean isLeftWall = mazeModel.getElementAt(x - 1, y) instanceof WallModel;
+    boolean isRightWall = mazeModel.getElementAt(x + 1, y) instanceof WallModel;
+    boolean isBottomWall = mazeModel.getElementAt(x, y + 1) instanceof WallModel;
+
+    if (!(isTopWall || isBottomWall || isLeftWall || isRightWall)) {
+      this.pathSprite = ImageManager.DUNGEON_SPRITE.getRandomImage(7, 0, 10, 3);
+    } else if (isTopWall) {
+      if (isLeftWall) {
+        this.pathSprite = ImageManager.DUNGEON_SPRITE.getImageAt(1, 1);
+      } else if (isRightWall) {
+        this.pathSprite = ImageManager.DUNGEON_SPRITE.getImageAt(4, 1);
+      } else {
+        this.pathSprite = ImageManager.DUNGEON_SPRITE.getRandomImage(2, 1, 3, 1);
+      }
+    } else if (isBottomWall) {
+      this.pathSprite = ImageManager.DUNGEON_SPRITE.getRandomImage(2, 3, 3, 3);
+    } else if (isLeftWall) {
+      this.pathSprite = ImageManager.DUNGEON_SPRITE.getImageAt(1, 2);
+    } else {
+      this.pathSprite = ImageManager.DUNGEON_SPRITE.getImageAt(4, 2);
+    }
   }
 
   @Override
@@ -157,11 +186,15 @@ public class CollectTaskModel extends TaskElement {
 
   @Override
   public void draw(Graphics g, int x, int y, int size) {
+    g.drawImage(pathSprite, x, y, size, size, null);
+
+    int torchSize = size / 3 * 2;
+    int torchX = x + size / 2 - torchSize / 2;
+    int torchY = y + size / 2 - torchSize / 2;
     if (this.isCompleted()) {
-      g.setColor(java.awt.Color.GREEN);
+      g.drawImage(DONE_IMAGE, torchX, torchY, torchSize, torchSize, null);
     } else {
-      g.setColor(java.awt.Color.ORANGE);
+      g.drawImage(INITIAL_IMAGE, torchX, torchY, torchSize, torchSize, null);
     }
-    g.fillOval(x, y, size, size);
   }
 }
