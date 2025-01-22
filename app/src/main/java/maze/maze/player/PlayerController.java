@@ -18,7 +18,10 @@ public class PlayerController implements KeyListener {
       case KeyEvent.VK_RIGHT, KeyEvent.VK_D -> playerModel.moveRight();
       case KeyEvent.VK_UP, KeyEvent.VK_W -> playerModel.moveUp();
       case KeyEvent.VK_DOWN, KeyEvent.VK_S -> playerModel.moveDown();
-    }
+      case KeyEvent.VK_Q -> playerModel.useItem(0);
+      case KeyEvent.VK_E -> playerModel.useItem(1);
+      case KeyEvent.VK_R -> playerModel.useItem(2);
+    } 
   }
 
   @Override

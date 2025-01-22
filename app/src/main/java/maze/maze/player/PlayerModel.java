@@ -1,5 +1,10 @@
 package maze.maze.player;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import javax.swing.Timer;
 
 import maze.enums.Direction;
@@ -8,6 +13,7 @@ import maze.maze.element.StartModel;
 import maze.util.Observable;
 import maze.window.AppScreenManager;
 import maze.window.screen.MazeGameOverScreen;
+import maze.maze.item.ItemEffect;
 
 public class PlayerModel extends Observable {
     private float playerX = 1;
@@ -20,18 +26,14 @@ public class PlayerModel extends Observable {
     private final int STEPS = 15;
     private final int DELAY = 1000 / 60;
     private Direction currentDirection;
+    private List<ItemEffect> inventory;
 
     MazeModel mazeModel = new MazeModel();
 
     // * PlayerのHP */
-    private static final int MAX_HITPOINT = 5;
-    private int hitPoint = 3;
-    private int keys = 0;
-    private int score = 0;
+    private static final int MAX_HITPOINT =3;
+    private int hitPoint;
 
-    public void addKey() {
-        keys++;
-    }
 
     public void heal(int amount) {
         hitPoint = Math.min(hitPoint + amount, MAX_HITPOINT);
@@ -39,28 +41,36 @@ public class PlayerModel extends Observable {
         notifyObservers();
     }
 
-    public void addScore(int points) {
-        score += points;
-    }
-
-    public int getKeys() {
-        return keys;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
     public PlayerModel(MazeModel mazeModel) {
         this.mazeModel = mazeModel;
 
         this.currentDirection = Direction.UP;
+
+        this.inventory = new ArrayList<>();
+        this.hitPoint = MAX_HITPOINT;
 
         this.mazeModel.addObserver((Observable observable, Object object) -> {
             setStartPos();
         });
 
         setStartPos();
+    }
+
+    public void addItemEffect(ItemEffect effect) {
+        inventory.add(effect);
+    }
+
+    public void useItem(int index) {
+        if (index >= 0 && index < inventory.size()) {
+            ItemEffect effect = inventory.get(index);
+            effect.applyEffect(this);
+
+            inventory.remove(index);
+        }
+    }
+
+    public List<ItemEffect> getInventory() {
+        return Collections.unmodifiableList(this.inventory);
     }
 
     private void setStartPos() {
