@@ -12,17 +12,20 @@ import maze.maze.player.PlayerModel;
 public class CollectTaskModel extends TaskElement {
   private Timer timer;
   private int count = 0;
-  private static final int COUNT = 10;
-  private int window_count;
+  private static final int COUNT = 16;
   private PlayerModel playerModel;
   private int ovalX, ovalY;
+  private int window_count;
+  private int window_count2;
   private boolean windowShown = false;
+  private boolean windowShown2 = false;
   private Random random = new Random();
 
   public CollectTaskModel(MazeModel mazeModel, PlayerModel playerModel) {
     this.timer = new Timer(500, null);
     this.playerModel = playerModel;
-    this.window_count = 2 + random.nextInt(7);
+    this.window_count = 2 + random.nextInt(5);
+    this.window_count2 = 10 + random.nextInt(5);
   }
 
   @Override
@@ -43,9 +46,14 @@ public class CollectTaskModel extends TaskElement {
           if (Math.abs(playerX - ovalX) < 0.01 && Math.abs(playerY - ovalY) < 0.01) {
             count++;
             isOnOval = true;
-            if ((count == window_count || count == COUNT - 2) && !windowShown) {
+            if (count == window_count && !windowShown) {
               showNewWindow();
               windowShown = true;
+              timer.stop();
+            }
+            if (count == window_count2 && !windowShown2) {
+              showNewWindow();
+              windowShown2 = true;
               timer.stop();
             }
             if (count == COUNT) {
