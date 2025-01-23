@@ -45,68 +45,6 @@ public class SoundManager {
   }
 
   /**
-   * 
-   * @param clip
-   * @param fadeMillis
-   * @param startDb
-   * @param endDb
-   */
-
-  public static void fadeOutAndStop(Clip clip, int fadeMillis, float startDb, float endDb) {
-    if (clip == null)
-      return;
-
-    // フェードステップの数(細かくすると滑らかになるが時間のオーバーヘッドが増える)
-    int steps = 20;
-    float delta = (endDb - startDb) / steps;
-    long sleepDuration = fadeMillis / steps;
-
-    new Thread(() -> {
-      for (int i = 0; i < steps; i++) {
-        float currentDb = startDb + delta * i;
-        setVolume(clip, currentDb);
-        try {
-          Thread.sleep(sleepDuration);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-      }
-      // 最後に無音に近づけて完全にstop
-      setVolume(clip, endDb);
-      clip.stop();
-    }).start();
-  }
-
-  public static void fadeInAndLoop(Clip clip, int fadeMillis, float startDb, float endDb) {
-    if (clip == null)
-      return;
-
-    clip.setFramePosition(0);
-    clip.loop(Clip.LOOP_CONTINUOUSLY); // ループ再生開始
-
-    int steps = 20;
-    float delta = (endDb - startDb) / steps;
-    long sleepDuration = fadeMillis / steps;
-
-    // 最初は無音にしてから再生開始
-    setVolume(clip, startDb);
-
-    new Thread(() -> {
-      for (int i = 0; i < steps; i++) {
-        float currentDb = startDb + delta * i;
-        setVolume(clip, currentDb);
-        try {
-          Thread.sleep(sleepDuration);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-      }
-      // フェードイン完了後、最終値にしておく
-      setVolume(clip, endDb);
-    }).start();
-  }
-
-  /**
    * 音声クリップを再生する
    */
   public static void playClip(Clip clip) {
@@ -123,4 +61,60 @@ public class SoundManager {
       clip.stop();
     }
   }
+ 
+  /*
+   * 音声クリップをフェードイン/フェードアウトする
+   */
+  public static void fade(Clip clip, int fadeMillis, float startDb, float endDb, Runnable onFinish) {
+    if (clip == null)
+      return;
+
+    int steps = 1000;
+    float delta = (endDb - startDb) / steps;
+    long sleepDuration = fadeMillis / steps;
+
+    new Thread(() -> {
+      for (int i = 0; i < steps; i++) {
+        float currentDb = startDb + delta * i;
+        setVolume(clip, currentDb);
+        try {
+          Thread.sleep(sleepDuration);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+      setVolume(clip, endDb);
+    }).start();
+  }
+
+
+  /*
+   * 音声クリップをループ再生する
+   */
+  public static void playClipLoopFadeIn(Clip clip, int fadeMillis, float startDb, float endDb) {
+    if (clip == null)
+      return;
+
+    setVolume(clip, startDb);
+
+    clip.setFramePosition(0);
+
+    clip.loop(Clip.LOOP_CONTINUOUSLY);
+
+    fade(clip, fadeMillis, startDb, endDb, null);
+  }
+  
+  /*
+   * 音声クリップをフェードアウトして停止する
+   */
+  public static void stopClipFadeOut(Clip clip, int fadeMillis, float startDb, float endDb) {
+    if (clip == null)
+      return;
+
+    fade(clip, fadeMillis, startDb, endDb, () -> {
+      clip.stop();
+      clip.flush();
+    });
+  }
+
 }

@@ -21,9 +21,6 @@ public class TaggerModel extends Observable {
   private TaggerSearchModel searchModel;
 
   private Clip heartbeatSoundSlow;
-  private Clip heartbeatSoundMedium;
-  private Clip heartbeatSoundFast;
-  private int currentStage = 0;
   private boolean isHeartbeatPlaying = false;
 
   public TaggerModel(MazeModel mazeModel) {
@@ -32,9 +29,7 @@ public class TaggerModel extends Observable {
     this.taggerX = startX;
     this.taggerY = startY;
 
-    this.heartbeatSoundSlow = SoundManager.loadClip("/sounds/heartbeat/HeartbeatSlow.wav");
-    this.heartbeatSoundMedium = SoundManager.loadClip("/sounds/heartbeat/HeartbeatMedium.wav");
-    this.heartbeatSoundFast = SoundManager.loadClip("/sounds/heartbeat/HeartbeatFast.wav");
+    this.heartbeatSoundSlow = SoundManager.loadClip("/sounds/heartbeat/heartbeatSlowCut.wav");
   }
 
   public MazeModel getMazeModel() {
@@ -75,10 +70,6 @@ public class TaggerModel extends Observable {
     LEFT, RIGHT, UP, DOWN
   }
 
-  public Direction getCurrentDirection() {
-    return currentDirection;
-  }
-
   public void moveLeft() {
     currentDirection = Direction.LEFT;
     move(-1.0f, 0.0f, currentDirection);
@@ -117,81 +108,39 @@ public class TaggerModel extends Observable {
     return distanceSquared <= RANGE_SQUARED;
   }
 
-  private void notifyChange() {
-    setChanged();
-    notifyObservers();
-  }
-
-  private int getCurrentStage() {
+  private boolean getPlayerInRangeOfHeartbeat() {
     PlayerModel playerModel = mazeModel.getPlayerModel();
-    if (playerModel == null) {
-      System.out.println("PlayerModelが設定されていません");
-      return 0;
-    }
 
     float playerX = playerModel.getPlayerX();
     float playerY = playerModel.getPlayerY();
 
     double distanceSquared = Math.pow(taggerX - playerX, 2) + Math.pow(taggerY - playerY, 2);
 
-    if (distanceSquared <= 0 * 0) {
-      return 3;
-    } else if (distanceSquared <= 7.0 * 7.0) {
-      return 2;
-    } else if (distanceSquared <= 15.0 * 5.0) {
-      return 1;
+    if (distanceSquared <= 7.0f * 7.0f) {
+      return true;
     } else {
-      return 0;
+      return false;
     }
   }
 
-  private void handleHeartbeatSound() {
-    int newStage = getCurrentStage();
-    if (newStage == currentStage) {
-      // ステージが同じなら、何もしない(継続)
-      return;
-    }
+  public Direction getCurrentDirection() {
+    return currentDirection;
+  }
 
-    // 以前のStageのクリップをフェードアウト
-    // (isHeartbeatPlaying が true の場合に限る)
-    if (isHeartbeatPlaying) {
-      switch (currentStage) {
-        case 3:
-          SoundManager.fadeOutAndStop(heartbeatSoundFast, 500, 0.0f, -80.0f);
-          break;
-        case 2:
-          SoundManager.fadeOutAndStop(heartbeatSoundMedium, 500, 0.0f, -80.0f);
-          break;
-        case 1:
-          SoundManager.fadeOutAndStop(heartbeatSoundSlow, 500, 0.0f, -80.0f);
-          break;
-        default:
-          // do nothing
+  private void handleHeartbeatSound() {
+    if (getPlayerInRangeOfHeartbeat()) {
+      if (!isHeartbeatPlaying) {
+        System.out.println("play heartbeat sound");
+        SoundManager.playClipLoopFadeIn(heartbeatSoundSlow, 3000, -40.0f, 0.0f);
+        isHeartbeatPlaying = true;
+      }
+    } else {
+      if (isHeartbeatPlaying) {
+        System.out.println("stop heartbeat sound");
+        SoundManager.stopClipFadeOut(heartbeatSoundSlow, 3000, 0.0f, -40.0f);
+        isHeartbeatPlaying = false;
       }
     }
-
-    // 新しいステージに応じたクリップをフェードイン
-    switch (newStage) {
-      case 3:
-        SoundManager.fadeInAndLoop(heartbeatSoundFast, 500, -80.0f, 0.0f);
-        isHeartbeatPlaying = true;
-        break;
-      case 2:
-        SoundManager.fadeInAndLoop(heartbeatSoundMedium, 500, -80.0f, 0.0f);
-        isHeartbeatPlaying = true;
-        break;
-      case 1:
-        SoundManager.fadeInAndLoop(heartbeatSoundSlow, 500, -80.0f, 0.0f);
-        isHeartbeatPlaying = true;
-        break;
-      default:
-        // Stage 0: 音は鳴らさない
-        // フェードアウトした後は再生しないので何もしない
-        isHeartbeatPlaying = false;
-        break;
-    }
-
-    currentStage = newStage;
   }
 
   private void move(float deltaX, float deltaY, Direction direction) {
@@ -203,6 +152,7 @@ public class TaggerModel extends Observable {
           currentDirection = direction;
           final int[] currentStep = { 0 };
           canMove = false;
+          handleHeartbeatSound();
           Timer timer = new Timer(DELAY, e -> {
             if (mazeModel.isPaused()) {
               return;
@@ -219,12 +169,16 @@ public class TaggerModel extends Observable {
               canMove = true;
               searchModel.signalConditionMet1();
               ((Timer) e.getSource()).stop();
-              handleHeartbeatSound();
             }
           });
           timer.start();
         }
       }
     }
+  }
+
+  private void notifyChange() {
+    setChanged();
+    notifyObservers();
   }
 }
