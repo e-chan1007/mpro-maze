@@ -226,8 +226,8 @@ public class TaggerSearchModel {
     return taggerX == playerX && taggerY == playerY;
   }
 
-  // * プレイヤーと鬼が RANGE 内にいるかどうかの判定*/
-  private final int RANGE = 5;
+  // * プレイヤーと鬼が RANGE 内にいるかどうかの判定 要最終調整*/
+  private final int RANGE = 12;
 
   public boolean isTaggerinRange() {
     int taggerX = Math.round(taggerModel.getTaggerX());

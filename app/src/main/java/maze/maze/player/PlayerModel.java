@@ -146,7 +146,7 @@ public class PlayerModel extends maze.util.Observable {
         if (hitPoint == 0) {
             // * ゲームオーバー処理 */
             System.out.println("Game Over");
-            AppScreenManager.getInstance().push(new MazeGameOverScreen());
+            AppScreenManager.getInstance().push(new MazeGameOverScreen(mazeModel));
         }
     }
 

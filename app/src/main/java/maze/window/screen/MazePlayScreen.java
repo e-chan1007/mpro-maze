@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JLayeredPane;
 
+import maze.maze.InventoryOverlay;
 import maze.maze.MazeModel;
 import maze.maze.MazeView;
 import maze.maze.player.PlayerController;
@@ -13,7 +14,6 @@ import maze.maze.player.PlayerModel;
 import maze.maze.tagger.TaggerModel;
 import maze.maze.tagger.TaggerSearchModel;
 import maze.window.AppScreenManager;
-import maze.maze.InventoryOverlay;
 
 /**
  * 迷路の盤面を表示する
@@ -35,6 +35,7 @@ public class MazePlayScreen extends ScreenBase {
 
     mazeModel.setPlayerModel(playerModel);
     taggerModel.setSearchModel(searchModel);
+
     mazeView = new MazeView(mazeModel, playerModel, taggerModel);
 
     PlayerController playerController = new PlayerController(playerModel);

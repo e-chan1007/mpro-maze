@@ -5,10 +5,11 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JLabel;
 
+import maze.maze.MazeModel;
 import maze.window.AppScreenManager;
 
 public class MazeGoalScreen extends TranslucentScreenBase {
-  public MazeGoalScreen() {
+  public MazeGoalScreen(MazeModel mazeModel) {
     super();
     setOpacity(0);
 
@@ -16,6 +17,8 @@ public class MazeGoalScreen extends TranslucentScreenBase {
     label.setForeground(getForeground());
     label.setPreferredSize(getSize());
     add(label);
+
+    mazeModel.setPaused(true);
 
     // TODO: 仮コードなので本番は削除すべき
     addKeyListener(new KeyAdapter() {

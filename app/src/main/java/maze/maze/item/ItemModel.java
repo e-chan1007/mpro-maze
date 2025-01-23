@@ -2,15 +2,14 @@ package maze.maze.item;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.Random;
-import java.util.List;
 import java.util.ArrayList;
-
+import java.util.List;
+import java.util.Random;
 
 import maze.asset.ImageManager;
 import maze.asset.Sprite;
-import maze.maze.item.Item;
 import maze.maze.MazeModel;
+import maze.maze.element.ItemElement;
 import maze.maze.player.PlayerModel;
 
 public class ItemModel extends ItemElement {
@@ -26,12 +25,12 @@ public class ItemModel extends ItemElement {
   private static final BufferedImage SPEED_BOOST_IMAGE = SPEED_BOOST_SPRITE.getImageAt(0, 4);
 
   public ItemModel(MazeModel mazeModel, PlayerModel playerModel) {
+    super(mazeModel, playerModel);
     this.playerModel = playerModel;
     this.items = new ArrayList<>();
     items.add(new HealPotion(1));
     items.add(new SpeedBoost());
   }
-
 
   /*
    * アイテム名に基づいて画像を返すメソッド
