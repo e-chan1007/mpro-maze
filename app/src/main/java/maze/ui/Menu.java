@@ -1,6 +1,7 @@
 package maze.ui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
@@ -58,7 +59,7 @@ public class Menu extends Observable {
     private MenuComponent() {
       super();
       setOpaque(true);
-      setBackground(null);
+      setBackground(new Color(0, 0, 0, 0));
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
       setAlignmentX(CENTER_ALIGNMENT);
       setAlignmentY(CENTER_ALIGNMENT);
@@ -84,6 +85,7 @@ public class Menu extends Observable {
     }
 
     private class MenuItemComponent extends JPanel implements Observer {
+      private static final Font UI_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
       private final JButton menuItem;
       private final MenuEntry entry;
 
@@ -92,22 +94,26 @@ public class Menu extends Observable {
         menu.addObserver(this);
         this.entry = entry;
         setOpaque(true);
-        setBackground(null);
+        setBackground(new Color(0, 0, 0, 0));
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setAlignmentX(LEFT_ALIGNMENT);
 
         JLabel activeLabel = new JLabel("▶");
         activeLabel.setForeground(null);
+        activeLabel.setFont(UI_FONT);
+        activeLabel.setOpaque(true);
+        activeLabel.setBackground(new Color(0, 0, 0, 0));
         add(activeLabel);
 
         menuItem = new JButton(entry.getKey());
         menuItem.addActionListener(e -> entry.getValue().run());
         menuItem.setOpaque(true);
-        menuItem.setBackground(null);
+        menuItem.setBackground(new Color(0, 0, 0, 0));
         menuItem.setBorder(null);
-        // menuItem.setFocusPainted(false);
+        menuItem.setFocusPainted(false);
         menuItem.setContentAreaFilled(false);
         menuItem.setForeground(Color.WHITE);
+        menuItem.setFont(UI_FONT);
         // menuItem.addMouseMotionListener(new MouseMotionAdapter() {
         // @Override
         // public void mouseMoved(java.awt.event.MouseEvent e) {

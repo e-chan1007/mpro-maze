@@ -1,40 +1,49 @@
 package maze.window.screen;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
 import maze.maze.MazeModel;
+import maze.ui.Menu;
 import maze.window.AppScreenManager;
 
 public class MazePauseScreen extends TranslucentScreenBase {
   public MazePauseScreen(MazeModel mazeModel) {
     super();
-    setOpacity(0);
 
-    JLabel label = new JLabel("PAUSE", JLabel.CENTER);
+    setOpacity(0f);
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    setAlignmentX(CENTER_ALIGNMENT);
+    setAlignmentY(CENTER_ALIGNMENT);
+    add(Box.createVerticalGlue());
+
+    JLabel label = new JLabel("PAUSE");
+    label.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
     label.setForeground(getForeground());
-    label.setPreferredSize(getSize());
     add(label);
 
-    addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-          case KeyEvent.VK_ESCAPE -> {
-            mazeModel.setPaused(false);
-            new Timer(1, (ActionEvent e2) -> {
-              if (getBackgroundOpacity() == 0 && getForegroundOpacity() == 0) {
-                ((Timer) e2.getSource()).stop();
-              }
-            }).start();
-            AppScreenManager.getInstance().pop();
-          }
-        }
-      }
-    });
+    add(Box.createVerticalStrut(20));
+    add(
+        new Menu()
+            .add("Continue", () -> {
+              mazeModel.setPaused(false);
+              new Timer(1, (ActionEvent e) -> {
+                if (getBackgroundOpacity() == 0 && getForegroundOpacity() == 0) {
+                  ((Timer) e.getSource()).stop();
+                }
+              }).start();
+              AppScreenManager.getInstance().pop();
+            })
+            .add("Exit", () -> {
+              AppScreenManager.getInstance().pop();
+              AppScreenManager.getInstance().pop();
+            })
+            .build());
+    add(Box.createVerticalGlue());
   }
 }

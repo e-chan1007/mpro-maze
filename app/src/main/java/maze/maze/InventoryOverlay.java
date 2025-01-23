@@ -1,17 +1,17 @@
 package maze.maze;
 
-import java.awt.Graphics;
-import java.util.List;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import javax.swing.JPanel;
 
-import maze.maze.player.PlayerModel;
-import maze.util.Observable;
 import maze.asset.ImageManager;
 import maze.maze.item.Item;
 import maze.maze.item.ItemModel;
+import maze.maze.player.PlayerModel;
+import maze.util.Observable;
 
 public class InventoryOverlay extends JPanel implements maze.util.Observer {
 
