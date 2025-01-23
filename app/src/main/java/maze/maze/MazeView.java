@@ -75,7 +75,6 @@ public class MazeView extends JPanel implements Observer {
     int y = (int)(playerModel.getPlayerY() * cellSize + anchorY - cellSize * 0.75);
     
     g.setColor(Color.WHITE);
-    g.drawString("HP: " + playerModel.getHitPoint(), x, y);
   }
 
   @Override
