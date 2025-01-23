@@ -210,6 +210,9 @@ public class TaggerModel extends Observable {
             if (currentStep[0] < STEPS) {
               taggerX += deltaX / STEPS;
               taggerY += deltaY / STEPS;
+              if (!taggerArrivedFlag) {
+                taggerArrivedFlag = searchModel.isTaggerAtPlayer();
+              }
               notifyChange();
               currentStep[0]++;
             } else {
