@@ -143,6 +143,7 @@ public class CollectTaskModel extends TaskElement {
 
   private class MovingScreen extends TranslucentScreenBase {
     private int yellowLineX;
+    private int greenLineX;
     private int redLineX = 0;
     private int direction = 6;
     private final int anchorX = 1920 / 2 - 250 / 2;
@@ -153,7 +154,8 @@ public class CollectTaskModel extends TaskElement {
       setOpacity(0);
       setBounds(0, 0, 1920, 1080);
       Random rand = new Random();
-      yellowLineX = 80 + rand.nextInt(91);
+      yellowLineX = 70 + rand.nextInt(51);
+      greenLineX = yellowLineX + 24;
 
       moveTimer = new Timer(1000 / 60, (ActionEvent e) -> {
         moveRedLine();
@@ -168,10 +170,13 @@ public class CollectTaskModel extends TaskElement {
         public void actionPerformed(ActionEvent e) {
           if (AppScreenManager.getInstance().peek() != MovingScreen.this)
             return;
-          if (isRedLineInYellowRange()) {
-            System.out.println("success!");
+          if (isRedLineInGreenRange()) {
+            System.out.println("perfect!");
+            count++;
+          } else if (isRedLineInYellowRange()) {
+            System.out.println("good.");
           } else {
-            System.out.println("failure...");
+            System.out.println("miss...");
             count--;
           }
           AppScreenManager.getInstance().pop();
@@ -191,15 +196,17 @@ public class CollectTaskModel extends TaskElement {
       g.setColor(Color.WHITE);
       g.fillRect(anchorX, anchorY + 140, 250, 20);
       g.setColor(Color.YELLOW);
-      g.fillRect(anchorX + yellowLineX, anchorY + 140, 20, 20);
+      g.fillRect(anchorX + yellowLineX, anchorY + 140, 60, 20);
+      g.setColor(Color.GREEN);
+      g.fillRect(anchorX + greenLineX, anchorY + 140, 12, 20);
       g.setColor(Color.RED);
-      g.fillRect(anchorX + redLineX, anchorY + 100, 10, 60);
+      g.fillRect(anchorX + redLineX, anchorY + 100, 6, 60);
     }
 
     public void moveRedLine() {
       redLineX += direction;
-      if (redLineX >= 240) {
-        System.out.println("failure...");
+      if (redLineX >= 244) {
+        System.out.println("miss...");
         moveTimer.stop();
         count--;
         if (AppScreenManager.getInstance().peek() == this) {
@@ -209,7 +216,11 @@ public class CollectTaskModel extends TaskElement {
     }
 
     public boolean isRedLineInYellowRange() {
-      return redLineX + 5 >= yellowLineX && redLineX <= yellowLineX + 15;
+      return redLineX + 3 >= yellowLineX && redLineX <= yellowLineX + 57;
+    }
+
+    public boolean isRedLineInGreenRange() {
+      return redLineX + 3 >= greenLineX && redLineX <= greenLineX + 9;
     }
   }
 
