@@ -1,5 +1,6 @@
 package maze.window;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
@@ -25,13 +26,17 @@ public class AppWindow extends JFrame {
     setUndecorated(true);
     setVisible(true);
     setSize(innerWidth, innerHeight);
+    setBackground(Color.BLACK);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
     GraphicsDevice gd = ge.getDefaultScreenDevice();
-    gd.setFullScreenWindow(this);
-    gd.setDisplayMode(Arrays.stream(gd.getDisplayModes())
-        .filter(dm -> dm.getWidth() == innerWidth && dm.getHeight() == innerHeight).findFirst().get());
+    // gd.setFullScreenWindow(this);
+    // gd.setDisplayMode(Arrays.stream(gd.getDisplayModes())
+    // .filter(dm -> dm.getWidth() == innerWidth && dm.getHeight() ==
+    // innerHeight).findFirst().get());
+
+    revalidate();
 
     JLayeredPane layeredPane = new JLayeredPane();
 
@@ -48,9 +53,14 @@ public class AppWindow extends JFrame {
             });
           });
       visibleScreens.stream().filter(s -> !currentScreens.contains(s)).forEach(s -> {
-        s.setOpacity(0);
-        layeredPane.add(s);
-        s.fadeIn(null);
+        if (l[0] == 0) {
+          s.setOpacity(1);
+          layeredPane.add(s);
+        } else {
+          s.setOpacity(0);
+          layeredPane.add(s);
+          s.fadeIn(null);
+        }
         layeredPane.setLayer(s, l[0]++);
       });
       screenManager.peek().requestFocus();
