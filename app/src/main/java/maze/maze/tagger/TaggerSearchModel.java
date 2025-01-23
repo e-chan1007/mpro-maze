@@ -198,11 +198,6 @@ public class TaggerSearchModel {
       goal.x = Math.round(playerModel.getPlayerX());
       goal.y = Math.round(playerModel.getPlayerY());
 
-      // if (taggerModel.taggerArrivedFlag) {
-      // System.out.println("Targetに到達しました.");
-      // break;
-      // }
-
       if (isTaggerinRange()) {
         ArrayDeque<Coordinate> path = performBFS();
         if (path.isEmpty()) {
@@ -212,6 +207,12 @@ public class TaggerSearchModel {
         moveTowardPlayer(path, STEP_LIMIT);
       } else {
         randomWalk();
+        try {
+          waitForCondition1();
+        } catch (InterruptedException ex) {
+          Thread.currentThread().interrupt();
+          return;
+        }
       }
     }
   }
