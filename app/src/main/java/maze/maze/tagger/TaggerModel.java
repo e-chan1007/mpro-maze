@@ -58,6 +58,10 @@ public class TaggerModel extends Observable {
     return taggerArrivedFlag;
   }
 
+  public void setIsHeartbeatPlaying(boolean isHeartbeatPlaying) {
+    this.isHeartbeatPlaying = isHeartbeatPlaying;
+  }
+
   public void setStartPosition(float x, float y) {
     this.startX = x;
     this.startY = y;
@@ -131,7 +135,7 @@ public class TaggerModel extends Observable {
     if (getPlayerInRangeOfHeartbeat()) {
       if (!isHeartbeatPlaying) {
         System.out.println("play heartbeat sound");
-        SoundManager.playClipLoopFadeIn(heartbeatSoundSlow, 3000, -40.0f, 0.0f);
+        SoundManager.playClipLoopFadeIn(heartbeatSoundSlow, 3000, -40.0f, 0.0f, mazeModel);
         isHeartbeatPlaying = true;
       }
     } else {
