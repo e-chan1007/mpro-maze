@@ -34,7 +34,8 @@ public class WallModel extends MazeElement {
     TOP_LEFT_CORNER_2(4, 5),
     TOP_RIGHT_CORNER_2(5, 5),
     BOTTOM_LEFT_CORNER_2(1, 0),
-    BOTTOM_RIGHT_CORNER_2(1, 0);
+    BOTTOM_RIGHT_CORNER_2(1, 0),
+    NO_WALL(8, 7);
 
     public final BufferedImage sprite;
 

@@ -151,6 +151,7 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
           put('┓', () -> new WallModel(WallModel.WallType.TOP_RIGHT_CORNER_2));
           put('┗', () -> new WallModel(WallModel.WallType.BOTTOM_LEFT_CORNER_2));
           put('┛', () -> new WallModel(WallModel.WallType.BOTTOM_RIGHT_CORNER_2));
+          put('┼', () -> new WallModel(WallModel.WallType.NO_WALL));
 
           put('　', () -> new PathModel());
           put('Ｓ', () -> new StartModel());
