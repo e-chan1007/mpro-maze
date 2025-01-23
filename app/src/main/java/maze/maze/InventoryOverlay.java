@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 import maze.maze.player.PlayerModel;
 import maze.util.Observable;
 import maze.asset.ImageManager;
+import maze.maze.element.ItemElement;
 import maze.maze.item.Item;
-import maze.maze.item.ItemModel;
 
 public class InventoryOverlay extends JPanel implements maze.util.Observer {
 
@@ -55,14 +55,15 @@ public class InventoryOverlay extends JPanel implements maze.util.Observer {
 
     for (int i = 0; i < hitPoint; i++) {
       g.drawImage(heartBorderImage, startHeartX + i * (iconSize + padding), rectY + padding, iconSize, iconSize, null);
-      g.drawImage(heartBackgroundImage, startHeartX + i * (iconSize + padding), rectY + padding, iconSize, iconSize, null);
+      g.drawImage(heartBackgroundImage, startHeartX + i * (iconSize + padding), rectY + padding, iconSize, iconSize,
+          null);
       g.drawImage(heartImage, startHeartX + i * (iconSize + padding), rectY + padding, iconSize, iconSize, null);
     }
 
     for (int i = 0; i < MAX_SLOTS; i++) {
       if (i < inventory.size()) {
         Item item = inventory.get(i);
-        BufferedImage image = ItemModel.getImage(item.getName());
+        BufferedImage image = ItemElement.getImage(item.getName());
         g.drawImage(image, startItemX + i * (iconSize + padding), rectY + padding, iconSize, iconSize, null);
       } else {
         g.setColor(new Color(0, 0, 0, 80));
