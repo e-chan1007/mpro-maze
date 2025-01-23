@@ -19,11 +19,15 @@ public class InventoryOverlay extends JPanel implements maze.util.Observer {
   private static final int MAX_SLOTS = 3;
   private static final int MAX_HITPOINT = 3;
   private BufferedImage heartImage;
+  private BufferedImage heartBackgroundImage;
+  private BufferedImage heartBorderImage;
 
   public InventoryOverlay(PlayerModel playerModel) {
     this.playerModel = playerModel;
     setOpaque(false);
     heartImage = ImageManager.loadImage("/player/hp/heart.png");
+    heartBackgroundImage = ImageManager.loadImage(("/player/hp/background.png"));
+    heartBorderImage = ImageManager.loadImage("/player/hp/border.png");
   }
 
   @Override
@@ -46,10 +50,12 @@ public class InventoryOverlay extends JPanel implements maze.util.Observer {
 
     int hitPoint = playerModel.getHitPoint();
 
-    g.setColor(new Color(119, 136, 153, 80));
+    g.setColor(new Color(0, 0, 0, 60));
     g.fillRect(rectX, rectY, totalWidth, totalHeight);
 
     for (int i = 0; i < hitPoint; i++) {
+      g.drawImage(heartBorderImage, startHeartX + i * (iconSize + padding), rectY + padding, iconSize, iconSize, null);
+      g.drawImage(heartBackgroundImage, startHeartX + i * (iconSize + padding), rectY + padding, iconSize, iconSize, null);
       g.drawImage(heartImage, startHeartX + i * (iconSize + padding), rectY + padding, iconSize, iconSize, null);
     }
 
@@ -59,7 +65,7 @@ public class InventoryOverlay extends JPanel implements maze.util.Observer {
         BufferedImage image = ItemModel.getImage(item.getName());
         g.drawImage(image, startItemX + i * (iconSize + padding), rectY + padding, iconSize, iconSize, null);
       } else {
-        g.setColor(new Color(112, 128, 144, 80));
+        g.setColor(new Color(0, 0, 0, 80));
         g.fillRect(startItemX + i * (iconSize + padding), rectY + padding, iconSize, iconSize);
       }
     }

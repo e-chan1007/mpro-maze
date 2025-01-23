@@ -17,6 +17,7 @@ public class ItemModel extends ItemElement {
   private PlayerModel playerModel;
   private List<Item> items;
   private Item selectedItem;
+  private BufferedImage pathSprite;
 
   private static final Random RANDOM = new Random();
 
@@ -24,6 +25,8 @@ public class ItemModel extends ItemElement {
   private static final BufferedImage HEAL_POTION_IMAGE = HEAL_POTION_SPRITE.getImageAt(0, 1);
   private static final Sprite SPEED_BOOST_SPRITE = ImageManager.loadImageAsSprite("/item/potion.png", 64, 64);
   private static final BufferedImage SPEED_BOOST_IMAGE = SPEED_BOOST_SPRITE.getImageAt(0, 4);
+
+  private static final BufferedImage ITEM_BOX = ImageManager.DUNGEON_SPRITE.getImageAt(4, 8);
 
   public ItemModel(MazeModel mazeModel, PlayerModel playerModel) {
     this.playerModel = playerModel;
@@ -58,10 +61,9 @@ public class ItemModel extends ItemElement {
   @Override
   public void draw(Graphics g, int x, int y, int size) {
     if (!this.isCollected()) {
-      g.setColor(java.awt.Color.RED);
+      g.drawImage(ITEM_BOX, x, y, size, size, null);
     } else {
       g.setColor(java.awt.Color.GRAY);
     }
-    g.fillRect(x, y, size, size);
   }
 }
