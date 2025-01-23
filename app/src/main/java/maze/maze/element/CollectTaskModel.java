@@ -124,7 +124,7 @@ public class CollectTaskModel extends TaskElement {
       setOpacity(0);
       setBounds(0, 0, 1920, 1080);
       Random rand = new Random();
-      yellowLineX = 130 + rand.nextInt(81);
+      yellowLineX = 80 + rand.nextInt(91);
 
       moveTimer = new Timer(1000 / 60, (ActionEvent e) -> {
         moveRedLine();
