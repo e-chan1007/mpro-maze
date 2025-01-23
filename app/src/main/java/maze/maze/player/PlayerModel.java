@@ -17,7 +17,6 @@ import maze.window.screen.MazeGameOverScreen;
 public class PlayerModel extends maze.util.Observable {
     private float playerX = 1;
     private float playerY = 1;
-    private boolean keyAcc = true;
     private boolean canMove = true;
     private int steps = 15;
     private final int DELAY = 1000 / 60;
@@ -49,7 +48,7 @@ public class PlayerModel extends maze.util.Observable {
         }
 
         Timer timer = new Timer(5000, e -> {
-            if (keyAcc) {
+            if (canMove) {
                 speedBoosteActive = false;
                 steps = 15;
                 setChanged();
@@ -91,7 +90,7 @@ public class PlayerModel extends maze.util.Observable {
     }
 
     public void useItem(int index) {
-        if (!mazeModel.isPaused() && keyAcc) {
+        if (!mazeModel.isPaused() && canMove) {
             if (index >= 0 && index < inventory.size()) {
                 Item item = inventory.get(index);
                 item.applyEffect(this);
