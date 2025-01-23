@@ -114,9 +114,9 @@ public class CollectTaskModel extends TaskElement {
 
   private class MovingScreen extends TranslucentScreenBase {
     private int yellowLineX;
-    private int redLineX = 70;
-    private int direction = 2;
-    private final int anchorX = 1920 / 2 - 300 / 2;
+    private int redLineX = 0;
+    private int direction = 6;
+    private final int anchorX = 1920 / 2 - 250 / 2;
     private final int anchorY = 1080 / 2 - 160 / 2;
     private final Timer moveTimer;
 
@@ -160,7 +160,7 @@ public class CollectTaskModel extends TaskElement {
     @Override
     public void draw(Graphics2D g) {
       g.setColor(Color.WHITE);
-      g.fillRect(anchorX, anchorY + 140, 300, 20);
+      g.fillRect(anchorX, anchorY + 140, 250, 20);
       g.setColor(Color.YELLOW);
       g.fillRect(anchorX + yellowLineX, anchorY + 140, 20, 20);
       g.setColor(Color.RED);
@@ -169,7 +169,7 @@ public class CollectTaskModel extends TaskElement {
 
     public void moveRedLine() {
       redLineX += direction;
-      if (redLineX >= 320) {
+      if (redLineX >= 240) {
         System.out.println("failure...");
         moveTimer.stop();
         count--;
