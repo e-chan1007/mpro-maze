@@ -36,7 +36,7 @@ public class MazeView extends JPanel implements Observer {
     this.mazeModel.readFile("/test.txt");
     this.playerView = new PlayerView(playerModel, this);
     this.taggerModel = taggerModel;
-    this.taggerView = new TaggerView(taggerModel);
+    this.taggerView = new TaggerView(taggerModel, this);
     setBackground(new Color(0x25, 0x13, 0x1A));
 
     this.setFocusable(true);

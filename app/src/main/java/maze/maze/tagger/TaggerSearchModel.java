@@ -1,7 +1,6 @@
 package maze.maze.tagger;
 
 import java.util.ArrayDeque;
-import javax.swing.Timer;
 
 import maze.maze.MazeModel;
 import maze.maze.player.PlayerModel;
@@ -104,7 +103,6 @@ public class TaggerSearchModel {
     }
 
     ArrayDeque<Coordinate> stack = new ArrayDeque<>();
-
     // * プレイヤー位置までの移動が不可能な場合の処理 */
     // if (dist[goal.x][goal.y] == -1) {
     // System.out.println("プレイヤー位置までの移動が不可能です.");
@@ -215,18 +213,6 @@ public class TaggerSearchModel {
       } else {
         randomWalk();
       }
-
-      // * 調整用 */
-      // try {
-      // Thread.sleep(300);
-      // } catch (InterruptedException ex) {
-      // Thread.currentThread().interrupt();
-      // }
-
-      // if (taggerModel.taggerArrivedFlag) {
-      // System.out.println("Targetに到達しました.");
-      // break;
-      // }
     }
   }
 

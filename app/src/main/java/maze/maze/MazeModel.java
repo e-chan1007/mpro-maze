@@ -44,6 +44,10 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
     return this.view;
   }
 
+  public PlayerModel getPlayerModel() {
+    return this.playerModel;
+  }
+
   /**
    * 座標が迷路の範囲内かどうか
    *
