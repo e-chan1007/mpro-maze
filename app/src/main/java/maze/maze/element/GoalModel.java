@@ -18,7 +18,7 @@ public class GoalModel extends MazeElement {
   public void onEnter() {
     if (mazeModel.canGoal()) {
       System.out.println("Goal!");
-      AppScreenManager.getInstance().push(new MazeGoalScreen());
+      AppScreenManager.getInstance().push(new MazeGoalScreen(mazeModel));
     } else {
       System.out.println("Not all tasks are completed.");
     }
