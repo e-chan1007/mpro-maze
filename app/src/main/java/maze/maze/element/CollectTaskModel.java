@@ -155,7 +155,7 @@ public class CollectTaskModel extends TaskElement {
       setBounds(0, 0, 1920, 1080);
       Random rand = new Random();
       yellowLineX = 70 + rand.nextInt(51);
-      greenLineX = yellowLineX + 24;
+      greenLineX = yellowLineX + rand.nextInt(60 - 12);
 
       moveTimer = new Timer(1000 / 60, (ActionEvent e) -> {
         moveRedLine();
@@ -216,11 +216,11 @@ public class CollectTaskModel extends TaskElement {
     }
 
     public boolean isRedLineInYellowRange() {
-      return redLineX + 3 >= yellowLineX && redLineX <= yellowLineX + 57;
+      return redLineX + 3 >= yellowLineX && redLineX + 3 <= yellowLineX + 60;
     }
 
     public boolean isRedLineInGreenRange() {
-      return redLineX + 3 >= greenLineX && redLineX <= greenLineX + 9;
+      return redLineX + 3 >= greenLineX && redLineX + 3 <= greenLineX + 12;
     }
   }
 
