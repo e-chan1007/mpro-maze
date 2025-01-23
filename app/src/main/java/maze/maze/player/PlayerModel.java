@@ -1,7 +1,6 @@
 package maze.maze.player;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import maze.util.Observable;
 import maze.window.AppScreenManager;
 import maze.window.screen.MazeGameOverScreen;
 import maze.maze.item.Item;
-import maze.maze.item.ItemModel;
 
 public class PlayerModel extends maze.util.Observable {
     private float playerX = 1;
@@ -28,6 +26,8 @@ public class PlayerModel extends maze.util.Observable {
     private final int DELAY = 1000 / 60;
     private Direction currentDirection;
     private List<Item> inventory;
+    private boolean speedBoosteActive = false;
+    private boolean speedBoosteRevert = false;
 
     MazeModel mazeModel = new MazeModel();
 
@@ -35,23 +35,35 @@ public class PlayerModel extends maze.util.Observable {
     private static final int MAX_HITPOINT = 3;
     private int hitPoint;
 
+    // * PlayerのHPを回復 */
     public void heal(int amount) {
         hitPoint = Math.min(hitPoint + amount, MAX_HITPOINT);
         setChanged();
-        notifyObservers();
+        notifyObservers("hpChanged");
     }
 
+    // * Playerのスピードを一時的に上げる */
     public void boostSpeed() {
-        steps = 7;
-        setChanged();
-        notifyObservers();
+        if (!speedBoosteActive) {
+            steps = 10;
+            speedBoosteActive = true;
+            setChanged();
+            notifyObservers("speedBoosted");
+        }
 
         Timer timer = new Timer(5000, e -> {
-            steps = 15;
-            setChanged();
-            notifyObservers();
+            if (keyAcc) {
+                speedBoosteActive = false;
+                steps = 15;
+                setChanged();
+                notifyObservers("speedBoosted");
+                ((Timer) e.getSource()).stop();
+            } else {
+                speedBoosteRevert = true;
+            }
             ((Timer) e.getSource()).stop();
         });
+        timer.setRepeats(false);
         timer.start();
     }
 
@@ -147,6 +159,9 @@ public class PlayerModel extends maze.util.Observable {
 
     public void onHit() {
         hitPoint--;
+        setChanged();
+        notifyObservers("hpChanged");
+
         if (hitPoint == 0) {
             // * ゲームオーバー処理 */
             System.out.println("Game Over");
@@ -174,6 +189,14 @@ public class PlayerModel extends maze.util.Observable {
                         isWalkingLeft = false;
                         ((Timer) e.getSource()).stop();
                         onMove();
+
+                        if (speedBoosteRevert) {
+                            steps = 15;
+                            speedBoosteActive = false;
+                            speedBoosteRevert = false;
+                            setChanged();
+                            notifyObservers("speedBoosted");
+                        }
                     }
                 });
                 timer.start();
@@ -200,6 +223,14 @@ public class PlayerModel extends maze.util.Observable {
                         isWalkingRight = false;
                         ((Timer) e.getSource()).stop();
                         onMove();
+
+                        if (speedBoosteRevert) {
+                            steps = 15;
+                            speedBoosteActive = false;
+                            speedBoosteRevert = false;
+                            setChanged();
+                            notifyObservers("speedBoosted");
+                        }
                     }
                 });
                 timer.start();
@@ -227,6 +258,15 @@ public class PlayerModel extends maze.util.Observable {
                         ((Timer) e.getSource()).stop();
                         isWalkingUp = false;
                         onMove();
+                        
+                        if (speedBoosteRevert) {
+                            steps = 15;
+                            speedBoosteActive = false;
+                            speedBoosteRevert = false;
+                            setChanged();
+                            notifyObservers("speedBoosted");
+                        }
+
                     }
                 });
                 timer.start();
@@ -253,6 +293,14 @@ public class PlayerModel extends maze.util.Observable {
                         isWalkingDown = false;
                         ((Timer) e.getSource()).stop();
                         onMove();
+
+                        if (speedBoosteRevert) {
+                            steps = 15;
+                            speedBoosteActive = false;
+                            speedBoosteRevert = false;
+                            setChanged();
+                            notifyObservers("speedBoosted");
+                        }
                     }
                 });
                 timer.start();

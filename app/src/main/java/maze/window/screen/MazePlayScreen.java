@@ -65,7 +65,7 @@ public class MazePlayScreen extends ScreenBase {
 
     inventoryOverlay = new InventoryOverlay(playerModel);
     playerModel.addObserver(inventoryOverlay);
-    inventoryOverlay.setBounds(480, 900, 960, 180);
+    inventoryOverlay.setBounds(1920/2-310, 900, 620, 120);
     layeredPane.add(inventoryOverlay, JLayeredPane.PALETTE_LAYER);
 
     add(layeredPane);
