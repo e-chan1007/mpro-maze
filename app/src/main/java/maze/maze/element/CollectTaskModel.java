@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Random;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -15,6 +17,7 @@ import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
 import maze.asset.ImageManager;
+import maze.asset.Sprite;
 import maze.maze.MazeModel;
 import maze.maze.player.PlayerModel;
 import maze.window.AppScreenManager;
@@ -33,6 +36,11 @@ public class CollectTaskModel extends TaskElement {
   private Random random = new Random();
   private BufferedImage pathSprite;
 
+  private final Sprite fireSprite = ImageManager.loadImageAsSprite("/fire/fire.png", 64, 64);
+  private List<BufferedImage> fireImages = new ArrayList<>();
+  private final Timer fireTimer;
+  private int fireIndex = 0;
+
   private final BufferedImage INITIAL_IMAGE = ImageManager.DUNGEON_SPRITE.getImageAt(6, 9);
   private final BufferedImage DONE_IMAGE = ImageManager.DUNGEON_SPRITE.getImageAt(5, 9);
 
@@ -41,6 +49,23 @@ public class CollectTaskModel extends TaskElement {
     this.playerModel = playerModel;
     this.window_count = 2 + random.nextInt(5);
     this.window_count2 = 10 + random.nextInt(5);
+
+    for (int i = 0; i < 7; i++) {
+      fireImages.add(fireSprite.getImageAt(i, 0));
+    }
+
+    fireTimer = new Timer(100, new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        fireIndex++;
+        if (fireIndex >= fireImages.size()) {
+          fireIndex = 0;
+          fireTimer.stop();
+        }
+        setChanged();
+        notifyObservers();
+      }
+    });
   }
 
   @Override
@@ -97,6 +122,10 @@ public class CollectTaskModel extends TaskElement {
             if (count == COUNT) {
               setCompleted(true);
               System.out.println("The task is completed.");
+
+              // * 炎
+              startFireAnimation();
+
               timer.stop();
             }
           } else if (isOnOval) {
@@ -193,8 +222,17 @@ public class CollectTaskModel extends TaskElement {
     int torchY = y + size / 2 - torchSize / 2;
     if (this.isCompleted()) {
       g.drawImage(DONE_IMAGE, torchX, torchY, torchSize, torchSize, null);
+
+      if (fireImages.size() > 0) {
+        g.drawImage(fireImages.get(fireIndex), x, y, size, size, null);
+      }
     } else {
       g.drawImage(INITIAL_IMAGE, torchX, torchY, torchSize, torchSize, null);
     }
   }
+
+  private void startFireAnimation() {
+    fireTimer.start();
+  }
+
 }
