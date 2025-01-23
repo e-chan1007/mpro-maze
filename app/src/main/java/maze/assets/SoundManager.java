@@ -54,12 +54,6 @@ public class SoundManager extends Thread {
     }).start();
   }
 
-  public static void playClipLoop(Clip clip) {
-    new Thread(() -> {
-      clip.loop(Clip.LOOP_CONTINUOUSLY);
-    }).start();
-  }
-
   public static void stopClip(Clip clip) {
     if (clip == null) {
       return;
@@ -67,8 +61,11 @@ public class SoundManager extends Thread {
       clip.stop();
     }
   }
-
-  public static void fade(Clip clip, int fadeMillis, float startDb, float endDb) {
+ 
+  /*
+   * 音声クリップをフェードイン/フェードアウトする
+   */
+  public static void fade(Clip clip, int fadeMillis, float startDb, float endDb, Runnable onFinish) {
     if (clip == null)
       return;
 
@@ -88,6 +85,36 @@ public class SoundManager extends Thread {
       }
       setVolume(clip, endDb);
     }).start();
+  }
+
+
+  /*
+   * 音声クリップをループ再生する
+   */
+  public static void playClipLoopFadeIn(Clip clip, int fadeMillis, float startDb, float endDb) {
+    if (clip == null)
+      return;
+
+    setVolume(clip, startDb);
+
+    clip.setFramePosition(0);
+
+    clip.loop(Clip.LOOP_CONTINUOUSLY);
+
+    fade(clip, fadeMillis, startDb, endDb, null);
+  }
+  
+  /*
+   * 音声クリップをフェードアウトして停止する
+   */
+  public static void stopClipFadeOut(Clip clip, int fadeMillis, float startDb, float endDb) {
+    if (clip == null)
+      return;
+
+    fade(clip, fadeMillis, startDb, endDb, () -> {
+      clip.stop();
+      clip.flush();
+    });
   }
 
 }

@@ -125,13 +125,13 @@ public class TaggerModel extends Observable {
     if (getPlayerInRangeOfHeartbeat()) {
       if (!isHeartbeatPlaying) {
         System.out.println("play heartbeat sound");
-        SoundManager.playClipLoop(heartbeatSoundSlow);
+        SoundManager.playClipLoopFadeIn(heartbeatSoundSlow, 3000, -40.0f, 0.0f);
         isHeartbeatPlaying = true;
       }
     } else {
       if (isHeartbeatPlaying) {
         System.out.println("stop heartbeat sound");
-        SoundManager.stopClip(heartbeatSoundSlow);
+        SoundManager.stopClipFadeOut(heartbeatSoundSlow, 3000, 0.0f, -40.0f);
         isHeartbeatPlaying = false;
       }
     }
