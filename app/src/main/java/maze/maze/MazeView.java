@@ -36,7 +36,7 @@ public class MazeView extends JPanel implements Observer {
     this.mazeModel.readFile("/test.txt");
     this.playerView = new PlayerView(playerModel, this);
     this.taggerModel = taggerModel;
-    this.taggerView = new TaggerView(taggerModel);
+    this.taggerView = new TaggerView(taggerModel, this);
     setBackground(new Color(0x25, 0x13, 0x1A));
 
     this.setFocusable(true);
@@ -69,6 +69,15 @@ public class MazeView extends JPanel implements Observer {
     return Math.min(x, y);
   }
 
+  private void drawHitPoints(Graphics g) {
+    int cellSize = getMazeCellSize();
+    int x = (int)(playerModel.getPlayerX() * cellSize + anchorX);
+    int y = (int)(playerModel.getPlayerY() * cellSize + anchorY - cellSize * 0.75);
+    
+    g.setColor(Color.WHITE);
+    g.drawString("HP: " + playerModel.getHitPoint(), x, y);
+  }
+
   @Override
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
@@ -83,6 +92,7 @@ public class MazeView extends JPanel implements Observer {
 
     playerView.draw(g);
     taggerView.draw(g, anchorX, anchorY);
+    drawHitPoints(g);
 
     MazeFogView.draw(g, getWidth(), getHeight());
   }
@@ -96,7 +106,9 @@ public class MazeView extends JPanel implements Observer {
 
   @Override
   public void update(Observable o, Object arg) {
-    if (o == playerModel)
+    if (o == playerModel) {
       updateAnchor();
+      repaint();
+    }
   }
 }

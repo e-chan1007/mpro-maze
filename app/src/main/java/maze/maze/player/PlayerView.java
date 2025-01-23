@@ -75,8 +75,7 @@ public class PlayerView {
       Direction direction = playerModel.getCurrentDirection();
       if (playerModel.isIdle()) {
         currentFrame = (currentFrame + 1) % idleSprites.get(direction).size();
-      } else if (playerModel.isWalkingUp() || playerModel.isWalkingDown()
-          || playerModel.isWalkingLeft() || playerModel.isWalkingRight()) {
+      } else {
         currentFrame = (currentFrame + 1) % walkSprites.get(direction).size();
       }
     });
@@ -92,8 +91,7 @@ public class PlayerView {
 
     if (playerModel.isIdle()) {
       playerSprite = idleSprites.get(direction).get(currentFrame);
-    } else if (playerModel.isWalkingUp() || playerModel.isWalkingDown()
-        || playerModel.isWalkingLeft() || playerModel.isWalkingRight()) {
+    } else {
       playerSprite = walkSprites.get(direction).get(currentFrame);
     }
 
