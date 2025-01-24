@@ -7,6 +7,9 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
+import maze.maze.MazeModel;
+import maze.maze.tagger.TaggerModel;
+
 /**
  * @example SoundManager.playClip(SoundManager.loadClip("/se.wav"));
  */
@@ -61,7 +64,7 @@ public class SoundManager {
       clip.stop();
     }
   }
- 
+
   /*
    * 音声クリップをフェードイン/フェードアウトする
    */
@@ -87,11 +90,10 @@ public class SoundManager {
     }).start();
   }
 
-
   /*
    * 音声クリップをループ再生する
    */
-  public static void playClipLoopFadeIn(Clip clip, int fadeMillis, float startDb, float endDb) {
+  public static void playClipLoopFadeIn(Clip clip, int fadeMillis, float startDb, float endDb, MazeModel mazeModel, TaggerModel taggerModel) {
     if (clip == null)
       return;
 
@@ -102,8 +104,24 @@ public class SoundManager {
     clip.loop(Clip.LOOP_CONTINUOUSLY);
 
     fade(clip, fadeMillis, startDb, endDb, null);
+
+    new Thread(() -> {
+      try {
+        while (true) {
+          if (mazeModel.isPaused()) {
+            taggerModel.setIsHeartbeatPlaying(false);
+            clip.stop();
+            clip.flush();
+          }
+          Thread.sleep(100);
+        }
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }).start();
+
   }
-  
+
   /*
    * 音声クリップをフェードアウトして停止する
    */
