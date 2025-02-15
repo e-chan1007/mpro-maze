@@ -37,7 +37,7 @@ public class TaggerModel extends Observable {
   private static final double TAGGER_RANGE_SQUARED = TAGGER_RANGE * TAGGER_RANGE;
 
   // 心音が鳴る範囲
-  private static final double HEARTBEAT_RANGE = 8.0;
+  private static final double HEARTBEAT_RANGE = 12.0;
   private static final double HEARTBEAT_RANGE_SQUARED = HEARTBEAT_RANGE * HEARTBEAT_RANGE;
 
   // 鬼がプレイヤーに追いついたかどうかのフラグ
@@ -156,13 +156,13 @@ public class TaggerModel extends Observable {
     if (getPlayerInRangeOfHeartbeat()) {
       if (!isHeartbeatPlaying) {
         System.out.println("play heartbeat sound");
-        SoundManager.playClipLoopFadeIn(hearbeatClip, 3000, -40.0f, 0.0f, mazeModel, this);
+        SoundManager.playClipLoopFadeIn(hearbeatClip, 1000, -40.0f, 0.0f, mazeModel, this);
         isHeartbeatPlaying = true;
       }
     } else {
       if (isHeartbeatPlaying) {
         System.out.println("stop heartbeat sound");
-        SoundManager.stopClipFadeOut(hearbeatClip, 3000, 0.0f, -40.0f);
+        SoundManager.stopClipFadeOut(hearbeatClip, 1000, 0.0f, -40.0f);
         isHeartbeatPlaying = false;
       }
     }
@@ -195,7 +195,7 @@ public class TaggerModel extends Observable {
               currentStep[0]++;
             } else {
               canMove = true;
-              searchModel.signalConditionMet1();
+              searchModel.signalConditionMet();
               ((Timer) e.getSource()).stop();
             }
           });
