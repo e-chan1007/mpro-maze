@@ -119,36 +119,39 @@ public class TaggerModel extends Observable {
     move(0.0f, 1.0f, currentDirection);
   }
 
+  /**
+   * プレイヤーが鬼の追跡範囲にいるかどうかを返す
+   */
   public boolean isTaggerInRange() {
     PlayerModel playerModel = mazeModel.getPlayerModel();
     if (playerModel == null) {
       System.out.println("PlayerModelが設定されていません");
       return false;
     }
-
     float playerX = playerModel.getPlayerX();
     float playerY = playerModel.getPlayerY();
-
     double distanceSquared = Math.pow(taggerX - playerX, 2) + Math.pow(taggerY - playerY, 2);
-
-    double RANGE = 5.0;
-    double RANGE_SQUARED = RANGE * RANGE;
-
-    return distanceSquared <= RANGE_SQUARED;
+    return distanceSquared <= TAGGER_RANGE_SQUARED;
   }
 
+  /**
+   *心音が鳴る範囲にプレイヤーがいるかどうかを返す 
+   */
   private boolean getPlayerInRangeOfHeartbeat() {
     PlayerModel playerModel = mazeModel.getPlayerModel();
     float playerX = playerModel.getPlayerX();
     float playerY = playerModel.getPlayerY();
     double distanceSquared = Math.pow(taggerX - playerX, 2) + Math.pow(taggerY - playerY, 2);
-    return distanceSquared <= 7.0 * 7.0;
+    return distanceSquared <= HEARTBEAT_RANGE_SQUARED;
   }
 
   public Direction getCurrentDirection() {
     return currentDirection;
   }
 
+  /**
+   * 心音再生の制御
+   */
   private void handleHeartbeatSound() {
     if (getPlayerInRangeOfHeartbeat()) {
       if (!isHeartbeatPlaying) {
@@ -165,6 +168,9 @@ public class TaggerModel extends Observable {
     }
   }
 
+  /**
+   * 鬼の移動処理
+   */
   private void move(float deltaX, float deltaY, Direction direction) {
     int targetX = Math.round(taggerX + deltaX);
     int targetY = Math.round(taggerY + deltaY);
