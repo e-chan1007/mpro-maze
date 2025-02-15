@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import maze.maze.element.CollectTaskModel;
 import maze.maze.element.EmptyModel;
 import maze.maze.element.GoalModel;
-import maze.maze.element.ItemElement;
+import maze.maze.element.ItemModel;
 import maze.maze.element.MazeElement;
 import maze.maze.element.PathModel;
 import maze.maze.element.PlayerStartModel;
@@ -138,7 +138,7 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
           put('S', () -> new PlayerStartModel());
           put('T', () -> new TaggerStartModel());
           put('1', () -> new CollectTaskModel(MazeModel.this, playerModel));
-          put('I', () -> new ItemElement(MazeModel.this, playerModel));
+          put('I', () -> new ItemModel(MazeModel.this, playerModel));
 
           put('┌', () -> new WallModel(WallModel.WallType.LEFT_TOP_CORNER));
           put('┬', () -> new WallModel(WallModel.WallType.TOP_EDGE));
@@ -160,7 +160,7 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
           put('Ｔ', () -> new TaggerStartModel());
           put('Ｇ', () -> new GoalModel(MazeModel.this));
           put('１', () -> new CollectTaskModel(MazeModel.this, playerModel));
-          put('Ⅰ', () -> new ItemElement(MazeModel.this, playerModel));
+          put('Ⅰ', () -> new ItemModel(MazeModel.this, playerModel));
         }
       };
 

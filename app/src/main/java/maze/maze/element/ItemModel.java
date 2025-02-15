@@ -1,11 +1,10 @@
 package maze.maze.element;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 
 import maze.asset.ImageManager;
 import maze.asset.Sprite;
@@ -15,7 +14,7 @@ import maze.maze.item.Item;
 import maze.maze.item.SpeedBoost;
 import maze.maze.player.PlayerModel;
 
-public class ItemElement extends MazeElement {
+public class ItemModel extends MazeElement {
     private boolean isItemCollected = false;
 
     private PlayerModel playerModel;
@@ -34,7 +33,7 @@ public class ItemElement extends MazeElement {
     private static final BufferedImage INITIAL_IMAGE = ImageManager.DUNGEON_SPRITE.getImageAt(4, 8);
     private static final BufferedImage DONE_IMAGE = ImageManager.DUNGEON_SPRITE.getImageAt(5, 8);
 
-    public ItemElement(MazeModel mazeModel, PlayerModel playerModel) {
+    public ItemModel(MazeModel mazeModel, PlayerModel playerModel) {
         this.playerModel = playerModel;
         this.items = new ArrayList<>();
         items.add(new HealPotion(1));

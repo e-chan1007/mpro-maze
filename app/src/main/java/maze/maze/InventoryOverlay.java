@@ -1,17 +1,17 @@
 package maze.maze;
 
-import java.awt.Graphics;
-import java.util.List;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import javax.swing.JPanel;
 
+import maze.asset.ImageManager;
+import maze.maze.element.ItemModel;
+import maze.maze.item.Item;
 import maze.maze.player.PlayerModel;
 import maze.util.Observable;
-import maze.asset.ImageManager;
-import maze.maze.element.ItemElement;
-import maze.maze.item.Item;
 
 public class InventoryOverlay extends JPanel implements maze.util.Observer {
 
@@ -63,7 +63,7 @@ public class InventoryOverlay extends JPanel implements maze.util.Observer {
     for (int i = 0; i < MAX_SLOTS; i++) {
       if (i < inventory.size()) {
         Item item = inventory.get(i);
-        BufferedImage image = ItemElement.getImage(item.getName());
+        BufferedImage image = ItemModel.getImage(item.getName());
         g.drawImage(image, startItemX + i * (iconSize + padding), rectY + padding, iconSize, iconSize, null);
       } else {
         g.setColor(new Color(0, 0, 0, 80));
