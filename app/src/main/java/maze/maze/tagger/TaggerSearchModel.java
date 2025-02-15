@@ -23,8 +23,8 @@ public class TaggerSearchModel {
   private final int[] dx = { 1, 0, -1, 0 };
   private final int[] dy = { 0, 1, 0, -1 };
   private final Object monitor1 = new Object();
-  private final int STEP_LIMIT = 1;
-  private final int STOP_DURATION = 3000;
+  private static final int STEP_LIMIT = 1;
+  private static final int STOP_DURATION = 3000;
 
   public TaggerSearchModel(MazeModel mazeModel, PlayerModel playerModel, TaggerModel taggerModel) {
     this.mazeModel = mazeModel;
@@ -163,11 +163,11 @@ public class TaggerSearchModel {
       stepsTaken++;
 
       // * taggerがプレイヤーに到達したら一時停止 */
-      if (taggerModel.taggerArrivedFlag) {
+      if (taggerModel.isTaggerArrived()) {
         playerModel.onHit();
         try {
           Thread.sleep(STOP_DURATION);
-          taggerModel.taggerArrivedFlag = false;
+          taggerModel.setTaggerArrivedFlag(false);
         } catch (InterruptedException ex) {
           Thread.currentThread().interrupt();
           return;
@@ -234,14 +234,9 @@ public class TaggerSearchModel {
     int taggerY = Math.round(taggerModel.getTaggerY());
     int playerX = Math.round(playerModel.getPlayerX());
     int playerY = Math.round(playerModel.getPlayerY());
-
-    if ((playerX * playerX + playerY * playerY) - (taggerX * taggerX + taggerY * taggerY) <= RANGE * RANGE) {
-      // System.out.println("Tagger is in range");
-      return true;
-    } else {
-      // System.out.println("Tagger is not in range");
-      return false;
-    }
+    int dx = taggerX - playerX;
+    int dy = taggerY - playerY;
+    return dx * dx + dy * dy <= RANGE * RANGE;
   }
 
 }

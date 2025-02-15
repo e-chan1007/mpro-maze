@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,12 +13,13 @@ import javax.swing.Timer;
 import maze.asset.ImageManager;
 import maze.asset.Sprite;
 import maze.maze.MazeView;
-import maze.maze.tagger.TaggerModel.Direction;;
+import maze.enums.Direction;
 
 public class TaggerView {
   private final TaggerModel taggerModel;
   private MazeView mazeView;
 
+  // 
   public static final Sprite TAGGER_WALKLEFT_SPRITE = ImageManager.loadImageAsSprite("/tagger/WispLeft.png", 32, 32);
   public static final Sprite TAGGER_WALKRIGHT_SPRITE = ImageManager.loadImageAsSprite("/tagger/WispRight.png", 32, 32);
 
@@ -31,7 +32,7 @@ public class TaggerView {
     this.taggerModel = taggerModel;
     this.mazeView = mazeView;
 
-    walkSprites = new HashMap<>();
+    walkSprites = new EnumMap<>(Direction.class);
 
     walkSprites.put(Direction.LEFT, new ArrayList<>());
     walkSprites.put(Direction.RIGHT, new ArrayList<>());
@@ -41,8 +42,6 @@ public class TaggerView {
     for (int i = 0; i < 10; i++) {
       walkSprites.get(Direction.LEFT).add(TAGGER_WALKLEFT_SPRITE.getImageAt(i, 0));
       walkSprites.get(Direction.RIGHT).add(TAGGER_WALKRIGHT_SPRITE.getImageAt(i, 0));
-      // walkSprites.get(Direction.UP).add(TAGGER_WALK_SPRITE.getImageAt(i, 0));
-      // walkSprites.get(Direction.DOWN).add(TAGGER_WALK_SPRITE.getImageAt(i, 0));
     }
 
     this.currentFrame = 0;

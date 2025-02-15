@@ -7,7 +7,7 @@ import javax.swing.Timer;
 
 import maze.enums.Direction;
 import maze.maze.MazeModel;
-import maze.maze.element.StartModel;
+import maze.maze.element.PlayerStartModel;
 import maze.maze.item.Item;
 import maze.util.Observable;
 import maze.window.AppScreenManager;
@@ -63,7 +63,6 @@ public class PlayerModel extends maze.util.Observable {
         this.mazeModel.addObserver((Observable observable, Object object) -> {
             setStartPos();
         });
-        setStartPos();
     }
 
     /**
@@ -147,7 +146,7 @@ public class PlayerModel extends maze.util.Observable {
      * スタート位置設定
      */
     private void setStartPos() {
-        int startPos[] = mazeModel.locateElement(StartModel.class);
+        int startPos[] = mazeModel.locateElement(PlayerStartModel.class);
         if (startPos != null) {
             playerX = startPos[0];
             playerY = startPos[1];
