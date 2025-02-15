@@ -15,7 +15,8 @@ import maze.maze.element.GoalModel;
 import maze.maze.element.ItemElement;
 import maze.maze.element.MazeElement;
 import maze.maze.element.PathModel;
-import maze.maze.element.StartModel;
+import maze.maze.element.PlayerStartModel;
+import maze.maze.element.TaggerStartModel;
 import maze.maze.element.TaskElement;
 import maze.maze.element.WallModel;
 import maze.maze.player.PlayerModel;
@@ -134,7 +135,8 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
           put('#', () -> new WallModel(WallModel.WallType.TOP_EDGE)); // 互換性
           put(' ', () -> new PathModel());
           put('G', () -> new GoalModel(MazeModel.this));
-          put('S', () -> new StartModel());
+          put('S', () -> new PlayerStartModel());
+          put('T', () -> new TaggerStartModel());
           put('1', () -> new CollectTaskModel(MazeModel.this, playerModel));
           put('I', () -> new ItemElement(MazeModel.this, playerModel));
 
@@ -154,7 +156,8 @@ public class MazeModel extends maze.util.Observable implements maze.util.Observe
           put('┼', () -> new WallModel(WallModel.WallType.NO_WALL));
 
           put('　', () -> new PathModel());
-          put('Ｓ', () -> new StartModel());
+          put('Ｓ', () -> new PlayerStartModel());
+          put('Ｔ', () -> new TaggerStartModel());
           put('Ｇ', () -> new GoalModel(MazeModel.this));
           put('１', () -> new CollectTaskModel(MazeModel.this, playerModel));
           put('Ⅰ', () -> new ItemElement(MazeModel.this, playerModel));

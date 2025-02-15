@@ -59,7 +59,6 @@ public class CollectTaskModel extends TaskElement {
       public void actionPerformed(ActionEvent e) {
         fireIndex++;
         if (fireIndex >= fireImages.size()) {
-          fireIndex = 0;
           fireTimer.stop();
         }
         setChanged();
@@ -234,7 +233,7 @@ public class CollectTaskModel extends TaskElement {
     if (this.isCompleted()) {
       g.drawImage(DONE_IMAGE, torchX, torchY, torchSize, torchSize, null);
 
-      if (fireImages.size() > 0) {
+      if (fireImages.size() > 0 && fireIndex < fireImages.size()) {
         g.drawImage(fireImages.get(fireIndex), x, y, size, size, null);
       }
     } else {

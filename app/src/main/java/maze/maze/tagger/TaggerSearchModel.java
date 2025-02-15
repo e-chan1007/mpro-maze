@@ -1,13 +1,18 @@
 package maze.maze.tagger;
 
 import java.util.ArrayDeque;
-
 import maze.maze.MazeModel;
 import maze.maze.player.PlayerModel;
 
+// 座標クラス
 class Coordinate {
   int x;
   int y;
+
+  public Coordinate(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
 }
 
 public class TaggerSearchModel {
@@ -19,26 +24,29 @@ public class TaggerSearchModel {
   private int mazeHeight;
   private int[][] dist;
   private Coordinate start;
-  private final Coordinate goal;
+  private Coordinate goal;
   private final int[] dx = { 1, 0, -1, 0 };
   private final int[] dy = { 0, 1, 0, -1 };
-  private final Object monitor1 = new Object();
-  private final int STEP_LIMIT = 1;
-  private final int STOP_DURATION = 3000;
+  private final Object movementMonitor = new Object();
+  private static final int STEP_LIMIT = 1;
+  private static final int STOP_DURATION = 3000;
+  private static final int TAGGER_RANGE = 12;
 
   public TaggerSearchModel(MazeModel mazeModel, PlayerModel playerModel, TaggerModel taggerModel) {
     this.mazeModel = mazeModel;
     this.playerModel = playerModel;
     this.taggerModel = taggerModel;
 
-    goal = new Coordinate();
-    goal.x = Math.round(playerModel.getPlayerX());
-    goal.y = Math.round(playerModel.getPlayerY());
+    // プレイヤーのスタート位置を初期ゴール地点に設定
+    goal = new Coordinate(Math.round(playerModel.getPlayerX()), Math.round(playerModel.getPlayerY()));
 
+    // dist[][] を初期化
     initializeDistance();
   }
 
-  // * dist[][] を初期化 */
+  /**
+   * 距離の初期化
+   */
   private void initializeDistance() {
     mazeWidth = mazeModel.getMazeWidth();
     mazeHeight = mazeModel.getMazeHeight();
@@ -50,30 +58,25 @@ public class TaggerSearchModel {
     }
   }
 
-  // * ランダムウォーク */
+  /**
+   * ランダムウォーク
+   */
   public void randomWalk() {
     int random = (int) (Math.random() * 4);
     switch (random) {
-      case 0:
-        taggerModel.moveLeft();
-        break;
-      case 1:
-        taggerModel.moveRight();
-        break;
-      case 2:
-        taggerModel.moveUp();
-        break;
-      case 3:
-        taggerModel.moveDown();
-        break;
+      case 0 -> taggerModel.moveLeft();
+      case 1 -> taggerModel.moveRight();
+      case 2 -> taggerModel.moveUp();
+      case 3 -> taggerModel.moveDown();
     }
   }
 
+  /**
+   * 幅優先探索
+   */
   private ArrayDeque<Coordinate> performBFS() {
     initializeDistance();
-    start = new Coordinate();
-    start.x = Math.round(taggerModel.getTaggerX());
-    start.y = Math.round(taggerModel.getTaggerY());
+    start = new Coordinate(Math.round(taggerModel.getTaggerX()), Math.round(taggerModel.getTaggerY()));
     ArrayDeque<Coordinate> queue = new ArrayDeque<>();
     queue.add(start);
     dist[start.x][start.y] = 0;
@@ -88,9 +91,7 @@ public class TaggerSearchModel {
 
         if (nx >= 0 && nx < mazeWidth && ny >= 0 && ny < mazeHeight) {
           if (dist[nx][ny] == -1 && mazeModel.getElementAt(nx, ny).canEnter()) {
-            Coordinate nextElem = new Coordinate();
-            nextElem.x = nx;
-            nextElem.y = ny;
+            Coordinate nextElem = new Coordinate(nx, ny);
             queue.add(nextElem);
             dist[nx][ny] = dist[elem.x][elem.y] + 1;
           }
@@ -103,12 +104,6 @@ public class TaggerSearchModel {
     }
 
     ArrayDeque<Coordinate> stack = new ArrayDeque<>();
-    // * プレイヤー位置までの移動が不可能な場合の処理 */
-    // if (dist[goal.x][goal.y] == -1) {
-    // System.out.println("プレイヤー位置までの移動が不可能です.");
-    // return stack;
-    // }
-
     stack.add(goal);
     Coordinate elem = goal;
     int ptDistance = dist[goal.x][goal.y];
@@ -119,9 +114,7 @@ public class TaggerSearchModel {
         int ny = elem.y + dy[i];
 
         if (nx >= 0 && nx < mazeWidth && ny >= 0 && ny < mazeHeight && dist[nx][ny] == ptDistance - 1) {
-          Coordinate nextElem = new Coordinate();
-          nextElem.x = nx;
-          nextElem.y = ny;
+          Coordinate nextElem = new Coordinate(nx, ny);
           stack.add(nextElem);
           elem = nextElem;
           ptDistance--;
@@ -141,7 +134,7 @@ public class TaggerSearchModel {
       // * taggerの前の移動が終わる(整数座標になる)まで待つ */
       if (next != null) {
         try {
-          waitForCondition1();
+          waitForMoveFinished();
         } catch (InterruptedException ex) {
           Thread.currentThread().interrupt();
           return;
@@ -163,11 +156,11 @@ public class TaggerSearchModel {
       stepsTaken++;
 
       // * taggerがプレイヤーに到達したら一時停止 */
-      if (taggerModel.taggerArrivedFlag) {
+      if (taggerModel.isTaggerArrived()) {
         playerModel.onHit();
         try {
           Thread.sleep(STOP_DURATION);
-          taggerModel.taggerArrivedFlag = false;
+          taggerModel.setTaggerArrivedFlag(false);
         } catch (InterruptedException ex) {
           Thread.currentThread().interrupt();
           return;
@@ -176,39 +169,36 @@ public class TaggerSearchModel {
     }
   }
 
-  // * 条件が達成されるまで待つ */
-  private void waitForCondition1() throws InterruptedException {
-    synchronized (monitor1) {
+  // taggerの移動が終わるまで待つ
+  private void waitForMoveFinished() throws InterruptedException {
+    synchronized (movementMonitor) {
       while (!taggerModel.getCanMoveFlag()) {
-        monitor1.wait();
+        movementMonitor.wait();
       }
     }
   }
 
-  // * 条件が達成されたのを知らせる */
-  public void signalConditionMet1() {
-    synchronized (monitor1) {
-      monitor1.notifyAll();
+  // 条件が達成されたのを知らせる
+  public void signalConditionMet() {
+    synchronized (movementMonitor) {
+      movementMonitor.notifyAll();
     }
   }
 
-  // * TaggerModel で呼び出す用 */
+  // 鬼の探索とランダムウォークの実施機構
   public void executeTaggerMovement() {
     while (true) {
       goal.x = Math.round(playerModel.getPlayerX());
       goal.y = Math.round(playerModel.getPlayerY());
-
+      // プレイヤーの位置によって探索かランダムウォークを選択
       if (isTaggerinRange()) {
         ArrayDeque<Coordinate> path = performBFS();
-        if (path.isEmpty()) {
-          System.out.println("プレイヤーに到達できません.");
-          break;
-        }
         moveTowardPlayer(path, STEP_LIMIT);
       } else {
         randomWalk();
         try {
-          waitForCondition1();
+          Thread.sleep(100);
+          waitForMoveFinished();
         } catch (InterruptedException ex) {
           Thread.currentThread().interrupt();
           return;
@@ -217,31 +207,23 @@ public class TaggerSearchModel {
     }
   }
 
+  // プレイヤーと鬼が同じ座標にいるかどうかの判定
   public boolean isTaggerAtPlayer() {
     int taggerX = Math.round(taggerModel.getTaggerX());
     int taggerY = Math.round(taggerModel.getTaggerY());
     int playerX = Math.round(playerModel.getPlayerX());
     int playerY = Math.round(playerModel.getPlayerY());
-
     return taggerX == playerX && taggerY == playerY;
   }
 
-  // * プレイヤーと鬼が RANGE 内にいるかどうかの判定 要最終調整*/
-  private final int RANGE = 12;
-
+  // プレイヤーと鬼が一定の距離以内にいるかどうかの判定
   public boolean isTaggerinRange() {
     int taggerX = Math.round(taggerModel.getTaggerX());
     int taggerY = Math.round(taggerModel.getTaggerY());
     int playerX = Math.round(playerModel.getPlayerX());
     int playerY = Math.round(playerModel.getPlayerY());
-
-    if ((playerX * playerX + playerY * playerY) - (taggerX * taggerX + taggerY * taggerY) <= RANGE * RANGE) {
-      // System.out.println("Tagger is in range");
-      return true;
-    } else {
-      // System.out.println("Tagger is not in range");
-      return false;
-    }
+    int dx = taggerX - playerX;
+    int dy = taggerY - playerY;
+    return dx * dx + dy * dy <= TAGGER_RANGE * TAGGER_RANGE;
   }
-
 }
