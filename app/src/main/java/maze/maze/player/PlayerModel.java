@@ -26,7 +26,6 @@ public class PlayerModel extends maze.util.Observable {
     public static final String HP_CHANGED_EVENT = "hpChanged";
     public static final String SPEED_BOOSTED_EVENT = "speedBoosted";
     public static final String INVENTORY_CHANGED_EVENT = "inventoryChanged";
-    public static final String GAME_OVER_EVENT = "gameOver";
 
     // プレイヤーの座標
     private float playerX;
@@ -70,8 +69,7 @@ public class PlayerModel extends maze.util.Observable {
      */
     public void heal(int amount) {
         hitPoint = Math.min(hitPoint + amount, MAX_HITPOINT);
-        setChanged();
-        notifyObservers(HP_CHANGED_EVENT);
+        notifyChange(HP_CHANGED_EVENT);
     }
 
     /**
@@ -81,8 +79,7 @@ public class PlayerModel extends maze.util.Observable {
         if (!speedBoostActive) {
             steps = BOOSTED_STEPS;
             speedBoostActive = true;
-            setChanged();
-            notifyObservers(SPEED_BOOSTED_EVENT);
+            notifyChange(SPEED_BOOSTED_EVENT);
         }
 
         Timer timer = new Timer(BOOST_DURATION, e -> {
@@ -105,8 +102,7 @@ public class PlayerModel extends maze.util.Observable {
     private void revertSpeedBoost() {
         steps = NORMAL_STEPS;
         speedBoostActive = false;
-        setChanged();
-        notifyObservers(SPEED_BOOSTED_EVENT);
+        notifyChange(SPEED_BOOSTED_EVENT);
     }
 
     /**
@@ -115,8 +111,7 @@ public class PlayerModel extends maze.util.Observable {
     public void addItem(Item item) {
         if (inventory.size() < MAX_INVENTORY_SIZE) {
             inventory.add(item);
-            setChanged();
-            notifyObservers(INVENTORY_CHANGED_EVENT);
+            notifyChange(INVENTORY_CHANGED_EVENT);
         }
     }
 
@@ -129,8 +124,7 @@ public class PlayerModel extends maze.util.Observable {
                 Item item = inventory.get(index);
                 item.applyEffect(this);
                 inventory.remove(index);
-                setChanged();
-                notifyObservers(INVENTORY_CHANGED_EVENT);
+                notifyChange(INVENTORY_CHANGED_EVENT);
             }
         }
     }
@@ -190,13 +184,10 @@ public class PlayerModel extends maze.util.Observable {
      */
     public void onHit() {
         hitPoint--;
-        setChanged();
-        notifyObservers(HP_CHANGED_EVENT);
+        notifyChange(HP_CHANGED_EVENT);
 
         if (hitPoint == 0) {
             // ゲームオーバー処理 */
-            setChanged();
-            notifyObservers(GAME_OVER_EVENT);
             AppScreenManager.getInstance().push(new MazeGameOverScreen(mazeModel));
         }
     }
@@ -247,7 +238,6 @@ public class PlayerModel extends maze.util.Observable {
                 playerX += deltaX / steps;
                 playerY += deltaY / steps;
                 currentStep[0]++;
-                setChanged();
                 notifyChange(); // 座標変更を通知
             } else {
                 canMove = true;
@@ -267,7 +257,14 @@ public class PlayerModel extends maze.util.Observable {
         mazeModel.getElementAt(Math.round(playerX), Math.round(playerY)).onEnter();
     }
 
+    // Observerパターンの通知処理
     private void notifyChange() {
+        setChanged();
         notifyObservers();
+    }
+
+    private void notifyChange(String event) {
+        setChanged();
+        notifyObservers(event);
     }
 }
