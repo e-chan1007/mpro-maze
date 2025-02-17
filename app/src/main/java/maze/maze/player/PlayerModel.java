@@ -136,6 +136,7 @@ public class PlayerModel extends maze.util.Observable {
         return Collections.unmodifiableList(this.inventory);
     }
 
+    // インベントリが満杯かどうか
     public boolean isInventoryFull() {
         return inventory.size() >= MAX_INVENTORY_SIZE;
     }
