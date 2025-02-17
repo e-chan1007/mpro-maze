@@ -15,10 +15,4 @@ public class SpeedBoost implements Item {
   public String getName() {
     return "Speed Boost";
   }
-
-  @Override
-  public String getImagePath() {
-    return "/item/speedBoost.png";
-  }
-
 }
