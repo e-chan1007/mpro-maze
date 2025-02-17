@@ -93,12 +93,6 @@ public class TaggerModel extends Observable {
     this.isHeartbeatPlaying = isHeartbeatPlaying;
   }
 
-  public void setStartPosition(float x, float y) {
-    this.taggerX = x;
-    this.taggerY = y;
-    notifyChange();
-  }
-
   public void moveLeft() {
     currentDirection = Direction.LEFT;
     move(-1.0f, 0.0f, currentDirection);
