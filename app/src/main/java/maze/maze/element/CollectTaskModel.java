@@ -24,6 +24,7 @@ import maze.window.AppScreenManager;
 import maze.window.screen.TranslucentScreenBase;
 
 public class CollectTaskModel extends TaskElement {
+  //フィールド
   private Timer timer;
   private int count = 0;
   private static final int COUNT = 16;
@@ -44,6 +45,7 @@ public class CollectTaskModel extends TaskElement {
   private final BufferedImage INITIAL_IMAGE = ImageManager.DUNGEON_SPRITE.getImageAt(6, 9);
   private final BufferedImage DONE_IMAGE = ImageManager.DUNGEON_SPRITE.getImageAt(5, 9);
 
+  //コンストラクタ
   public CollectTaskModel(MazeModel mazeModel, PlayerModel playerModel) {
     this.timer = new Timer(500, null);
     this.playerModel = playerModel;
@@ -105,6 +107,7 @@ public class CollectTaskModel extends TaskElement {
         public void actionPerformed(ActionEvent e) {
           float playerX = playerModel.getPlayerX();
           float playerY = playerModel.getPlayerY();
+          //プレイヤーがタスク位置に来た時の処理
           if (Math.abs(playerX - ovalX) < 0.01 && Math.abs(playerY - ovalY) < 0.01) {
             count++;
             isOnOval = true;
@@ -140,6 +143,7 @@ public class CollectTaskModel extends TaskElement {
     AppScreenManager.getInstance().push(new MovingScreen());
   }
 
+  //ミニゲーム関連を管理している内部クラス
   private class MovingScreen extends TranslucentScreenBase {
     private int yellowLineX;
     private int greenLineX;
@@ -149,9 +153,11 @@ public class CollectTaskModel extends TaskElement {
     private final int anchorY = 1080 / 2 - 160 / 2;
     private final Timer moveTimer;
 
+    //コンストラクタ
     public MovingScreen() {
       setOpacity(0);
       setBounds(0, 0, 1920, 1080);
+      //判定ラインの設定
       Random rand = new Random();
       yellowLineX = 70 + rand.nextInt(51);
       greenLineX = yellowLineX + rand.nextInt(60 - 12);
@@ -165,6 +171,7 @@ public class CollectTaskModel extends TaskElement {
           KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
           "closeWindow");
       getActionMap().put("closeWindow", new AbstractAction() {
+        //メーターが各判定ラインに入った時の処理
         @Override
         public void actionPerformed(ActionEvent e) {
           if (AppScreenManager.getInstance().peek() != MovingScreen.this)
@@ -190,6 +197,7 @@ public class CollectTaskModel extends TaskElement {
       timer.start();
     }
 
+    //ミニゲーム関連の図形の描画
     @Override
     public void draw(Graphics2D g) {
       g.setColor(Color.WHITE);
@@ -223,6 +231,7 @@ public class CollectTaskModel extends TaskElement {
     }
   }
 
+  //タスク画像の描画
   @Override
   public void draw(Graphics g, int x, int y, int size) {
     g.drawImage(pathSprite, x, y, size, size, null);
