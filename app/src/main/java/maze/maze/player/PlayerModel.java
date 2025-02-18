@@ -64,17 +64,13 @@ public class PlayerModel extends maze.util.Observable {
         });
     }
 
-    /**
-     * HP回復処理
-     */
+    // HP回復処理
     public void heal(int amount) {
         hitPoint = Math.min(hitPoint + amount, MAX_HITPOINT);
         notifyChange(HP_CHANGED_EVENT);
     }
 
-    /**
-     * スピードブースト処理
-     */
+    // スピードブースト処理
     public void boostSpeed() {
         if (!speedBoostActive) {
             steps = BOOSTED_STEPS;
@@ -96,18 +92,14 @@ public class PlayerModel extends maze.util.Observable {
         timer.start();
     }
 
-    /**
-     * スピードブースト解除処理
-     */
+    // スピードブースト解除
     private void revertSpeedBoost() {
         steps = NORMAL_STEPS;
         speedBoostActive = false;
         notifyChange(SPEED_BOOSTED_EVENT);
     }
 
-    /**
-     * アイテム追加
-     */
+    // アイテム追加
     public void addItem(Item item) {
         if (inventory.size() < MAX_INVENTORY_SIZE) {
             inventory.add(item);
@@ -115,9 +107,7 @@ public class PlayerModel extends maze.util.Observable {
         }
     }
 
-    /**
-     * アイテム使用
-     */
+    // アイテム使用
     public void useItem(int index) {
         if (!mazeModel.isPaused() && canMove) {
             if (index >= 0 && index < inventory.size()) {
@@ -129,9 +119,7 @@ public class PlayerModel extends maze.util.Observable {
         }
     }
 
-    /**
-     * インベントリ情報取得
-     */
+    // インベントリ情報取得
     public List<Item> getInventory() {
         return Collections.unmodifiableList(this.inventory);
     }
@@ -141,9 +129,7 @@ public class PlayerModel extends maze.util.Observable {
         return inventory.size() >= MAX_INVENTORY_SIZE;
     }
 
-    /**
-     * スタート位置設定
-     */
+    // スタート位置設定
     private void setStartPos() {
         int startPos[] = mazeModel.locateElement(PlayerStartModel.class);
         if (startPos != null) {
@@ -152,74 +138,80 @@ public class PlayerModel extends maze.util.Observable {
         }
     }
 
+    // プレイヤーのX座標を返す
     public float getPlayerX() {
         return playerX;
     }
 
+    // プレイヤーのY座標を返す
     public float getPlayerY() {
         return playerY;
     }
 
+    // プレイヤーのHPを返す
     public int getHitPoint() {
         return hitPoint;
     }
 
+    // プレイヤーがアイドル状態かどうか
     public boolean isIdle() {
         return canMove;
     }
 
+    // プレイヤーが向いている方向を返す
     public Direction getCurrentDirection() {
         return currentDirection;
     }
 
+    // ポーズ状態かどうか
     public boolean isPaused() {
         return mazeModel.isPaused();
     }
 
+    // 迷路の幅を返す
     public int getMazeWidth() {
         return mazeModel.getMazeWidth();
     }
 
+    // 迷路の高さを返す
     public int getMazeHeight() {
         return mazeModel.getMazeHeight();
     }
 
-    /**
-     * 鬼との衝突時の処理
-     */
+    // 鬼との衝突時の処理
     public void onHit() {
         hitPoint--;
         notifyChange(HP_CHANGED_EVENT);
-
+        // HPが0になったらゲームオーバー
         if (hitPoint == 0) {
-            // ゲームオーバー処理 */
             AppScreenManager.getInstance().push(new MazeGameOverScreen(mazeModel));
         }
     }
 
+    // 上に移動
     public void moveUp() {
         move(0, -1, Direction.UP);
     }
 
+    // 下に移動
     public void moveDown() {
         move(0, 1, Direction.DOWN);
     }
 
+    // 左に移動
     public void moveLeft() {
         move(-1, 0, Direction.LEFT);
     }
 
+    // 右に移動
     public void moveRight() {
         move(1, 0, Direction.RIGHT);
     }
 
-    /**
-     * プレイヤーの移動処理
-     */
+    // プレイヤーの移動処理
     private void move(float deltaX, float deltaY, Direction direction) {
         int targetX = Math.round(playerX + deltaX);
         int targetY = Math.round(playerY + deltaY);
-
         if (mazeModel.isInMaze(targetX, targetY) && mazeModel.getElementAt(targetX, targetY).canEnter()) {
             if (canMove) {
                 currentDirection = direction;
@@ -229,9 +221,7 @@ public class PlayerModel extends maze.util.Observable {
         }
     }
 
-    /**
-     * プレイヤーの移動アニメーション処理
-     */
+    // プレイヤーの移動アニメーション処理
     private void startMoveAnimation(float deltaX, float deltaY) {
         final int[] currentStep = { 0 };
         Timer moveTimer = new Timer(FRAME_DELAY, null);
@@ -243,13 +233,12 @@ public class PlayerModel extends maze.util.Observable {
                 playerX += deltaX / steps;
                 playerY += deltaY / steps;
                 currentStep[0]++;
-                notifyChange(); // 座標変更を通知
+                notifyChange();
             } else {
                 canMove = true;
                 moveTimer.stop();
-                onMove(); // 移動後の処理
-
-                // スピードブースト解除処理
+                onMove();
+                // スピードブースト解除フラグが立っている場合、スピードブーストを解除
                 if (speedBoostRevert) {
                     revertSpeedBoost();
                 }
@@ -258,6 +247,7 @@ public class PlayerModel extends maze.util.Observable {
         moveTimer.start();
     }
 
+    // 移動後の処理
     private void onMove() {
         mazeModel.getElementAt(Math.round(playerX), Math.round(playerY)).onEnter();
     }
