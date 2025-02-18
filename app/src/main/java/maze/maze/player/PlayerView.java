@@ -136,22 +136,4 @@ public class PlayerView {
           null);
     }
   }
-
-  /**
-   * アニメーション開始
-   */
-  public void startAnimation() {
-    if (animationTimer != null && !animationTimer.isRunning()) {
-      animationTimer.start();
-    }
-  }
-
-  /**
-   * アニメーション停止
-   */
-  public void stopAnimation() {
-    if (animationTimer != null && animationTimer.isRunning()) {
-      animationTimer.stop();
-    }
-  }
 }
