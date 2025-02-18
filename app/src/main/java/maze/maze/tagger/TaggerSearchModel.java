@@ -32,6 +32,7 @@ public class TaggerSearchModel {
   private static final int STOP_DURATION = 3000;
   private static final int TAGGER_RANGE = 12;
 
+  // コンストラクタ
   public TaggerSearchModel(MazeModel mazeModel, PlayerModel playerModel, TaggerModel taggerModel) {
     this.mazeModel = mazeModel;
     this.playerModel = playerModel;
@@ -44,9 +45,7 @@ public class TaggerSearchModel {
     initializeDistance();
   }
 
-  /**
-   * 距離の初期化
-   */
+  // 距離配列の初期化
   private void initializeDistance() {
     mazeWidth = mazeModel.getMazeWidth();
     mazeHeight = mazeModel.getMazeHeight();
@@ -58,9 +57,7 @@ public class TaggerSearchModel {
     }
   }
 
-  /**
-   * ランダムウォーク
-   */
+  // ランダムウォーク
   public void randomWalk() {
     int random = (int) (Math.random() * 4);
     switch (random) {
@@ -71,9 +68,7 @@ public class TaggerSearchModel {
     }
   }
 
-  /**
-   * 幅優先探索
-   */
+  // 幅優先探索
   private ArrayDeque<Coordinate> performBFS() {
     initializeDistance();
     start = new Coordinate(Math.round(taggerModel.getTaggerX()), Math.round(taggerModel.getTaggerY()));
@@ -81,7 +76,7 @@ public class TaggerSearchModel {
     queue.add(start);
     dist[start.x][start.y] = 0;
 
-    // * プレイヤーの現在地までの距離を計測 */
+    // プレイヤーの現在地までの距離を計測
     while (!queue.isEmpty()) {
       Coordinate elem = queue.poll();
 
@@ -97,7 +92,7 @@ public class TaggerSearchModel {
           }
         }
       }
-      // * プレイヤー位置までの距離が求まったらそこで探索終了 */
+      // プレイヤー位置までの距離が求まったらそこで探索終了
       if (dist[goal.x][goal.y] != -1) {
         break;
       }
@@ -125,13 +120,13 @@ public class TaggerSearchModel {
     return stack;
   }
 
-  // * taggerの移動処理 */
+  // taggerの移動処理
   private void moveTowardPlayer(ArrayDeque<Coordinate> path, int stepLimit) {
     int stepsTaken = 0;
 
     while (!path.isEmpty() && stepsTaken < stepLimit) {
       Coordinate next = path.pollLast();
-      // * taggerの前の移動が終わる(整数座標になる)まで待つ */
+      // taggerの前の移動が終わる(整数座標になる)まで待つ
       if (next != null) {
         try {
           waitForMoveFinished();
@@ -155,7 +150,7 @@ public class TaggerSearchModel {
       }
       stepsTaken++;
 
-      // * taggerがプレイヤーに到達したら一時停止 */
+      // taggerがプレイヤーに到達したら一時停止
       if (taggerModel.isTaggerArrived()) {
         playerModel.onHit();
         try {
