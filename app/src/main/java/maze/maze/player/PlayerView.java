@@ -118,7 +118,7 @@ public class PlayerView {
       int imageWidth = playerSprite.getWidth();
       int imageHeight = playerSprite.getHeight();
 
-      // * 縦横比を維持しながら、画像の倍率調整 */
+      // 縦横比を維持しながら、画像の倍率調整 */
       double scale = Math.min((double) cellSize / imageWidth, (double) cellSize / imageHeight) * MAGNIFICATION;
       int scaleWidth = (int) (imageWidth * scale);
       int scaleHeight = (int) (imageHeight * scale);
