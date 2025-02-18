@@ -30,7 +30,7 @@ public class TaggerModel extends Observable {
 
   // 心音クリップ
   private Clip hearbeatClip;
-  private boolean isHeartbeatPlaying= false;
+  private boolean isHeartbeatPlaying = false;
 
   // 鬼がプレイヤーを追いかけ始める範囲
   private static final double TAGGER_RANGE = 7.0;
@@ -42,9 +42,11 @@ public class TaggerModel extends Observable {
 
   // 鬼がプレイヤーに追いついたかどうかのフラグ
   private boolean taggerArrivedFlag = false;
+
   public boolean isTaggerArrived() {
     return taggerArrivedFlag;
   }
+
   public void setTaggerArrivedFlag(boolean flag) {
     taggerArrivedFlag = flag;
   }
@@ -54,7 +56,7 @@ public class TaggerModel extends Observable {
     this.mazeModel = mazeModel;
     this.currentDirection = Direction.LEFT;
     this.hearbeatClip = SoundManager.loadClip("/sounds/heartbeat/heartbeat.wav");
-  
+
     this.mazeModel.addObserver((Observable observable, Object object) -> {
       setStartPos();
     });
@@ -69,53 +71,59 @@ public class TaggerModel extends Observable {
     }
   }
 
+  // MazeModelを返す
   public MazeModel getMazeModel() {
     return mazeModel;
   }
 
+  // TaggerSearchModelをセット
   public void setSearchModel(TaggerSearchModel searchModel) {
     this.searchModel = searchModel;
   }
 
+  // 鬼のX座標を返す
   public float getTaggerX() {
     return taggerX;
   }
 
+  // 鬼のY座標を返す
   public float getTaggerY() {
     return taggerY;
   }
 
+  // 鬼の移動可能フラグを返す
   public boolean getCanMoveFlag() {
     return canMove;
   }
 
+  // 心音再生のフラッグをセット
   public void setIsHeartbeatPlaying(boolean isHeartbeatPlaying) {
     this.isHeartbeatPlaying = isHeartbeatPlaying;
   }
 
+  // 左に移動
   public void moveLeft() {
     currentDirection = Direction.LEFT;
     move(-1.0f, 0.0f, currentDirection);
   }
 
+  // 右に移動
   public void moveRight() {
     currentDirection = Direction.RIGHT;
     move(1.0f, 0.0f, currentDirection);
   }
 
-  // * currentDirectionは更新しない */
+  // 上に移動 *currentDirectionは更新しない
   public void moveUp() {
     move(0.0f, -1.0f, currentDirection);
   }
 
-  // * currentDirectionは更新しない */
+  // 下に移動 *currentDirectionは更新しない
   public void moveDown() {
     move(0.0f, 1.0f, currentDirection);
   }
 
-  /**
-   * プレイヤーが鬼の追跡範囲にいるかどうかを返す
-   */
+  // プレイヤーが鬼の追跡範囲にいるかどうかを返す
   public boolean isTaggerInRange() {
     PlayerModel playerModel = mazeModel.getPlayerModel();
     if (playerModel == null) {
@@ -128,9 +136,7 @@ public class TaggerModel extends Observable {
     return distanceSquared <= TAGGER_RANGE_SQUARED;
   }
 
-  /**
-   *心音が鳴る範囲にプレイヤーがいるかどうかを返す 
-   */
+  // 心音が鳴る範囲にプレイヤーがいるかどうかを返す
   private boolean getPlayerInRangeOfHeartbeat() {
     PlayerModel playerModel = mazeModel.getPlayerModel();
     float playerX = playerModel.getPlayerX();
@@ -139,13 +145,12 @@ public class TaggerModel extends Observable {
     return distanceSquared <= HEARTBEAT_RANGE_SQUARED;
   }
 
+  // 鬼が向いている方向を返す
   public Direction getCurrentDirection() {
     return currentDirection;
   }
 
-  /**
-   * 心音再生の制御
-   */
+  // 心音再生処理
   private void handleHeartbeatSound() {
     if (getPlayerInRangeOfHeartbeat()) {
       if (!isHeartbeatPlaying) {
@@ -162,43 +167,38 @@ public class TaggerModel extends Observable {
     }
   }
 
-  /**
-   * 鬼の移動処理
-   */
+  // 鬼の移動処理
   private void move(float deltaX, float deltaY, Direction direction) {
     int targetX = Math.round(taggerX + deltaX);
     int targetY = Math.round(taggerY + deltaY);
-    if (mazeModel.isInMaze(targetX, targetY)) {
-      if (mazeModel.getElementAt(targetX, targetY).canEnter()) {
-        if (canMove) {
-          currentDirection = direction;
-          final int[] currentStep = { 0 };
-          canMove = false;
-          handleHeartbeatSound();
-          Timer timer = new Timer(DELAY, e -> {
-            if (mazeModel.isPaused()) {
-              return;
-            }
-            if (currentStep[0] < STEPS) {
-              taggerX += deltaX / STEPS;
-              taggerY += deltaY / STEPS;
-              if (!taggerArrivedFlag) {
-                taggerArrivedFlag = searchModel.isTaggerAtPlayer();
-              }
-              notifyChange();
-              currentStep[0]++;
-            } else {
-              canMove = true;
-              searchModel.signalConditionMet();
-              ((Timer) e.getSource()).stop();
-            }
-          });
-          timer.start();
+    if (mazeModel.getElementAt(targetX, targetY).canEnter() && canMove) {
+      currentDirection = direction;
+      final int[] currentStep = { 0 };
+      canMove = false;
+      handleHeartbeatSound();
+      Timer timer = new Timer(DELAY, e -> {
+        if (mazeModel.isPaused()) {
+          return;
         }
-      }
+        if (currentStep[0] < STEPS) {
+          taggerX += deltaX / STEPS;
+          taggerY += deltaY / STEPS;
+          if (!taggerArrivedFlag) {
+            taggerArrivedFlag = searchModel.isTaggerAtPlayer();
+          }
+          notifyChange();
+          currentStep[0]++;
+        } else {
+          canMove = true;
+          searchModel.signalConditionMet();
+          ((Timer) e.getSource()).stop();
+        }
+      });
+      timer.start();
     }
   }
 
+  // Observerに通知
   private void notifyChange() {
     setChanged();
     notifyObservers();
