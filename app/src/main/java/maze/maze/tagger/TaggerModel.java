@@ -137,7 +137,7 @@ public class TaggerModel extends Observable {
   }
 
   // 心音が鳴る範囲にプレイヤーがいるかどうかを返す
-  private boolean getPlayerInRangeOfHeartbeat() {
+  private boolean isPlayerInRangeOfHeartbeat() {
     PlayerModel playerModel = mazeModel.getPlayerModel();
     float playerX = playerModel.getPlayerX();
     float playerY = playerModel.getPlayerY();
@@ -152,7 +152,7 @@ public class TaggerModel extends Observable {
 
   // 心音再生処理
   private void handleHeartbeatSound() {
-    if (getPlayerInRangeOfHeartbeat()) {
+    if (isPlayerInRangeOfHeartbeat()) {
       if (!isHeartbeatPlaying) {
         System.out.println("play heartbeat sound");
         SoundManager.playClipLoopFadeIn(hearbeatClip, 1000, -40.0f, 0.0f, mazeModel, this);
