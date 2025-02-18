@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import maze.asset.ImageManager;
 import maze.ui.Menu;
+import maze.ui.Menu.MenuComponent;
 import maze.window.AppScreenManager;
 
 public class StartScreen extends ScreenBase {
@@ -23,20 +24,21 @@ public class StartScreen extends ScreenBase {
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     setAlignmentX(CENTER_ALIGNMENT);
     setAlignmentY(CENTER_ALIGNMENT);
+
+    MenuComponent menu = new Menu()
+        .add("Start", () -> {
+          AppScreenManager.getInstance().push(new MazePlayScreen());
+        })
+        .add("Exit", () -> {
+          System.exit(0);
+        })
+        .build();
+
     add(new Box.Filler(new Dimension(0, 0), new Dimension(0, 1080), new Dimension(0, 1080)));
     add(new Logo());
     add(Box.createVerticalStrut(20));
-    add(
-        new Menu()
-            .add("Start", () -> {
-              AppScreenManager.getInstance().push(new MazePlayScreen());
-            })
-            .add("Exit", () -> {
-              System.exit(0);
-            })
-            .build());
+    add(menu);
     add(new Box.Filler(new Dimension(0, 0), new Dimension(0, 1080), new Dimension(0, 1080)));
-
   }
 
   @Override
@@ -50,7 +52,6 @@ public class StartScreen extends ScreenBase {
     public Logo() {
       setBackground(new Color(0, 0, 0, 0));
       setOpaque(true);
-      setFocusable(false);
       setPreferredSize(new Dimension(1920, 400));
     }
 

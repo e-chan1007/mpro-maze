@@ -75,11 +75,6 @@ public class MazePlayScreen extends ScreenBase {
     new Thread(searchModel::executeTaggerMovement).start();
   }
 
-  @Override
-  public void requestFocus() {
-    mazeView.requestFocus();
-  }
-
   public void refreshInventoryOverlay() {
     inventoryOverlay.repaint();
   }

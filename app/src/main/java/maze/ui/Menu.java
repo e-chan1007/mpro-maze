@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.AncestorListener;
 
 import maze.util.Observable;
 import maze.util.Observer;
@@ -68,25 +69,13 @@ public class Menu extends Observable {
         MenuItemComponent menuItemComponent = new MenuItemComponent(Menu.this, entry);
         add(menuItemComponent);
       });
-      setActive(menuItems.get(0));
 
-      // addKeyListener(new KeyAdapter() {
-      // @Override
-      // public void keyPressed(KeyEvent e) {
-      // switch (e.getKeyCode()) {
-      // case KeyEvent.VK_UP -> transferFocusBackward();
-      // case KeyEvent.VK_DOWN -> transferFocus();
-      // case KeyEvent.VK_ENTER ->
-      // ((JButton)
-      // KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()).doClick();
-      // }
-      // }
-      // });
+      setActive(menuItems.get(0));
     }
 
     private class MenuItemComponent extends JPanel implements Observer {
       private static final Font UI_FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
-      private final JButton menuItem;
+      private final JButton menuButton;
       private final MenuEntry entry;
 
       private MenuItemComponent(Menu menu, MenuEntry entry) {
@@ -105,50 +94,63 @@ public class Menu extends Observable {
         activeLabel.setBackground(new Color(0, 0, 0, 0));
         add(activeLabel);
 
-        menuItem = new JButton(entry.getKey());
-        menuItem.addActionListener(e -> entry.getValue().run());
-        menuItem.setOpaque(true);
-        menuItem.setBackground(new Color(0, 0, 0, 0));
-        menuItem.setBorder(null);
-        menuItem.setFocusPainted(false);
-        menuItem.setContentAreaFilled(false);
-        menuItem.setForeground(Color.WHITE);
-        menuItem.setFont(UI_FONT);
+        menuButton = new JButton(entry.getKey());
+        menuButton.addActionListener(e -> {
+          active.getValue().run();
+        });
+        menuButton.setOpaque(true);
+        menuButton.setBackground(new Color(0, 0, 0, 0));
+        menuButton.setBorder(null);
+        menuButton.setFocusPainted(false);
+        menuButton.setContentAreaFilled(false);
+        menuButton.setForeground(Color.WHITE);
+        menuButton.setFont(UI_FONT);
         // menuItem.addMouseMotionListener(new MouseMotionAdapter() {
         // @Override
         // public void mouseMoved(java.awt.event.MouseEvent e) {
         // state.setActive(menuItem.getText());
         // }
         // });
-        menuItem.addKeyListener(new KeyAdapter() {
+        menuButton.addKeyListener(new KeyAdapter() {
           @Override
           public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
               case KeyEvent.VK_UP -> selectPrevious();
               case KeyEvent.VK_DOWN -> selectNext();
-              case KeyEvent.VK_ENTER -> menuItem.doClick();
+              case KeyEvent.VK_ENTER -> menuButton.doClick();
             }
           }
         });
-        menuItem.addFocusListener(new FocusAdapter() {
+        menuButton.addFocusListener(new FocusAdapter() {
           @Override
           public void focusGained(FocusEvent e) {
             setActive(entry);
           }
         });
-        add(menuItem);
-      }
+        add(menuButton);
 
-      @Override
-      public void requestFocus() {
-        menuItem.requestFocusInWindow();
       }
 
       @Override
       public void update(Observable o, Object arg) {
         boolean focused = arg == entry;
         if (focused) {
-          SwingUtilities.invokeLater(menuItem::grabFocus);
+          SwingUtilities.invokeLater(() -> {
+            menuButton.addAncestorListener(new AncestorListener() {
+              @Override
+              public void ancestorAdded(javax.swing.event.AncestorEvent event) {
+                menuButton.requestFocusInWindow();
+              }
+
+              @Override
+              public void ancestorMoved(javax.swing.event.AncestorEvent event) {
+              }
+
+              @Override
+              public void ancestorRemoved(javax.swing.event.AncestorEvent event) {
+              }
+            });
+          });
         }
         ((JLabel) getComponent(0)).setForeground(focused ? Color.WHITE : null);
       }
