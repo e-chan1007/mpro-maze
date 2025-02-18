@@ -1,0 +1,20 @@
+name: release
+on:
+  push:
+    tags:
+      - '*.*.*'
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: ./gradlew build
+      - name: Create release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "app/build/libs/app.jar"
