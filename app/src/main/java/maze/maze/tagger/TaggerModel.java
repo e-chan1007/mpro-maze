@@ -43,10 +43,12 @@ public class TaggerModel extends Observable {
   // 鬼がプレイヤーに追いついたかどうかのフラグ
   private boolean taggerArrivedFlag = false;
 
+  // 鬼がプレイヤーと衝突したかどうかのフラグ
   public boolean isTaggerArrived() {
     return taggerArrivedFlag;
   }
 
+  // 鬼がプレイヤーと衝突したかどうかのフラグをセット
   public void setTaggerArrivedFlag(boolean flag) {
     taggerArrivedFlag = flag;
   }

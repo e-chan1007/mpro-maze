@@ -14,12 +14,17 @@ import maze.window.AppScreenManager;
 import maze.window.screen.MazeGameOverScreen;
 
 public class PlayerModel extends maze.util.Observable {
-    // 定数定義
+    // 最大インベントリサイズ
     private static final int MAX_INVENTORY_SIZE = 3;
+    // 通常時のステップ数
     private static final int NORMAL_STEPS = 15;
+    // スピードブースト時のステップ数
     private static final int BOOSTED_STEPS = 10;
+    // フレーム遅延
     private static final int FRAME_DELAY = 1000 / 60;
+    // 最大HP
     private static final int MAX_HITPOINT = 3;
+    // スピードブースト効果時間
     private static final int BOOST_DURATION = 5000;
 
     // イベント名定義

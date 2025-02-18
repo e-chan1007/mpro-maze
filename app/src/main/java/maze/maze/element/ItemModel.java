@@ -73,6 +73,7 @@ public class ItemModel extends MazeElement {
         this.ovalX = x;
         this.ovalY = y;
 
+        // 道の画像を設定
         boolean isTopWall = mazeModel.getElementAt(x, y - 1) instanceof WallModel;
         boolean isLeftWall = mazeModel.getElementAt(x - 1, y) instanceof WallModel;
         boolean isRightWall = mazeModel.getElementAt(x + 1, y) instanceof WallModel;
