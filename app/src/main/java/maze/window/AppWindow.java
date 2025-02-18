@@ -3,8 +3,6 @@ package maze.window;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Arrays;
@@ -23,18 +21,11 @@ public class AppWindow extends JFrame {
   private static int innerHeight = 1080;
 
   public AppWindow() {
-    setUndecorated(true);
     setVisible(true);
     setSize(innerWidth, innerHeight);
     setBackground(Color.BLACK);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-    GraphicsDevice gd = ge.getDefaultScreenDevice();
-    // gd.setFullScreenWindow(this);
-    // gd.setDisplayMode(Arrays.stream(gd.getDisplayModes())
-    // .filter(dm -> dm.getWidth() == innerWidth && dm.getHeight() ==
-    // innerHeight).findFirst().get());
+    setResizable(false);
 
     revalidate();
 

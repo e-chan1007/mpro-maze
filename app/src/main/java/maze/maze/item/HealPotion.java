@@ -18,9 +18,4 @@ public class HealPotion implements Item {
   public String getName() {
     return "Heal Potion";
   }
-
-  @Override
-  public String getImagePath() {
-    return "/item/heal.png";
-  }
 }
