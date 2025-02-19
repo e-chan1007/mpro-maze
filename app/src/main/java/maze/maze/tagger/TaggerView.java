@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.Timer;
 
@@ -28,13 +27,15 @@ public class TaggerView {
   public static final Sprite TAGGER_WALKLEFT_SPRITE = ImageManager.loadImageAsSprite("/tagger/WispLeft.png", 32, 32);
   public static final Sprite TAGGER_WALKRIGHT_SPRITE = ImageManager.loadImageAsSprite("/tagger/WispRight.png", 32, 32);
 
-  private Map<Direction, List<BufferedImage>> walkSprites;
+  private final EnumMap<Direction, List<BufferedImage>> walkSprites;
   private int currentFrame;
   private final Timer animationTimer;
 
+  // コンストラクタ
   public TaggerView(TaggerModel taggerModel, MazeView mazeView) {
     this.taggerModel = taggerModel;
     this.mazeView = mazeView;
+    this.currentFrame = 0;
 
     walkSprites = new EnumMap<>(Direction.class);
     walkSprites.put(Direction.LEFT, new ArrayList<>());
@@ -42,16 +43,11 @@ public class TaggerView {
     walkSprites.put(Direction.UP, new ArrayList<>());
     walkSprites.put(Direction.DOWN, new ArrayList<>());
 
-    /**
-     * スプライトの代入
-     * 左右のみ実装し、上下は呼び出さない
-     */
+    // スプライトの読み込み *上下のスプライトは読み込まない
     for (int i = 0; i < FRAME_COUNT; i++) {
       walkSprites.get(Direction.LEFT).add(TAGGER_WALKLEFT_SPRITE.getImageAt(i, 0));
       walkSprites.get(Direction.RIGHT).add(TAGGER_WALKRIGHT_SPRITE.getImageAt(i, 0));
     }
-
-    this.currentFrame = 0;
 
     this.animationTimer = new Timer(ANIMAEION_DELAY, e -> {
       if (taggerModel.getMazeModel().isPaused()) {
@@ -64,9 +60,7 @@ public class TaggerView {
     this.animationTimer.start();
   }
 
-  /**
-   * 鬼の描画
-   */
+  // 鬼の描画処理  
   public void draw(Graphics g, int anchorX, int anchorY) {
     Graphics2D g2d = (Graphics2D) g;
     Direction direction = taggerModel.getCurrentDirection();

@@ -46,25 +46,19 @@ public class ItemModel extends MazeElement {
         items.add(new SpeedBoost());
     }
 
-    /**
-     * アイテムが取得されているかどうか
-     */
+    // アイテムが取得されているかどうかを返す
     public boolean isCollected() {
         return this.isItemCollected;
     }
 
-    /**
-     * アイテムが取得されているかどうかを設定
-     */
+    // アイテムが取得されているかどうかを設定する
     public void setCollected(boolean isCollected) {
         this.isItemCollected = isCollected;
         this.setChanged();
         this.notifyObservers();
     }
 
-    /**
-     * アイテム名に基づいて画像を返すメソッド
-     */
+    // アイテム名に応じた画像を返す
     public static BufferedImage getImage(String itemName) {
         return switch (itemName) {
             case HEAL_POTION -> HEAL_POTION_IMAGE;
@@ -73,14 +67,13 @@ public class ItemModel extends MazeElement {
         };
     }
 
-    /**
-     * 道の画像読み込み
-     */
+    // 道の画像読み込み
     @Override
     public void onAllInitiated(MazeModel mazeModel, int x, int y) {
         this.ovalX = x;
         this.ovalY = y;
 
+        // 道の画像を設定
         boolean isTopWall = mazeModel.getElementAt(x, y - 1) instanceof WallModel;
         boolean isLeftWall = mazeModel.getElementAt(x - 1, y) instanceof WallModel;
         boolean isRightWall = mazeModel.getElementAt(x + 1, y) instanceof WallModel;
@@ -105,6 +98,7 @@ public class ItemModel extends MazeElement {
         }
     }
 
+    // アイテムボックスに入った時の処理
     @Override
     public void onEnter() {
         if (!this.isCollected()) {

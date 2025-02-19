@@ -16,17 +16,21 @@ import maze.enums.Direction;
 import maze.maze.MazeView;
 
 public class PlayerView {
-  // 定数定義
+  // スプライトのフレーム数
   private static final int SPRITE_FRAME_COUNT = 8;
+  // スプライトの幅と高さ
   private static final int SPRITE_WIDTH = 48;
   private static final int SPRITE_HEIGHT = 64;
+  // 拡大率
   private static final double MAGNIFICATION = 2.0;
+  // アニメーションのFPSと遅延
   private static final int ANIMATION_FPS = 10;
   private static final int ANIMATION_DELAY = 1000 / ANIMATION_FPS;
 
   private PlayerModel playerModel;
   private MazeView mazeView;
 
+  // スプライトのマップ
   private Map<Direction, List<BufferedImage>> idleSprites;
   private Map<Direction, List<BufferedImage>> walkSprites;
 
@@ -41,21 +45,26 @@ public class PlayerView {
   private final Sprite PLAYER_WALKLEFT_SPRITE = ImageManager.loadImageAsSprite("/player/walk/walk_left.png", SPRITE_WIDTH, SPRITE_HEIGHT);
   private final Sprite PLAYER_WALKRIGHT_SPRITE = ImageManager.loadImageAsSprite("/player/walk/walk_right.png", SPRITE_WIDTH, SPRITE_HEIGHT);
 
+  // 現在のフレーム
   private int currentFrame;
+  // アニメーション用のタイマー
   private final Timer animationTimer;
 
+  // コンストラクタ
   public PlayerView(PlayerModel playerModel, MazeView mazeView) {
     this.playerModel = playerModel;
     this.mazeView = mazeView;
 
+    // スプライトのマップの初期化
     idleSprites = new EnumMap<>(Direction.class);
     walkSprites = new EnumMap<>(Direction.class);
 
-    // EnumMapの初期化
+    // スプライトのマップにスプライトを追加
     for (Direction direction : Direction.values()) {
       idleSprites.put(direction, new ArrayList<>());
       walkSprites.put(direction, new ArrayList<>());
     }
+    // スプライトの読み込み
     loadSprites();
 
     this.currentFrame = 0;
@@ -71,9 +80,7 @@ public class PlayerView {
     this.animationTimer.start();
   }
 
-  /**
-   * スプライト読み込み
-   */
+  // スプライトの読み込み
   private void loadSprites() {
     for (int i = 0; i < SPRITE_FRAME_COUNT; i++) {
       idleSprites.get(Direction.UP).add(PLAYER_IDLE_UP_SPRITE.getImageAt(i, 0));
@@ -88,9 +95,7 @@ public class PlayerView {
     }
   }
 
-  /**
-   * アニメーションのフレームを更新
-   */
+  // アニメーションフレームの更新
   private void updateAnimationFrame() {
     Direction direction = playerModel.getCurrentDirection();
     if (playerModel.isIdle()) {
@@ -100,9 +105,7 @@ public class PlayerView {
     }
   }
 
-  /**
-   * 描画処理
-   */
+  // プレイヤーの描画処理
   public void draw(Graphics g) {
     Graphics2D g2d = (Graphics2D) g;
     int cellSize = mazeView.getMazeCellSize();
@@ -118,7 +121,7 @@ public class PlayerView {
       int imageWidth = playerSprite.getWidth();
       int imageHeight = playerSprite.getHeight();
 
-      // * 縦横比を維持しながら、画像の倍率調整 */
+      // 縦横比を維持しながら、画像の倍率調整 */
       double scale = Math.min((double) cellSize / imageWidth, (double) cellSize / imageHeight) * MAGNIFICATION;
       int scaleWidth = (int) (imageWidth * scale);
       int scaleHeight = (int) (imageHeight * scale);
