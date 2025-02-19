@@ -33,7 +33,7 @@ public class MazeView extends JPanel implements Observer {
     this.mazeModel = mazeModel;
 
     this.playerModel = playerModel;
-    this.mazeModel.readFile("/test.txt");
+    this.mazeModel.readFile("/maze.txt");
     this.playerView = new PlayerView(playerModel, this);
     this.taggerModel = taggerModel;
     this.taggerView = new TaggerView(taggerModel, this);
@@ -71,9 +71,9 @@ public class MazeView extends JPanel implements Observer {
 
   private void drawHitPoints(Graphics g) {
     int cellSize = getMazeCellSize();
-    int x = (int)(playerModel.getPlayerX() * cellSize + anchorX);
-    int y = (int)(playerModel.getPlayerY() * cellSize + anchorY - cellSize * 0.75);
-    
+    int x = (int) (playerModel.getPlayerX() * cellSize + anchorX);
+    int y = (int) (playerModel.getPlayerY() * cellSize + anchorY - cellSize * 0.75);
+
     g.setColor(Color.WHITE);
   }
 
